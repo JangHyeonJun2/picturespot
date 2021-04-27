@@ -2,12 +2,12 @@ package com.sparta.hanghae.picturespot.config;
 
 
 import com.sparta.hanghae.picturespot.config.jwt.JwtAuthenticationFilter;
-import com.sparta.hanghae.picturespot.config.jwt.JwtAuthorizationFilter;
-import com.sparta.hanghae.picturespot.repository.UserRepository;
+import com.sparta.hanghae.picturespot.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
@@ -23,7 +24,13 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
-    private UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
@@ -45,11 +52,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(corsFilter) // @CrossOrigin는 인증이 안필요하면 controller에 달아서 사용해도되지만 인증이 필요한 경우는 시큐리티 필터에 추가해줘야 한다.
                 .formLogin().disable()
                 .httpBasic().disable() // Authorization 키값에 id와 비밀번호를 담아서 보내는 방식이다.
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-                .addFilter(new JwtAuthorizationFilter(authenticationManager(),userRepository))
+                .headers().frameOptions().disable().and()
                 // 권한 설정
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .anyRequest().permitAll();
+                .antMatchers("/login").permitAll()
+                .antMatchers("/signup").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
     }
 }

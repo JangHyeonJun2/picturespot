@@ -2,16 +2,19 @@ package com.sparta.hanghae.picturespot.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Collection;
 
 @NoArgsConstructor
 @Getter
 @Entity
-public class User extends Timestamped{
+public class User extends Timestamped implements UserDetails {
     @Id
     @GeneratedValue
     @Column(name = "USER_ID")
@@ -19,7 +22,7 @@ public class User extends Timestamped{
     @Column(nullable = false)
     private String nickname;
     @Column(nullable = false)
-    private String username; // email jwt UsernamePasswordAuthenticationFilter 에 username이라고 박혀있어서 바꾸는 방법을 몰라서 dto로는 email로 받고 엔티티에는 username으로 저장
+    private String email;
     @Column(nullable = false)
     private String password;
 
@@ -30,7 +33,37 @@ public class User extends Timestamped{
 
     public User (String nickname, String email, String password){
         this.nickname = nickname;
-        this.username = email;
+        this.email = email;
         this.password = password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
