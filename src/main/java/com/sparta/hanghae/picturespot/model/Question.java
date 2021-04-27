@@ -1,5 +1,6 @@
 package com.sparta.hanghae.picturespot.model;
 
+import com.sparta.hanghae.picturespot.dto.requestDto.QuestionRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,9 +19,21 @@ public class Question extends Timestamped{
 
     private String content;
 
-    private String writer;
+    //private String writer;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+
+
+    public Question(QuestionRequestDto questionRequestDto){
+        //this.user = user;
+        this.title = questionRequestDto.getTitle();
+        this.content = questionRequestDto.getContent();
+    }
+
+    public void update(QuestionRequestDto questionRequestDto){
+        this.title = questionRequestDto.getTitle();
+        this.content = questionRequestDto.getContent();
+    }
 }

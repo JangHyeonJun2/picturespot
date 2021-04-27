@@ -1,5 +1,6 @@
 package com.sparta.hanghae.picturespot.model;
 
+import com.sparta.hanghae.picturespot.dto.UserDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,4 +28,13 @@ public class User extends Timestamped{
 
     private String imgUrl;
 //    private enum ROLE
+
+    public void updatePwd(UserDto userDto){
+        this.password = userDto.getPassword();
+    }
+
+    public void updateProfile(UserDto userDto){
+        this.imgUrl = userDto.getImgUrl();
+        this.introduceMsg = userDto.getIntroduceMsg();
+    }
 }
