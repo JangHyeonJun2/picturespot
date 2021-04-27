@@ -28,6 +28,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.h2database/h2
     compile('com.h2database:h2')
     compile 'org.json:json:20210307'
+    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.0'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

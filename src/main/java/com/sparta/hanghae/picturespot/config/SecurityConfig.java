@@ -5,6 +5,7 @@ import com.sparta.hanghae.picturespot.config.jwt.JwtAuthenticationFilter;
 import com.sparta.hanghae.picturespot.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
     private final JwtTokenProvider jwtTokenProvider;
+
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
+    }
 
     @Bean
     @Override
@@ -55,8 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable().and()
                 // 권한 설정
                 .authorizeRequests()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/signup").permitAll()
+                .antMatchers("/user/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),

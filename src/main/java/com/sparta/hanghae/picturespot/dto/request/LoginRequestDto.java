@@ -1,4 +1,4 @@
-package com.sparta.hanghae.picturespot.dto;
+package com.sparta.hanghae.picturespot.dto.request;
 
 import lombok.Getter;
 
