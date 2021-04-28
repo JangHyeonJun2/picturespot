@@ -3,7 +3,7 @@ package com.sparta.hanghae.picturespot.service;
 import com.sparta.hanghae.picturespot.dto.reponseDto.QCommentResponseDto;
 import com.sparta.hanghae.picturespot.dto.requestDto.QuestionRequestDto;
 import com.sparta.hanghae.picturespot.dto.reponseDto.QuestionResponseDto;
-import com.sparta.hanghae.picturespot.model.Message;
+import com.sparta.hanghae.picturespot.dto.Message;
 import com.sparta.hanghae.picturespot.model.QComment;
 import com.sparta.hanghae.picturespot.model.Question;
 import com.sparta.hanghae.picturespot.model.User;
@@ -53,8 +53,8 @@ public class QuestionService {
 
     //문의하기 글쓰기
     @Transactional
-    public ResponseEntity createQuestion(QuestionRequestDto questionRequestDto){
-        Question question = new Question(questionRequestDto);
+    public ResponseEntity createQuestion(QuestionRequestDto questionRequestDto, User user){
+        Question question = new Question(questionRequestDto, user);
         questionRepository.save(question);
         Message message = new Message("게시글이 작성되었습니다.");
         return new ResponseEntity<>(message, HttpStatus.OK);
@@ -62,13 +62,17 @@ public class QuestionService {
 
     //문의하기 수정
     @Transactional
-    public ResponseEntity updateQuestion(Long qnaId, QuestionRequestDto questionRequestDto){
-//        Question question = questionRepository.findByUserAndId(user, qnaId).orElseThrow(
-//                () -> new IllegalArgumentException("작성자만 수정 가능")
-//        );
-        Question question = questionRepository.findById(qnaId).orElseThrow(
+    public ResponseEntity updateQuestion(Long qnaId, QuestionRequestDto questionRequestDto, User user){
+        Question question = questionRepository.findByUserAndId(user, qnaId).orElseThrow(
                 () -> new IllegalArgumentException("작성자만 수정 가능")
         );
+//        Question question = questionRepository.findById(qnaId).orElseThrow(
+//                () -> new IllegalArgumentException("게시물이 없습니다")
+//        );
+//        if (!question.getUser().getId().equals(user.getId())){
+//            throw new IllegalArgumentException("작성자만 수정할 수 있습니다");
+//        }
+
         question.update(questionRequestDto);
         Message message = new Message("게시글이 수정되었습니다.");
         return new ResponseEntity<>(message, HttpStatus.OK);
@@ -76,13 +80,17 @@ public class QuestionService {
 
     //문의하기 삭제
     @Transactional
-    public ResponseEntity deleteQuestion(Long qnaId){
-//        Question question = questionRepository.findByUserAndId(user, qnaId).orElseThrow(
-//                () -> new IllegalArgumentException("작성자만 삭제 가능")
-//        );
-        Question question = questionRepository.findById(qnaId).orElseThrow(
+    public ResponseEntity deleteQuestion(Long qnaId, User user){
+        Question question = questionRepository.findByUserAndId(user, qnaId).orElseThrow(
                 () -> new IllegalArgumentException("작성자만 삭제 가능")
         );
+//        Question question = questionRepository.findById(qnaId).orElseThrow(
+//                () -> new IllegalArgumentException("게시물이 없습니다")
+//        );
+//        if (!question.getUser().getId().equals(user.getId())){
+//            throw new IllegalArgumentException("작성자만 수정할 수 있습니다");
+//        }
+
         List<QComment> qComments = qCommentRepository.findAllByQuestionIdOrderByModifiedDesc(qnaId);
         for (QComment qComment : qComments){
             qCommentRepository.delete(qComment);
@@ -92,3 +100,5 @@ public class QuestionService {
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
 }
+
+

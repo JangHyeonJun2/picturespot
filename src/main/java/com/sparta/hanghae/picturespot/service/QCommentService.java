@@ -1,10 +1,9 @@
 package com.sparta.hanghae.picturespot.service;
 
 import com.sparta.hanghae.picturespot.dto.requestDto.QCommentRequestDto;
-import com.sparta.hanghae.picturespot.model.Message;
+import com.sparta.hanghae.picturespot.dto.Message;
 import com.sparta.hanghae.picturespot.model.QComment;
 import com.sparta.hanghae.picturespot.model.Question;
-import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.repository.QCommentRepository;
 import com.sparta.hanghae.picturespot.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;

@@ -24,7 +24,7 @@ public class QuestionResponseDto {
         this.id = question.getId();
         this.title = question.getTitle();
         this.content = question.getContent();
-        //this.writer = question.getUser().getNickname();
+        this.writer = question.getUser().getNickname();
         this.modified = question.getModified();
     }
 
@@ -32,7 +32,7 @@ public class QuestionResponseDto {
         this.id = question.getId();
         this.title = question.getTitle();
         this.content = question.getContent();
-        //this.writer = question.getUser().getNickname();
+        this.writer = question.getUser().getNickname();
         this.modified = question.getModified();
         this.qcomments = qCommentResponseDtos;
     }

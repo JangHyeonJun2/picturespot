@@ -1,4 +1,4 @@
-package com.sparta.hanghae.picturespot.model;
+package com.sparta.hanghae.picturespot.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

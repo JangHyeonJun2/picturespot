@@ -13,8 +13,9 @@ public class QCommentController {
 
     private final QCommentService qCommentService;
 
-    //----User user는 jwt토큰에서 뽑아낸 user----//
+    //----user role 필요----//
     //----문의하기 댓글은 관리자만 작성할 수 있음----//
+    //----문의하기 댓글은 문의하기 게시물 상세 요청 시 함께 볼 수 있음---//
 
     //문의하기 댓글 쓰기
     @PostMapping("/qna/{qnaId}/qcomment")

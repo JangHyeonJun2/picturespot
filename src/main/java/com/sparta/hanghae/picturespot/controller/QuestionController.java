@@ -6,6 +6,7 @@ import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,8 +16,6 @@ import java.util.List;
 public class QuestionController {
 
     private final QuestionService questionService;
-
-    //----User user는 jwt토큰에서 뽑아낸 user----//
 
     //문의하기 리스트
     @GetMapping("/qna")
@@ -32,19 +31,19 @@ public class QuestionController {
 
     //문의하기 글쓰기
     @PostMapping("/qna")
-    public ResponseEntity createQuestion(@RequestBody QuestionRequestDto questionRequestDto){
-        return questionService.createQuestion(questionRequestDto);
+    public ResponseEntity createQuestion(@RequestBody QuestionRequestDto questionRequestDto, @AuthenticationPrincipal User user){
+        return questionService.createQuestion(questionRequestDto, user);
     }
 
     //문의하기 수정
     @PutMapping("/qna/{qnaId}")
-    public ResponseEntity updateQuestion(@PathVariable Long qnaId, @RequestBody QuestionRequestDto questionRequestDto){
-        return questionService.updateQuestion(qnaId, questionRequestDto);
+    public ResponseEntity updateQuestion(@PathVariable Long qnaId, @RequestBody QuestionRequestDto questionRequestDto, @AuthenticationPrincipal User user){
+        return questionService.updateQuestion(qnaId, questionRequestDto, user);
     }
 
     //문의하기 삭제
     @DeleteMapping("/qna/{qnaId}")
-    public ResponseEntity deleteQuestion(@PathVariable Long qnaId){
-        return questionService.deleteQuestion(qnaId);
+    public ResponseEntity deleteQuestion(@PathVariable Long qnaId, @AuthenticationPrincipal User user){
+        return questionService.deleteQuestion(qnaId, user);
     }
 }
