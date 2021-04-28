@@ -1,25 +1,32 @@
 package com.sparta.hanghae.picturespot.service;
 
 import com.sparta.hanghae.picturespot.config.jwt.JwtTokenProvider;
-import com.sparta.hanghae.picturespot.dto.request.LoginRequestDto;
-import com.sparta.hanghae.picturespot.dto.request.PwEditRequestDto;
-import com.sparta.hanghae.picturespot.dto.response.AuthResponseDto;
-import com.sparta.hanghae.picturespot.dto.response.EmailResponseDto;
-import com.sparta.hanghae.picturespot.dto.response.LoginResponseDto;
-import com.sparta.hanghae.picturespot.dto.request.SignupRequestDto;
-import com.sparta.hanghae.picturespot.dto.response.MessageDto;
+import com.sparta.hanghae.picturespot.dto.request.user.AdminSignupRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.user.LoginRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.user.PwEditRequestDto;
+import com.sparta.hanghae.picturespot.dto.response.user.AuthResponseDto;
+import com.sparta.hanghae.picturespot.dto.response.user.EmailResponseDto;
+import com.sparta.hanghae.picturespot.dto.response.user.LoginResponseDto;
+import com.sparta.hanghae.picturespot.dto.request.user.SignupRequestDto;
 import com.sparta.hanghae.picturespot.model.User;
+import com.sparta.hanghae.picturespot.model.UserRole;
 import com.sparta.hanghae.picturespot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -29,10 +36,13 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final ModelMapper modelMapper;
+    private final JavaMailSender javaMailSender;
+    private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
 
     public void signup(SignupRequestDto requestDto){
         String encodPassword = bCryptPasswordEncoder.encode(requestDto.getPassword());
-        User user = new User(requestDto.getNickname(), requestDto.getEmail(), encodPassword);
+        UserRole role = UserRole.USER;
+        User user = new User(requestDto.getNickname(), requestDto.getEmail(), encodPassword, role);
         userRepository.save(user);
     }
 
@@ -88,9 +98,31 @@ public class UserService {
         if(user == null){
             return null;
         }else{
-            // 인증번호 발송
-            return new AuthResponseDto("인증번호 발송");
+            String auth = certified_key();
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(email);
+            message.setSubject("비밀번호 찾기");
+            message.setText(auth);
+            javaMailSender.send(message);
+            return new AuthResponseDto(auth);
         }
+    }
+
+    private String certified_key() {
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        int num = 0;
+
+        do {
+            num = random.nextInt(75) + 48;
+            if ((num >= 48 && num <= 57) || (num >= 65 && num <= 90) || (num >= 97 && num <= 122)) {
+                sb.append((char) num);
+            } else {
+                continue;
+            }
+
+        } while (sb.length() < 10);
+        return sb.toString();
     }
 
     @Transactional
@@ -102,5 +134,16 @@ public class UserService {
             String encodPassword = bCryptPasswordEncoder.encode(pwEditRequestDto.getPassword());
             user.updatePw(encodPassword);
         }
+    }
+
+    // 관리자 회원가입
+    public void adminsignup(AdminSignupRequestDto adminSignupRequestDto) {
+        if (!adminSignupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
+            throw new IllegalArgumentException("관리자 암호가 틀려 등록이 불가능합니다.");
+        }
+        String encodPassword = bCryptPasswordEncoder.encode(adminSignupRequestDto.getPassword());
+        UserRole role = UserRole.ADMIN;
+        User user = new User(adminSignupRequestDto.getNickname(), adminSignupRequestDto.getEmail(), encodPassword, role);
+        userRepository.save(user);
     }
 }

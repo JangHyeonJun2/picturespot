@@ -1,15 +1,14 @@
-package com.sparta.hanghae.picturespot.dto.request;
+package com.sparta.hanghae.picturespot.dto.request.user;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.parameters.P;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
 @NoArgsConstructor
-public class SignupRequestDto {
+public class AdminSignupRequestDto {
     @NotBlank(message = "닉네임을 비워둘 수 없습니다.")
     @Pattern(regexp = "^(?!(?:[0-9]+)$)([a-zA-Z]|[0-9a-zA-Z]){6,}$",
             message = "닉네임은 6자 이상의 영문 혹은 영문과 숫자를 조합")
@@ -30,11 +29,13 @@ public class SignupRequestDto {
     //        message = "동일하게 입력해주세요")
     private String pwdchk;
 
-    public SignupRequestDto(String nickname, String email, String password, String pwdchk){
+    private String adminToken;
+
+    public AdminSignupRequestDto(String nickname, String email, String password, String pwdchk, String adminToken){
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.pwdchk = pwdchk;
+        this.adminToken = adminToken;
     }
-
 }

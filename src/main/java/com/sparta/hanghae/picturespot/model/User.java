@@ -3,12 +3,11 @@ package com.sparta.hanghae.picturespot.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @NoArgsConstructor
@@ -29,17 +28,33 @@ public class User extends Timestamped implements UserDetails {
     private String introduceMsg;
 
     private String imgUrl;
-//    private enum ROLE
 
-    public User (String nickname, String email, String password){
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private UserRole role;
+
+    public User (String nickname, String email, String password, UserRole role){
         this.nickname = nickname;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
+
+    public void updatePw(String password) {
+        this.password = password;
+    }
+
+    ////////////// UserDetails Override /////////////////
+
+    private static final String ROLE_PREFIX = "ROLE_";
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        UserRole userRole = this.role;
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(ROLE_PREFIX + userRole.toString());
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(authority);
+        return authorities;
     }
 
     @Override
@@ -67,7 +82,5 @@ public class User extends Timestamped implements UserDetails {
         return true;
     }
 
-    public void updatePw(String password) {
-        this.password = password;
-    }
+
 }
