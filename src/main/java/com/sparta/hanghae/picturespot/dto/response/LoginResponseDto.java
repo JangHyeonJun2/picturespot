@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginResponseDto {
     private String token;
-    private String email;
+    private String nickname;
     private String msg;
 
-    public LoginResponseDto(String token, String email, String msg) {
+    public LoginResponseDto(String token, String nickname, String msg) {
         this.token = token;
-        this.email = email;
+        this.nickname = nickname;
         this.msg = msg;
     }
 }

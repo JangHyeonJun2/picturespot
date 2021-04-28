@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -62,6 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 권한 설정
                 .authorizeRequests()
                 .antMatchers("/user/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/map/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/board/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/qna/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),

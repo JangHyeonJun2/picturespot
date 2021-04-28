@@ -66,4 +66,8 @@ public class User extends Timestamped implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public void updatePw(String password) {
+        this.password = password;
+    }
 }

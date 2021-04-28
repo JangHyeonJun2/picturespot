@@ -1,12 +1,14 @@
 package com.sparta.hanghae.picturespot.dto.request;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.parameters.P;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
+@NoArgsConstructor
 public class SignupRequestDto {
     @NotBlank(message = "닉네임을 비워둘 수 없습니다.")
     @Pattern(regexp = "^(?!(?:[0-9]+)$)([a-zA-Z]|[0-9a-zA-Z]){6,}$",
