@@ -66,6 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/map/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/board/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/qna/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/board/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),

@@ -1,6 +1,7 @@
-package com.sparta.hanghae.picturespot.dto.requestDto;
+package com.sparta.hanghae.picturespot.dto.request.board;
 
 import com.sparta.hanghae.picturespot.model.Board;
+import com.sparta.hanghae.picturespot.model.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,15 +17,17 @@ public class BoardSaveRequestDto {
     private BigDecimal latitude;
     private BigDecimal logitude;
     private String imgUrl;
+    private User user;
 
     @Builder
-    public BoardSaveRequestDto(String title, String content, String category, BigDecimal latitude, BigDecimal logitude, String imgUrl) {
+    public BoardSaveRequestDto(String title, String content, String category, BigDecimal latitude, BigDecimal logitude, String imgUrl, User user) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.latitude = latitude;
         this.logitude = logitude;
         this.imgUrl = imgUrl;
+        this.user = user;
     }
 
     public Board toEntity() {
@@ -35,6 +38,7 @@ public class BoardSaveRequestDto {
                 .latitude(latitude)
                 .longitude(logitude)
                 .imgUrl(imgUrl)
+                .user(user)
                 .build();
     }
 }

@@ -11,16 +11,26 @@ sourceCompatibility = '1.8'
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
+
     }
 }
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/libs-milestone'}
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    // https://mvnrepository.com/artifact/org.springframework/spring-web
+//    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.3'
+    
+
+
+
+
+
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3'

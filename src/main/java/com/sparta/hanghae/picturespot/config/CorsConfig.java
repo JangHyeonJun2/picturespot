@@ -1,11 +1,13 @@
 package com.sparta.hanghae.picturespot.config;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,6 +22,7 @@ public class CorsConfig {
 //        config.setAllowedOriginPatterns(Arrays.asList("*")); // 모든 ip에 응답을 허용하겠다.
         config.setAllowedOrigins(Arrays.asList("*"));
         config.addAllowedHeader("*"); // 모든 header에 응답을 허용하겠다.
+
         config.addAllowedMethod("*"); // 모든 post,get,delete,update 허용
         config.setExposedHeaders(Arrays.asList("Authorization", "Content-Type"));
         source.registerCorsConfiguration("/**",config);

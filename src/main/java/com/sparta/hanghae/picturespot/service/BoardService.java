@@ -1,6 +1,7 @@
 package com.sparta.hanghae.picturespot.service;
 
-import com.sparta.hanghae.picturespot.dto.requestDto.BoardSaveRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.board.BoardSaveRequestDto;
+import com.sparta.hanghae.picturespot.dto.response.board.BoardSaveResponseDto;
 import com.sparta.hanghae.picturespot.model.Board;
 import com.sparta.hanghae.picturespot.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,9 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
     @Transactional
-    public Board save(BoardSaveRequestDto requestDto) {
-        return boardRepository.save(requestDto.toEntity());
+    public BoardSaveResponseDto save(BoardSaveRequestDto requestDto) {
+        Board boardEntity = boardRepository.save(requestDto.toEntity());
+
+        return new BoardSaveResponseDto(boardEntity);
     }
 }
