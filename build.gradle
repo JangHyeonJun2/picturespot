@@ -26,11 +26,6 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework/spring-web
 //    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.3'
     
-
-
-
-
-
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
@@ -46,9 +41,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     
     //s3
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws'
-    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
-    implementation 'com.amazonaws:aws-java-sdk-s3'
+    compile('org.springframework.cloud:spring-cloud-starter-aws')
 }
 
 dependencyManagement { imports { mavenBom 'org.springframework.cloud:spring-cloud-aws:2.2.1.RELEASE' } }
