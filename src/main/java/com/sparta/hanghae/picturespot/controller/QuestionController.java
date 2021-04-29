@@ -19,8 +19,10 @@ public class QuestionController {
 
     //문의하기 리스트
     @GetMapping("/qna")
-    public List<QuestionResponseDto> getAllQuestions(){
-        return questionService.getAllQuestions();
+    public List<QuestionResponseDto> getAllQuestions(@RequestParam("page") int page, @RequestParam("size") int size){
+        //----/qna?page={page}&size={size}
+        page = page - 1;
+        return questionService.getAllQuestions(page, size);
     }
 
     //문의하기 상세

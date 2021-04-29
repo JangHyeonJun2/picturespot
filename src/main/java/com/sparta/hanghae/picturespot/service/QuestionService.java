@@ -10,6 +10,9 @@ import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.repository.QCommentRepository;
 import com.sparta.hanghae.picturespot.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,9 +29,13 @@ public class QuestionService {
     private final QCommentRepository qCommentRepository;
 
     //문의하기 게시글 리스트
-    public List<QuestionResponseDto> getAllQuestions(){
+    public List<QuestionResponseDto> getAllQuestions(int page, int size){
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Question> questionList = questionRepository.findAllByOrderByModifiedDesc(pageable);
+        //List<Question> questionList = questionRepository.findAllByOrderByModifiedDesc();
         List<QuestionResponseDto> questionResponseDtos = new ArrayList<>();
-        List<Question> questionList = questionRepository.findAllByOrderByModifiedDesc();
+
         for (Question question : questionList){
             QuestionResponseDto questionDto = new QuestionResponseDto(question);
             questionResponseDtos.add(questionDto);

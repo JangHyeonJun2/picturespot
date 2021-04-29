@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    List<Board> findByUserOrderByModifiedDesc(User user);
+    //List<Board> findByUserOrderByModifiedDesc(User user);
     Optional<Board> findById(Long BoardId);
 }
 
