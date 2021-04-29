@@ -4,6 +4,8 @@ import com.sparta.hanghae.picturespot.model.Heart;
 import com.sparta.hanghae.picturespot.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface HeartRepository extends JpaRepository<Heart, Long> {
-    Heart findByUserAndLiked(User user, Boolean liked);
+    List<Heart> findAllByUserAndLikedOrderByModifiedDesc(User user, Boolean liked);
 }
