@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,16 +28,14 @@ public class BoardController {
 
     //게시물 작성
     @PostMapping("/board")
-    public ResponseEntity save(@RequestParam(value = "file", required = false) MultipartFile files, @RequestParam("title") String title,
+    public ResponseEntity save(@RequestParam(value = "file", required = false) List<MultipartFile> files, @RequestParam("title") String title,
                                @RequestParam("content") String content, @RequestParam("category") String category, @RequestParam("latitude") BigDecimal latitude,
-                               @RequestParam("longitude") BigDecimal longitude, @AuthenticationPrincipal User user) {
-        String imgUrl = "";
-        try {
-            imgUrl = s3Service.upload(files, "board");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        BoardSaveRequestDto boardSaveRequestDto = new BoardSaveRequestDto(title,content,category,latitude,longitude,imgUrl,user);
+                               @RequestParam("longitude") BigDecimal longitude, @AuthenticationPrincipal User user) throws IOException {
+
+
+        String[] imgUrls = s3Service.upload(files, "board");
+
+        BoardSaveRequestDto boardSaveRequestDto = new BoardSaveRequestDto(title,content,category,latitude,longitude,imgUrls,user);
         BoardSaveResponseDto responseDto = boardService.save(boardSaveRequestDto);
         return customExceptionController.ok("게시물을 저장하였습니다.", responseDto);
     }

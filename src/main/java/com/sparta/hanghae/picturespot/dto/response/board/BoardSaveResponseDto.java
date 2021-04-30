@@ -15,7 +15,7 @@ public class BoardSaveResponseDto {
     private String category;
     private BigDecimal latitude;
     private BigDecimal logitude;
-    private String imgUrl;
+    private String[] imgUrls;
     private User user;
 
     public BoardSaveResponseDto(Board entity) {
@@ -24,7 +24,7 @@ public class BoardSaveResponseDto {
         this.category = entity.getCategory();
         this.latitude = entity.getLatitude();
         this.logitude = entity.getLatitude();
-        this.imgUrl = entity.getImgUrl();
+        this.imgUrls = entity.getImgUrls();
         this.user = entity.getUser();
     }
 }
