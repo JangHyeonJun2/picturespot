@@ -16,11 +16,15 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/libs-milestone'}
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    // https://mvnrepository.com/artifact/org.springframework/spring-web
+//    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.3'
+
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
@@ -38,6 +42,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
+
+dependencyManagement { imports { mavenBom 'org.springframework.cloud:spring-cloud-aws:2.2.1.RELEASE' } }
 
 test {
     useJUnitPlatform()

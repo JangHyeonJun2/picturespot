@@ -74,6 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/qna/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,"/qna/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/qna/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/board/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
 //                .oauth2Login()
@@ -83,7 +84,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class);
-
-
     }
 }

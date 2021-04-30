@@ -11,12 +11,15 @@ public class PicturespotApplication {
 
     public static final String APPLICATION_LOCATIONS = "spring.config.location="
             + "classpath:oauth2.yml,"
-            + "classpath:application.properties";
+            + "classpath:application.properties,"
+            + "classpath:application.yml,"
+            + "classpath:aws.yml";
 
     public static void main(String[] args) {
         new SpringApplicationBuilder(PicturespotApplication.class)
                 .properties(APPLICATION_LOCATIONS)
                 .run(args);
+
     }
 
 }
