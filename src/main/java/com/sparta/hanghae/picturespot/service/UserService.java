@@ -1,15 +1,16 @@
 package com.sparta.hanghae.picturespot.service;
 
 import com.sparta.hanghae.picturespot.config.jwt.JwtTokenProvider;
-import com.sparta.hanghae.picturespot.dto.request.user.AdminSignupRequestDto;
-import com.sparta.hanghae.picturespot.dto.request.user.LoginRequestDto;
-import com.sparta.hanghae.picturespot.dto.request.user.PwEditRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.user.*;
 import com.sparta.hanghae.picturespot.dto.response.user.AuthResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.user.EmailResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.user.LoginResponseDto;
-import com.sparta.hanghae.picturespot.dto.request.user.SignupRequestDto;
+import com.sparta.hanghae.picturespot.model.EmailCheck;
+import com.sparta.hanghae.picturespot.model.PwdCheck;
 import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.model.UserRole;
+import com.sparta.hanghae.picturespot.repository.EmailCheckRepository;
+import com.sparta.hanghae.picturespot.repository.PwdCheckRepository;
 import com.sparta.hanghae.picturespot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -33,6 +34,8 @@ import java.util.Random;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final EmailCheckRepository emailCheckRepository;
+    private final PwdCheckRepository pwdCheckRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final ModelMapper modelMapper;
@@ -75,15 +78,60 @@ public class UserService {
         }
     }
 
-    public boolean emailchk(String email) {
+    // 단순 이메일 중복체크
+    public boolean emailchk(String email){
         User user = userRepository.findByEmail(email);
         if(user == null){
-            return true; // 중복이 아니다.
-        }else {
+            return true; // 중복이 아니다
+        }else{
             return false; // 중복
         }
     }
 
+
+    // 이메일 인증발송
+    @Transactional
+    public AuthResponseDto emailchkAuth(String email) {
+        User user = userRepository.findByEmail(email);
+        if(user == null){
+            // 이메일 발송
+            String auth = certified_key();
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(email);
+            message.setSubject("이메일 인증");
+            message.setText(auth);
+            javaMailSender.send(message);
+
+            // emailcheck 테이블 생성
+            EmailCheck emailCheck = emailCheckRepository.findByEmail(email);
+            if(emailCheck == null) {
+                EmailCheck check = new EmailCheck(email, auth);
+                emailCheckRepository.save(check);
+            }else{
+                emailCheck.update(auth);
+            }
+            return new AuthResponseDto(auth);
+        }else {
+            return null; // 중복
+        }
+    }
+
+    // 이메일 인증번호 확인
+    @Transactional
+    public boolean emailAuthCode(EmailAuthRequestDto emailAuthRequestDto) {
+        EmailCheck emailCheck = emailCheckRepository.findByEmail(emailAuthRequestDto.getEmail());
+        if (emailCheck == null) {
+            return false;
+        }else{
+            if(emailCheck.getAuthCode().equals(emailAuthRequestDto.getAuthCode())){
+                emailCheck.update("Y");
+                return true; // 이메일 인증 완료
+            }
+            return false;
+        }
+    }
+
+    // 이메일 찾기
     public EmailResponseDto findEmail(String nickname) {
         User user = userRepository.findByNickname(nickname);
         if(user == null){
@@ -93,21 +141,63 @@ public class UserService {
         }
     }
 
+    // 비밀번호 찾기
     public AuthResponseDto findpwd(String email) {
         User user = userRepository.findByEmail(email);
         if(user == null){
             return null;
         }else{
+            // 이메일로 인증번호 발송
             String auth = certified_key();
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
             message.setSubject("비밀번호 찾기");
             message.setText(auth);
             javaMailSender.send(message);
+
+            // EmailCheck 테이블에 authCode 저장
+            PwdCheck pwdCheck = pwdCheckRepository.findByEmail(email);
+            if(pwdCheck == null) {
+                PwdCheck check = new PwdCheck(email, auth);
+                pwdCheckRepository.save(check);
+            }else{
+                pwdCheck.update(auth);
+            }
             return new AuthResponseDto(auth);
         }
     }
 
+    // 비밀번호 인증코드 확인
+    @Transactional
+    public boolean pwdAuthcode(EmailAuthRequestDto emailAuthRequestDto) {
+        PwdCheck pwdCheck = pwdCheckRepository.findByEmail(emailAuthRequestDto.getEmail());
+        if (pwdCheck == null) {
+            return false;
+        }else{
+            if(pwdCheck.getAuthCode().equals(emailAuthRequestDto.getAuthCode())){
+                pwdCheck.update("Y");
+                return true; // 이메일 인증 완료
+            }
+            return false;
+        }
+    }
+
+    @Transactional
+    // 비밀번호 수정
+    public void editpwd(PwEditRequestDto pwEditRequestDto) {
+        User user = userRepository.findByEmail(pwEditRequestDto.getEmail());
+        if(user == null){
+            throw new IllegalStateException("가입된 이메일이 없습니다.");
+        }else{
+            PwdCheck pwdCheck = pwdCheckRepository.findByEmail(pwEditRequestDto.getEmail());
+            if(pwdCheck.getAuthCode().equals("Y")){
+                String encodPassword = bCryptPasswordEncoder.encode(pwEditRequestDto.getPassword());
+                user.updatePw(encodPassword);
+            }
+        }
+    }
+
+    // 인증번호 생성
     private String certified_key() {
         Random random = new Random();
         StringBuffer sb = new StringBuffer();
@@ -125,17 +215,6 @@ public class UserService {
         return sb.toString();
     }
 
-    @Transactional
-    public void editpwd(PwEditRequestDto pwEditRequestDto) {
-        User user = userRepository.findByEmail(pwEditRequestDto.getEmail());
-        if(user == null){
-            throw new IllegalStateException("가입된 이메일이 없습니다.");
-        }else{
-            String encodPassword = bCryptPasswordEncoder.encode(pwEditRequestDto.getPassword());
-            user.updatePw(encodPassword);
-        }
-    }
-
     // 관리자 회원가입
     public void adminsignup(AdminSignupRequestDto adminSignupRequestDto) {
         if (!adminSignupRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
@@ -146,4 +225,7 @@ public class UserService {
         User user = new User(adminSignupRequestDto.getNickname(), adminSignupRequestDto.getEmail(), encodPassword, role);
         userRepository.save(user);
     }
+
+
+
 }
