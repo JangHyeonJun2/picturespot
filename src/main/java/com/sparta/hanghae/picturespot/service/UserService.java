@@ -142,6 +142,7 @@ public class UserService {
     }
 
     // 비밀번호 찾기
+    @Transactional
     public AuthResponseDto findpwd(String email) {
         User user = userRepository.findByEmail(email);
         if(user == null){
