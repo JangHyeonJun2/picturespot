@@ -28,6 +28,8 @@ public class Board extends Timestamped{
 
     private BigDecimal longitude;
 
+    //private String place; 장소 추가
+
     private int likeCount;
 
     @ManyToOne

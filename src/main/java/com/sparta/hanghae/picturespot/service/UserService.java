@@ -31,8 +31,8 @@ public class UserService {
     private final ModelMapper modelMapper;
 
     public void signup(SignupRequestDto requestDto){
-        String encodPassword = bCryptPasswordEncoder.encode(requestDto.getPassword());
-        User user = new User(requestDto.getNickname(), requestDto.getEmail(), encodPassword);
+        String encodePassword = bCryptPasswordEncoder.encode(requestDto.getPassword());
+        User user = new User(requestDto.getNickname(), requestDto.getEmail(), encodePassword);
         userRepository.save(user);
     }
 
@@ -99,8 +99,8 @@ public class UserService {
         if(user == null){
             throw new IllegalStateException("가입된 이메일이 없습니다.");
         }else{
-            String encodPassword = bCryptPasswordEncoder.encode(pwEditRequestDto.getPassword());
-            user.updatePw(encodPassword);
+            String encodePassword = bCryptPasswordEncoder.encode(pwEditRequestDto.getPassword());
+            user.updatePw(encodePassword);
         }
     }
 }

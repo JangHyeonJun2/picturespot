@@ -1,6 +1,7 @@
 package com.sparta.hanghae.picturespot.dto;
 
 import com.sparta.hanghae.picturespot.model.Board;
+import com.sparta.hanghae.picturespot.model.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
@@ -28,8 +29,10 @@ public class BoardDto {
 
     private LocalDateTime modified;
 
+    private UserDto userDto;
 
-    public BoardDto(Board board, List<CommentDto> commentDtos){
+
+    public BoardDto(Board board, List<CommentDto> commentDtos, UserDto userDto){
         //this.id = board.getId();
         this.title = board.getTitle();
         this.content = board.getContent();
@@ -42,6 +45,8 @@ public class BoardDto {
         this.writer = board.getUser().getNickname();
         this.modified = board.getModified();
         this.commentDtos = commentDtos;
+
+        this.userDto = userDto;
     }
 
 
