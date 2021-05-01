@@ -23,14 +23,16 @@ public class BoardController {
     private final BoardService boardService;
     private final CustomExceptionController customExceptionController;
     private final S3Service s3Service;
+
     //게시글(커뮤니티)페이지
     @GetMapping("/board")
-    public ResponseEntity getBoards() {
-        List<BoardsGetResponseDto> boards = boardService.getBoards();
+    public ResponseEntity getBoards(@AuthenticationPrincipal User user) {
+        List<BoardsGetResponseDto> boards = boardService.getBoards(user);
         return customExceptionController.ok("게시글 정보 입니다.", boards);
     }
 
     //게시물 작성
+    //TODO 클라인트분들에게 장소도 넘겨주는지? 물어보기
     @PostMapping("/board")
     public ResponseEntity save(@RequestParam(value = "file", required = false) List<MultipartFile> files, @RequestParam("title") String title,
                                @RequestParam("content") String content, @RequestParam("category") String category, @RequestParam("latitude") BigDecimal latitude,

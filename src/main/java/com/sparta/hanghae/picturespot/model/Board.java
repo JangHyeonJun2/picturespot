@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -30,6 +32,9 @@ public class Board extends Timestamped{
     private BigDecimal longitude;
 
     private int likeCount;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    private List<Heart> hearts = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
