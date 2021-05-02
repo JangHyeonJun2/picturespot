@@ -1,7 +1,6 @@
 package com.sparta.hanghae.picturespot.service;
 
 import com.sparta.hanghae.picturespot.dto.request.board.BoardSaveRequestDto;
-import com.sparta.hanghae.picturespot.dto.response.board.BoardGetResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.board.BoardsGetResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.board.BoardSaveResponseDto;
 import com.sparta.hanghae.picturespot.model.Board;

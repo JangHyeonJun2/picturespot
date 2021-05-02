@@ -31,7 +31,7 @@ public class Board extends Timestamped{
 
     private BigDecimal longitude;
 
-    private int likeCount;
+//    private int likeCount;
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
     private List<Heart> hearts = new ArrayList<>();
@@ -48,7 +48,7 @@ public class Board extends Timestamped{
         this.imgUrls = imgUrls;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.likeCount = likeCount;
+//        this.likeCount = likeCount;
         this.user = user;
     }
 }

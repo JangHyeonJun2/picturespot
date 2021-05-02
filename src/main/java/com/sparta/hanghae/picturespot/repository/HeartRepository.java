@@ -11,4 +11,5 @@ public interface HeartRepository extends JpaRepository<Heart, Long> {
     List<Heart> findAllByBoardId(Long boardId);
 
     boolean existsByBoardIdAndUserId(Long boardId, Long loginUserId);
+    Heart findByBoardIdAndUserId(Long boardId, Long loginUserId);
 }
