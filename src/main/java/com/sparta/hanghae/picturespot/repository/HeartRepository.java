@@ -11,5 +11,4 @@ public interface HeartRepository extends JpaRepository<Heart, Long> {
     List<Heart> findAllByBoardId(Long boardId);
 
     boolean existsByBoardIdAndUserId(Long boardId, Long loginUserId);
-    int findLikeCountByBoardId(Long boardId);
 }
