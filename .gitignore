@@ -35,4 +35,5 @@ out/
 
 ### VS Code ###
 .vscode/
-application.yml
+src/main/resources/application.yml
+/Users/janghyeonjun/Downloads/picturespot/src/main/resources/application.yml
