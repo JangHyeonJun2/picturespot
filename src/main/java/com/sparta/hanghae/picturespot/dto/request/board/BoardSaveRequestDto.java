@@ -17,10 +17,11 @@ public class BoardSaveRequestDto {
     private BigDecimal latitude;
     private BigDecimal logitude;
     private String[] imgUrls;
+    private String spotName;
     private User user;
 
     @Builder
-    public BoardSaveRequestDto(String title, String content, String category, BigDecimal latitude, BigDecimal logitude, String[] imgUrls, User user) {
+    public BoardSaveRequestDto(String title, String content, String category, BigDecimal latitude, BigDecimal logitude, String[] imgUrls, String spotName, User user) {
         this.title = title;
         this.content = content;
         this.category = category;
@@ -32,6 +33,7 @@ public class BoardSaveRequestDto {
             this.imgUrls[i] = imgUrls[i];
 //            System.out.println(this.imgUrls[i]);
         }
+        this.spotName = spotName;
         this.user = user;
     }
 
@@ -43,6 +45,7 @@ public class BoardSaveRequestDto {
                 .latitude(latitude)
                 .longitude(logitude)
                 .imgUrls(imgUrls)
+                .spotName(spotName)
                 .user(user)
                 .build();
     }
