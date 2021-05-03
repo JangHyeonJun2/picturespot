@@ -14,10 +14,6 @@ public class Heart {
     @GeneratedValue
     private Long id;
 
-    private boolean liked;
-
-    private int likeCount;
-
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;

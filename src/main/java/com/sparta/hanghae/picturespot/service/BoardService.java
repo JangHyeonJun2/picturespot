@@ -52,10 +52,13 @@ public class BoardService {
     public List<BoardsGetResponseDto> getBoards(User loginUser) {
         List<BoardsGetResponseDto> boardGetResponseDtoList = new ArrayList<>();
         List<Board> boardAll = boardRepository.findAll();
-
+        boolean likeCheck = true;
         for (int i=0; i<boardAll.size(); i++) {
             //로그인 사용자가 게시물을 좋아요 했는지 안했는지 체크!
-            boolean likeCheck = heartRepository.existsByBoardIdAndUserId(boardAll.get(i).getId(), loginUser.getId());
+            if (loginUser == null) {//로그인이 되어있지 않은 사용자일 때
+                likeCheck = false;
+            } else //로그인이 되어있는 사용자 일 때
+                likeCheck = heartRepository.existsByBoardIdAndUserId(boardAll.get(i).getId(), loginUser.getId());
             //게시물에 대한 좋아요 개수
             List<Heart> allByBoardId = heartRepository.findAllByBoardId(boardAll.get(i).getId());
 
