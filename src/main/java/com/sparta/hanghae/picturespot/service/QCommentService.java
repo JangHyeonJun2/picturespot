@@ -26,10 +26,10 @@ public class QCommentService {
     //문의하기 댓글 쓰기
     @Transactional
     public ResponseEntity createQComment(Long qnaId, QCommentRequestDto qCommentRequestDto, User user){
-        if (user.getRole().equals("USER")){
+        String role = user.getRole().toString();
+        if (!role.equals("ADMIN")){
             throw new IllegalArgumentException("관리자만 댓글을 작성할 수 있습니다");
         }
-        //System.out.println(user.getRole());
         Question question = questionRepository.findById(qnaId).orElseThrow(
                 () -> new IllegalArgumentException("게시글이 없습니다")
         );
@@ -42,7 +42,8 @@ public class QCommentService {
     //문의하기 댓글 수정
     @Transactional
     public ResponseEntity updateQComment(Long qnaId, Long qcommentId, QCommentRequestDto qCommentRequestDto, User user){
-        if (user.getRole().equals("USER")){
+        String role = user.getRole().toString();
+        if (!role.equals("ADMIN")){
             throw new IllegalArgumentException("관리자만 댓글을 수정할 수 있습니다");
         }
         QComment qComment = qCommentRepository.findByQuestionIdAndId(qnaId, qcommentId).orElseThrow(
@@ -56,7 +57,8 @@ public class QCommentService {
     //문의하기 댓글 삭제
     @Transactional
     public ResponseEntity deleteQComment(Long qcommentId, Long qnaId, User user){
-        if (user.getRole().equals("USER")){
+        String role = user.getRole().toString();
+        if (!role.equals("ADMIN")){
             throw new IllegalArgumentException("관리자만 댓글을 삭제할 수 있습니다");
         }
         QComment qComment = qCommentRepository.findByQuestionIdAndId(qnaId, qcommentId).orElseThrow(
