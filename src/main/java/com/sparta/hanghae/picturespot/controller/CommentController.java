@@ -1,7 +1,9 @@
 package com.sparta.hanghae.picturespot.controller;
 
 import com.sparta.hanghae.picturespot.dto.request.Comment.CommentSaveRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.Comment.CommentUpdateRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.comment.CommentSaveResponseDto;
+import com.sparta.hanghae.picturespot.dto.response.comment.CommentUpdateResponseDto;
 import com.sparta.hanghae.picturespot.model.Comment;
 import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
@@ -9,10 +11,7 @@ import com.sparta.hanghae.picturespot.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,4 +30,17 @@ public class CommentController {
         }else
             return customExceptionController.ok("댓글이 저장되어 있습니다.", commentSaveResponseDto);
     }
+
+    //댓글 수정
+    @PutMapping("/board/comment/{commentId}")
+    public ResponseEntity updateComment(@PathVariable Long commentId, @RequestBody CommentUpdateRequestDto requestDto, @AuthenticationPrincipal User user) {
+        CommentUpdateResponseDto responseDto = commentService.updateComment(commentId, requestDto, user);
+        if (responseDto != null) {
+            return customExceptionController.ok("댓글이 수정되었습니다.", responseDto);
+        } else
+            return customExceptionController.error("사용자의 댓글이 아닙니다.");
+    }
+
+
+
 }

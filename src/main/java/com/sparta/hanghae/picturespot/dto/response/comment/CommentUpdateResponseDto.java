@@ -8,16 +8,14 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CommentSaveResponseDto {
+public class CommentUpdateResponseDto {
     private String content;
     private User user;
     private Board board;
 
-    public CommentSaveResponseDto(Comment entity) {
+    public CommentUpdateResponseDto(Comment entity) {
         this.content = entity.getContent();
         this.user = entity.getUser();
         this.board = entity.getBoard();
     }
 }
-
-

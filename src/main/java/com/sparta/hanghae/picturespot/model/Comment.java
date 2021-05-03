@@ -1,5 +1,6 @@
 package com.sparta.hanghae.picturespot.model;
 
+import com.sparta.hanghae.picturespot.dto.request.Comment.CommentUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,5 +32,10 @@ public class Comment extends Timestamped{
         this.content = content;
         this.user = user;
         this.board = board;
+    }
+
+    public Comment update(CommentUpdateRequestDto requestDto) {
+        this.content = requestDto.getContent();
+        return this;
     }
 }
