@@ -98,6 +98,7 @@ public class UserService {
             String auth = certified_key();
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
+//            message.setFrom(email);
             message.setSubject("이메일 인증");
             message.setText(auth);
             javaMailSender.send(message);

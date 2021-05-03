@@ -4,7 +4,6 @@ import com.sparta.hanghae.picturespot.dto.request.Comment.CommentSaveRequestDto;
 import com.sparta.hanghae.picturespot.dto.request.Comment.CommentUpdateRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.comment.CommentSaveResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.comment.CommentUpdateResponseDto;
-import com.sparta.hanghae.picturespot.model.Comment;
 import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import com.sparta.hanghae.picturespot.service.CommentService;
@@ -41,6 +40,10 @@ public class CommentController {
             return customExceptionController.error("사용자의 댓글이 아닙니다.");
     }
 
-
-
+//    댓글 삭제
+    @DeleteMapping("/board/comment/{commentId}")
+    public ResponseEntity deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal User user) {
+        commentService.deleteComment(commentId, user);
+        return customExceptionController.ok("댓글이 삭제되었습니다..",commentId);
+    }
 }

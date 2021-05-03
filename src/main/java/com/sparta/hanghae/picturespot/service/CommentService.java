@@ -38,4 +38,13 @@ public class CommentService {
         } else
             return null;
     }
+
+    @Transactional
+    public void deleteComment(Long commentId, User user) {
+        Comment findComment = commentRepository.findById(commentId).orElseThrow(() -> new IllegalArgumentException("해당 댓글이 없습니다..."));
+
+        if (user.getId().equals(findComment.getUser().getId())) {
+            commentRepository.deleteById(commentId);
+        }
+    }
 }
