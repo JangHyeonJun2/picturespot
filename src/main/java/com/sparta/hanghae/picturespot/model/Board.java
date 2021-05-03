@@ -33,15 +33,15 @@ public class Board extends Timestamped{
 
 //    private int likeCount;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<Heart> hearts = new ArrayList<>();
+//    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+//    private List<Heart> hearts = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
 
     @Builder
-    public Board(String title, String content, String category, String[] imgUrls, BigDecimal latitude, BigDecimal longitude, int likeCount, User user) {
+    public Board(String title, String content, String category, String[] imgUrls, BigDecimal latitude, BigDecimal longitude, User user) {
         this.title = title;
         this.content = content;
         this.category = category;
