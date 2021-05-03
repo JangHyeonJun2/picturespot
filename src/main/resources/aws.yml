@@ -1,0 +1,17 @@
+cloud:
+  aws:
+    s3:
+      bucket: picturespot
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+#spring:
+#  datasource:
+#    url: jdbc:h2:tcp://localhost/~/picturespot
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: update

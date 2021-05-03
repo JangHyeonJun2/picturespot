@@ -1,7 +1,7 @@
 package com.sparta.hanghae.picturespot.controller;
 
-import com.sparta.hanghae.picturespot.dto.requestDto.QuestionRequestDto;
-import com.sparta.hanghae.picturespot.dto.reponseDto.QuestionResponseDto;
+import com.sparta.hanghae.picturespot.dto.request.question.QuestionRequestDto;
+import com.sparta.hanghae.picturespot.dto.response.question.QuestionResponseDto;
 import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.service.QuestionService;
 import lombok.RequiredArgsConstructor;

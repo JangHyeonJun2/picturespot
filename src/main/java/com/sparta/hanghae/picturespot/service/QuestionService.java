@@ -1,8 +1,8 @@
 package com.sparta.hanghae.picturespot.service;
 
-import com.sparta.hanghae.picturespot.dto.reponseDto.QCommentResponseDto;
-import com.sparta.hanghae.picturespot.dto.requestDto.QuestionRequestDto;
-import com.sparta.hanghae.picturespot.dto.reponseDto.QuestionResponseDto;
+import com.sparta.hanghae.picturespot.dto.response.question.QCommentResponseDto;
+import com.sparta.hanghae.picturespot.dto.request.question.QuestionRequestDto;
+import com.sparta.hanghae.picturespot.dto.response.question.QuestionResponseDto;
 import com.sparta.hanghae.picturespot.dto.Message;
 import com.sparta.hanghae.picturespot.model.QComment;
 import com.sparta.hanghae.picturespot.model.Question;
@@ -49,12 +49,12 @@ public class QuestionService {
                 () -> new IllegalArgumentException("게시물이 없습니다")
         );
         List<QComment> qCommentList = qCommentRepository.findAllByQuestionIdOrderByModifiedDesc(question.getId());
-        List<QCommentResponseDto> qCommentReponseDtos = new ArrayList<>();
+        List<QCommentResponseDto> qCommentResponseDtos = new ArrayList<>();
         for (QComment qComment : qCommentList){
             QCommentResponseDto qCommentDto = new QCommentResponseDto(qComment);
-            qCommentReponseDtos.add(qCommentDto);
+            qCommentResponseDtos.add(qCommentDto);
         }
-        QuestionResponseDto questionReponseDto = new QuestionResponseDto(question, qCommentReponseDtos);
+        QuestionResponseDto questionReponseDto = new QuestionResponseDto(question, qCommentResponseDtos);
         return questionReponseDto;
     }
 

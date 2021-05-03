@@ -1,6 +1,6 @@
 package com.sparta.hanghae.picturespot.model;
 
-import com.sparta.hanghae.picturespot.dto.requestDto.QCommentRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.question.QCommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,9 +25,9 @@ public class QComment extends Timestamped{
     private Question question;
 
 
-    public QComment(Question question, QCommentRequestDto qCommentRequestDto){
+    public QComment(Question question, QCommentRequestDto qCommentRequestDto, User user){
         this.content = qCommentRequestDto.getContent();
-        //this.user = user;
+        this.user = user;
         this.question = question;
     }
 

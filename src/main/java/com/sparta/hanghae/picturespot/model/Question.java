@@ -1,6 +1,6 @@
 package com.sparta.hanghae.picturespot.model;
 
-import com.sparta.hanghae.picturespot.dto.requestDto.QuestionRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.question.QuestionRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

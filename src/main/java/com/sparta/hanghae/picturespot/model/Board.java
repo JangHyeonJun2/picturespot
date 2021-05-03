@@ -22,7 +22,8 @@ public class Board extends Timestamped{
 
     private String category;
 
-    private String imgUrl;
+    @Column(columnDefinition="TEXT")
+    private String[] imgUrls;
 
     private BigDecimal latitude;
 
@@ -37,11 +38,11 @@ public class Board extends Timestamped{
     private User user;
 
     @Builder
-    public Board(String title, String content, String category, String imgUrl, BigDecimal latitude, BigDecimal longitude, int likeCount, User user) {
+    public Board(String title, String content, String category, String[] imgUrls, BigDecimal latitude, BigDecimal longitude, int likeCount, User user) {
         this.title = title;
         this.content = content;
         this.category = category;
-        this.imgUrl = imgUrl;
+        this.imgUrls = imgUrls;
         this.latitude = latitude;
         this.longitude = longitude;
         this.likeCount = likeCount;

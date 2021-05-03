@@ -1,6 +1,6 @@
-package com.sparta.hanghae.picturespot.dto.reponseDto;
+package com.sparta.hanghae.picturespot.dto.response.question;
 
-import com.sparta.hanghae.picturespot.dto.CommentDto;
+import com.sparta.hanghae.picturespot.dto.response.question.QCommentResponseDto;
 import com.sparta.hanghae.picturespot.model.Question;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

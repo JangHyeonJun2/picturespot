@@ -1,6 +1,7 @@
-package com.sparta.hanghae.picturespot.dto.reponseDto;
+package com.sparta.hanghae.picturespot.dto.response.question;
 
 import com.sparta.hanghae.picturespot.model.QComment;
+import com.sparta.hanghae.picturespot.model.UserRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 public class QCommentResponseDto {
     private Long id;
     private String content;
-    private String writer;
+    private UserRole writer;
     private Long questionId;
 
     private LocalDateTime modified;
@@ -19,7 +20,7 @@ public class QCommentResponseDto {
     public QCommentResponseDto(QComment qComment){
         this.id = qComment.getId();
         this.content = qComment.getContent();
-        //this.writer = qComment.getUser().getNickname();
+        this.writer = qComment.getUser().getRole();
         this.questionId = qComment.getQuestion().getId();
         this.modified = qComment.getModified();
     }

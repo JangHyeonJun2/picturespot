@@ -1,10 +1,11 @@
 package com.sparta.hanghae.picturespot.controller;
 
-import com.sparta.hanghae.picturespot.dto.requestDto.QCommentRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.question.QCommentRequestDto;
 import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.service.QCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
@@ -19,20 +20,20 @@ public class QCommentController {
 
     //문의하기 댓글 쓰기
     @PostMapping("/qna/{qnaId}/qcomment")
-    public ResponseEntity createQComment(@PathVariable Long qnaId, @RequestBody QCommentRequestDto qCommentRequestDto){
-        return qCommentService.createQComment(qnaId, qCommentRequestDto);
+    public ResponseEntity createQComment(@PathVariable Long qnaId, @RequestBody QCommentRequestDto qCommentRequestDto, @AuthenticationPrincipal User user){
+        return qCommentService.createQComment(qnaId, qCommentRequestDto, user);
 
     }
 
     //문의하기 댓글 수정
     @PutMapping("/qna/{qnaId}/qcomment/{qcommentId}")
-    public ResponseEntity updateQComment(@PathVariable Long qnaId, @PathVariable Long qcommentId, @RequestBody QCommentRequestDto qCommentRequestDto){
-        return qCommentService.updateQComment(qnaId, qcommentId, qCommentRequestDto);
+    public ResponseEntity updateQComment(@PathVariable Long qnaId, @PathVariable Long qcommentId, @RequestBody QCommentRequestDto qCommentRequestDto, @AuthenticationPrincipal User user){
+        return qCommentService.updateQComment(qnaId, qcommentId, qCommentRequestDto, user);
     }
 
     //문의하기 댓글 삭제
     @DeleteMapping("/qna/{qnaId}/qcomment/{qcommentId}")
-    public ResponseEntity deleteQComment(@PathVariable Long qnaId, @PathVariable Long qcommentId){
-        return qCommentService.deleteQComment(qcommentId, qnaId);
+    public ResponseEntity deleteQComment(@PathVariable Long qnaId, @PathVariable Long qcommentId, @AuthenticationPrincipal User user){
+        return qCommentService.deleteQComment(qcommentId, qnaId, user);
     }
 }

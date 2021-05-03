@@ -3,6 +3,7 @@ package com.sparta.hanghae.picturespot.config;
 
 import com.sparta.hanghae.picturespot.config.jwt.JwtAuthenticationFilter;
 import com.sparta.hanghae.picturespot.config.jwt.JwtTokenProvider;
+import com.sparta.hanghae.picturespot.service.PrincipalOauth2UserService;
 import lombok.RequiredArgsConstructor;
 
 import org.modelmapper.ModelMapper;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,10 +25,12 @@ import org.springframework.web.filter.CorsFilter;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
     private final JwtTokenProvider jwtTokenProvider;
+    private final PrincipalOauth2UserService principalOauth2UserService;
 
     @Bean
     public ModelMapper modelMapper(){
@@ -63,11 +67,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 권한 설정
                 .authorizeRequests()
                 .antMatchers("/user/**").permitAll()
+                .antMatchers("/index").permitAll()
                 .antMatchers(HttpMethod.GET, "/map/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/board/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/qna/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/qna/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT,"/qna/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE,"/qna/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/board/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
+//                .oauth2Login()
+//                .loginPage("/index")
+                //.userInfoEndpoint()
+                //.userService(principalOauth2UserService)
+
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class);
     }
