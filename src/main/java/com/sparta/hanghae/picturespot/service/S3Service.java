@@ -1,5 +1,6 @@
 package com.sparta.hanghae.picturespot.service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -48,15 +49,6 @@ public class S3Service {
             uploadImgUrl[i] = putS3(uploadFile[i],resultFileName);
             removeNewFile(uploadFile[i]);
         }
-//        String fileName = uploadFile.getName().replace(" ","");
-//        Date date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
-//        SimpleDateFormat fourteen_format = new SimpleDateFormat("yyyyMMddHHmmss");
-//
-//        String dateFileName = fourteen_format.format(date_now) + fileName;
-//
-//        String resultFileName = dirName + "/" + dateFileName;
-//        String uploadImageUrl = putS3(uploadFile, resultFileName);
-//        removeNewFile(uploadFile);
         return uploadImgUrl;
     }
 
@@ -77,7 +69,6 @@ public class S3Service {
     private Optional<File[]> convert(List<MultipartFile> file) throws IOException {
         File[] convertFiles = new File[file.size()];
         for (int i=0; i<file.size(); i++) {
-
             convertFiles[i] = new File(file.get(i).getOriginalFilename());
             if (!convertFiles[i].createNewFile()) {
                 return Optional.empty();

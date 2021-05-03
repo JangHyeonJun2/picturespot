@@ -1,8 +1,8 @@
 //package com.sparta.hanghae.picturespot.service;
 //
-//import com.sparta.hanghae.picturespot.dto.BoardDto;
 //import com.sparta.hanghae.picturespot.dto.CommentDto;
 //import com.sparta.hanghae.picturespot.dto.UserDto;
+//import com.sparta.hanghae.picturespot.dto.response.board.BoardsGetResponseDto;
 //import com.sparta.hanghae.picturespot.model.Board;
 //import com.sparta.hanghae.picturespot.model.Comment;
 //import com.sparta.hanghae.picturespot.model.Heart;
@@ -30,9 +30,9 @@
 //    private final UserRepository userRepository;
 //
 //    //내 명소(내가올린게시물) + 댓글 + 좋아요 + user정보(이름, 프로필사진, intro메시지)
-//    public List<BoardDto> getMyboard(User user){
+//    public List<BoardsGetResponseDto> getMyboard(User user){
 //        List<Board> boardList = boardRepository.findByUserOrderByModifiedDesc(user); //user로 게시물 찾는다
-//        List<BoardDto> boardDtoList = new ArrayList<>();
+//        List<BoardsGetResponseDto> boardDtoList = new ArrayList<>();
 //        for (Board board : boardList){
 //            Long boardId = board.getId();
 //            List<Comment> comments = commentRepository.findAllByBoardIdOrderByModifiedDesc(boardId);
@@ -43,15 +43,15 @@
 //                commentDtos.add(commentDto); //댓글을 dto리스트에 담는다
 //            }
 //            UserDto userDto = new UserDto(user);
-//            BoardDto boardDto = new BoardDto(board, commentDtos, userDto); //게시글 dto에 게시글과 댓글 dto리스트 담는다
+//            BoardsGetResponseDto boardDto = new BoardsGetResponseDto(board, commentDtos, userDto); //게시글 dto에 게시글과 댓글 dto리스트 담는다
 //            boardDtoList.add(boardDto); //게시글 dto리스트에 게시글 dto담는다
 //        }
 //        return boardDtoList;
 //    }
 //
 //    //찜 명소(좋아요한 게시물) + 댓글 + 좋아요 + user정보
-//    public List<BoardDto> getMylikeboard(User user){
-//        List<BoardDto> boardDtoList = new ArrayList<>();
+//    public List<BoardsGetResponseDto> getMylikeboard(User user){
+//        List<BoardsGetResponseDto> boardDtoList = new ArrayList<>();
 //        List<Heart> heartList = heartRepository.findAllByUserAndLikedOrderByModifiedDesc(user,true);
 //
 //        for (Heart hearts : heartList){

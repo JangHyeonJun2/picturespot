@@ -1,12 +1,13 @@
 package com.sparta.hanghae.picturespot.service;
 
 import com.sparta.hanghae.picturespot.dto.request.board.BoardSaveRequestDto;
-import com.sparta.hanghae.picturespot.dto.response.board.BoardGetResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.board.BoardsGetResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.board.BoardSaveResponseDto;
 import com.sparta.hanghae.picturespot.model.Board;
+import com.sparta.hanghae.picturespot.model.Heart;
 import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.repository.BoardRepository;
+import com.sparta.hanghae.picturespot.repository.HeartRepository;
 import com.sparta.hanghae.picturespot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.List;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final HeartRepository heartRepository;
 
     //게시물 저장
     @Transactional
@@ -47,18 +49,18 @@ public class BoardService {
     }
 
     //커뮤니티 게시글 조회
-    public List<BoardsGetResponseDto> getBoards() {
+    public List<BoardsGetResponseDto> getBoards(User loginUser) {
         List<BoardsGetResponseDto> boardGetResponseDtoList = new ArrayList<>();
-        List<User> userList = userRepository.findAll();
+        List<Board> boardAll = boardRepository.findAll();
 
-        for (int i=0; i<userList.size(); i++) {
-            User user = userList.get(i);
-            BoardsGetResponseDto brdto = new BoardsGetResponseDto(user);
-            List<Board> boardList = boardRepository.findAllByUserId(user.getId());
-            for (int j=0; j<boardList.size(); j++) {
-                BoardGetResponseDto boardGetResponseDto = new BoardGetResponseDto(boardList.get(i));
-                brdto.getBoardGetResponseDtos().add(boardGetResponseDto);
-            }
+        for (int i=0; i<boardAll.size(); i++) {
+            //로그인 사용자가 게시물을 좋아요 했는지 안했는지 체크!
+            boolean likeCheck = heartRepository.existsByBoardIdAndUserId(boardAll.get(i).getId(), loginUser.getId());
+            //게시물에 대한 좋아요 개수
+            List<Heart> allByBoardId = heartRepository.findAllByBoardId(boardAll.get(i).getId());
+
+            BoardsGetResponseDto brdto = new BoardsGetResponseDto(boardAll.get(i).getUser(), boardAll.get(i), likeCheck, allByBoardId.size());
+
             boardGetResponseDtoList.add(brdto);
         }
 

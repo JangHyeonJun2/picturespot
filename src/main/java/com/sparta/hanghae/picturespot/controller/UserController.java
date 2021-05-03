@@ -40,26 +40,27 @@ public class UserController {
             return new ResponseEntity(messageDto,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         // 닉네임 중복체크 && 이메일 중복체크
+        MessageDto messageDto = null;
         if(userService.nickchk(signupRequestDto.getNickname()) && (userService.emailchk(signupRequestDto.getEmail()))){ // 이거는 그냥 중복체크만 한거인데 인증을 한 상태인지 어캐 알지
             EmailCheck emailCheck = emailCheckRepository.findByEmail(signupRequestDto.getEmail());
-            if(emailCheck==null){
-                MessageDto messageDto = new MessageDto("이메일 인증을 해주세요");
-                return new ResponseEntity(messageDto,HttpStatus.INTERNAL_SERVER_ERROR);
-            }else{
+//            if(emailCheck==null){
+//                MessageDto messageDto = new MessageDto("이메일 인증을 해주세요");
+//                return new ResponseEntity(messageDto,HttpStatus.INTERNAL_SERVER_ERROR);
+//            }else{
                 // 이메일 인증상태 확인
-                if(emailCheck.getAuthCode().equals("Y")){
-                    userService.signup(signupRequestDto);
-                    MessageDto messageDto = new MessageDto("성공");
+//                if(emailCheck.getAuthCode().equals("Y")){
+            userService.signup(signupRequestDto);
+            messageDto = new MessageDto("성공");
                     return new ResponseEntity(messageDto, HttpStatus.OK);
-                }else{
-                    MessageDto messageDto = new MessageDto("이메일 인증을 해주세요");
-                    return new ResponseEntity(messageDto,HttpStatus.INTERNAL_SERVER_ERROR);
-                }
+//                }else{
+//                    MessageDto messageDto = new MessageDto("이메일 인증을 해주세요");
+//                    return new ResponseEntity(messageDto,HttpStatus.INTERNAL_SERVER_ERROR);
+//                }
             }
-        }else{
-            MessageDto messageDto = new MessageDto("중복체크를 해주세요");
+//        }else{
+//            MessageDto messageDto = new MessageDto("중복체크를 해주세요");
             return new ResponseEntity(messageDto,HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+//        }
 
     }
 

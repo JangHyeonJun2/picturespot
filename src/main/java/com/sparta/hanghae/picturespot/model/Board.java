@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -29,9 +31,6 @@ public class Board extends Timestamped{
 
     private BigDecimal longitude;
 
-    //private String place; 장소 추가
-
-    private int likeCount;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
@@ -45,7 +44,7 @@ public class Board extends Timestamped{
         this.imgUrls = imgUrls;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.likeCount = likeCount;
+//        this.likeCount = likeCount;
         this.user = user;
     }
 }
