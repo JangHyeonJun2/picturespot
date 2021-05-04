@@ -36,12 +36,12 @@ public class BoardController {
     @PostMapping("/board")
     public ResponseEntity save(@RequestParam(value = "file", required = false) List<MultipartFile> files, @RequestParam("title") String title,
                                @RequestParam("content") String content, @RequestParam("category") String category, @RequestParam("latitude") BigDecimal latitude,
-                               @RequestParam("longitude") BigDecimal longitude, @AuthenticationPrincipal User user) throws IOException {
+                               @RequestParam("longitude") BigDecimal longitude, @RequestParam("spotName") String spotName, @AuthenticationPrincipal User user) throws IOException {
 
 
         String[] imgUrls = s3Service.upload(files, "board");
 
-        BoardSaveRequestDto boardSaveRequestDto = new BoardSaveRequestDto(title,content,category,latitude,longitude,imgUrls,user);
+        BoardSaveRequestDto boardSaveRequestDto = new BoardSaveRequestDto(title,content,category,latitude,longitude,imgUrls, spotName, user);
         BoardSaveResponseDto responseDto = boardService.save(boardSaveRequestDto);
         return customExceptionController.ok("게시물을 저장하였습니다.", responseDto);
     }

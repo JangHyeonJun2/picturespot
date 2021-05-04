@@ -29,20 +29,22 @@ public class Board extends Timestamped{
 
     private BigDecimal longitude;
 
+    private String spotName;
+
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
 
     @Builder
-    public Board(String title, String content, String category, String[] imgUrls, BigDecimal latitude, BigDecimal longitude, User user) {
+    public Board(String title, String content, String category, String[] imgUrls, BigDecimal latitude, BigDecimal longitude, String spotName, User user) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.imgUrls = imgUrls;
         this.latitude = latitude;
         this.longitude = longitude;
-//        this.likeCount = likeCount;
+        this.spotName = spotName;
         this.user = user;
     }
 }

@@ -1,7 +1,6 @@
 package com.sparta.hanghae.picturespot.dto.response.mypage;
 
 import com.sparta.hanghae.picturespot.model.Board;
-import com.sparta.hanghae.picturespot.model.Comment;
 import com.sparta.hanghae.picturespot.model.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +25,7 @@ public class MypageResponseDto {
     private String content;
     private String[] imgUrls;
     private String category;
+    private String spotName;
     private LocalDateTime modified;
 
     //heart
@@ -48,6 +48,7 @@ public class MypageResponseDto {
         this.title = boardEntity.getTitle();
         this.content = boardEntity.getContent();
         this.category = boardEntity.getCategory();
+        this.spotName = boardEntity.getSpotName();
         this.modified = boardEntity.getModified();
         //게시물 배열 초기화
         this.imgUrls = new String[boardEntity.getImgUrls().length];

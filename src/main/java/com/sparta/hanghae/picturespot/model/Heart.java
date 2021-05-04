@@ -14,15 +14,12 @@ public class Heart {
     @GeneratedValue
     private Long id;
 
-//    private boolean liked;
-//
-//    private int likeCount;
-
-    @ManyToOne(cascade = CascadeType.ALL)
+    //@ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "BOARD_ID")
     private Board board;
 

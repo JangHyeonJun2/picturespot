@@ -13,10 +13,10 @@ import com.sparta.hanghae.picturespot.repository.EmailCheckRepository;
 import com.sparta.hanghae.picturespot.repository.PwdCheckRepository;
 import com.sparta.hanghae.picturespot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +24,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 import org.springframework.beans.factory.annotation.Value;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -99,6 +97,7 @@ public class UserService {
     // 이메일 인증발송
     @Transactional
     public AuthResponseDto emailchkAuth(String email) {
+
         User user = userRepository.findByEmail(email);
         if(user == null){
             // 이메일 발송
