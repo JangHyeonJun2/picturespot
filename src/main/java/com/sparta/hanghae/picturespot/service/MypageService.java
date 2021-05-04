@@ -1,84 +1,91 @@
-//package com.sparta.hanghae.picturespot.service;
-//
-//import com.sparta.hanghae.picturespot.dto.CommentDto;
-//import com.sparta.hanghae.picturespot.dto.UserDto;
-//import com.sparta.hanghae.picturespot.dto.response.board.BoardsGetResponseDto;
-//import com.sparta.hanghae.picturespot.model.Board;
-//import com.sparta.hanghae.picturespot.model.Comment;
-//import com.sparta.hanghae.picturespot.model.Heart;
-//import com.sparta.hanghae.picturespot.model.User;
-//import com.sparta.hanghae.picturespot.repository.BoardRepository;
-//import com.sparta.hanghae.picturespot.repository.CommentRepository;
-//import com.sparta.hanghae.picturespot.repository.HeartRepository;
-//import com.sparta.hanghae.picturespot.repository.UserRepository;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.stereotype.Service;
-//
-//import javax.transaction.Transactional;
-//import java.util.ArrayList;
-//import java.util.List;
-//import java.util.Optional;
-//
-//@RequiredArgsConstructor
-//@Service
-//public class MypageService {
-//
-//    private final BoardRepository boardRepository;
-//    private final CommentRepository commentRepository;
-//    private final HeartRepository heartRepository;
-//    private final UserRepository userRepository;
-//
-//    //내 명소(내가올린게시물) + 댓글 + 좋아요 + user정보(이름, 프로필사진, intro메시지)
-//    public List<BoardsGetResponseDto> getMyboard(User user){
-//        List<Board> boardList = boardRepository.findByUserOrderByModifiedDesc(user); //user로 게시물 찾는다
-//        List<BoardsGetResponseDto> boardDtoList = new ArrayList<>();
-//        for (Board board : boardList){
-//            Long boardId = board.getId();
-//            List<Comment> comments = commentRepository.findAllByBoardIdOrderByModifiedDesc(boardId);
-//            //게시물 아이디로 해당 게시물에 달린 댓글들 찾는다
-//            List<CommentDto> commentDtos = new ArrayList<>();
-//            for (Comment comment : comments){
-//                CommentDto commentDto = new CommentDto(comment);
-//                commentDtos.add(commentDto); //댓글을 dto리스트에 담는다
-//            }
-//            UserDto userDto = new UserDto(user);
-//            BoardsGetResponseDto boardDto = new BoardsGetResponseDto(board, commentDtos, userDto); //게시글 dto에 게시글과 댓글 dto리스트 담는다
-//            boardDtoList.add(boardDto); //게시글 dto리스트에 게시글 dto담는다
-//        }
-//        return boardDtoList;
+package com.sparta.hanghae.picturespot.service;
+
+
+import com.sparta.hanghae.picturespot.dto.response.mypage.MypageCommentResponseDto;
+import com.sparta.hanghae.picturespot.dto.response.mypage.MypageResponseDto;
+import com.sparta.hanghae.picturespot.model.Board;
+import com.sparta.hanghae.picturespot.model.Comment;
+import com.sparta.hanghae.picturespot.model.Heart;
+import com.sparta.hanghae.picturespot.model.User;
+import com.sparta.hanghae.picturespot.repository.BoardRepository;
+import com.sparta.hanghae.picturespot.repository.CommentRepository;
+import com.sparta.hanghae.picturespot.repository.HeartRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+@RequiredArgsConstructor
+@Service
+public class MypageService {
+
+    private final BoardRepository boardRepository;
+    private final HeartRepository heartRepository;
+    private final CommentRepository commentRepository;
+
+
+    //내 명소(내가올린게시물) + 댓글 + 좋아요 + user정보(이름, 프로필사진, intro메시지)
+    public List<MypageResponseDto> getMyboard(User user){
+        List<MypageResponseDto> mypageDtoList = new ArrayList<>();
+
+        List<Board> boardList = boardRepository.findAllByUserIdOrderByModifiedDesc(user.getId()); //user로 게시물 찾는다
+        for (Board board : boardList){ //게시글
+            Long boardId = board.getId();
+            Long userId = user.getId();
+
+            List<Comment> comments = commentRepository.findAllByBoardIdOrderByModifiedDesc(boardId); //댓글
+            List<MypageCommentResponseDto> commentResponseDtos = new ArrayList<>();
+            for (Comment comment : comments){
+                MypageCommentResponseDto commentResponseDto = new MypageCommentResponseDto(comment);
+                commentResponseDtos.add(commentResponseDto);
+            }
+
+            boolean likeCheck = heartRepository.existsByBoardIdAndUserId(boardId, userId); //좋아요 여부
+            List<Heart> hearts = heartRepository.findAllByBoardId(boardId); //좋아요 수
+
+            MypageResponseDto mypageDto = new MypageResponseDto(user, board, commentResponseDtos, likeCheck, hearts.size());
+            //user정보, 게시글, 댓글, 좋아요 여부, 좋아요 수
+            mypageDtoList.add(mypageDto);
+        }
+        return mypageDtoList;
+    }
+
+
+    //찜 명소(좋아요한 게시물) + 댓글 + 좋아요 + user정보 ,내가 올린 게시물은 제외
+    public List<MypageResponseDto> getMylikeboard(User user){
+        List<MypageResponseDto> mypageDtoList = new ArrayList<>();
+
+        List<Heart> heartList = heartRepository.findAllByUser(user); //user가 누른 하트 찾기
+        for (Heart hearts : heartList){
+            Long boardId = hearts.getBoard().getId(); //user가 누른 하트에서 게시물 아이디 찾기
+            Board board = boardRepository.findByIdOrderByModifiedDesc(boardId).orElseThrow(//user가 좋아요 한 게시물
+                    () -> new IllegalArgumentException("찜한 명소가 없습니다.")
+            );
+            if (!board.getUser().getId().equals(user.getId())){ //게시물 작성자와 현재 user가 다를 때만(남이 쓴 게시물만)
+                List<Comment> comments = commentRepository.findAllByBoardIdOrderByModifiedDesc(board.getId()); //댓글
+                List<MypageCommentResponseDto> commentResponseDtos = new ArrayList<>();
+                for (Comment comment : comments){
+                    MypageCommentResponseDto commentResponseDto = new MypageCommentResponseDto(comment);
+                    commentResponseDtos.add(commentResponseDto);
+                }
+
+                List<Heart> heartsList = heartRepository.findAllByBoardId(boardId);
+                MypageResponseDto mypageDto = new MypageResponseDto(user, board, commentResponseDtos, true, heartsList.size());
+                //user정보, 게시글, 댓글, 좋아요 여부(true), 좋아요 수
+                mypageDtoList.add(mypageDto);
+            }
+        }
+        return mypageDtoList;
+    }
+
+
+    //프로필 수정
+//    @Transactional
+//    public ResponseEntity editProfile(User user, UserDto userDto){
+//        User editUser = userRepository.findByUser(user);
+//        //editUser.updateProfile(userDto);
+//        return ResponseEntity.ok().build();
 //    }
-//
-//    //찜 명소(좋아요한 게시물) + 댓글 + 좋아요 + user정보
-//    public List<BoardsGetResponseDto> getMylikeboard(User user){
-//        List<BoardsGetResponseDto> boardDtoList = new ArrayList<>();
-//        List<Heart> heartList = heartRepository.findAllByUserAndLikedOrderByModifiedDesc(user,true);
-//
-//        for (Heart hearts : heartList){
-//            Long boardId = hearts.getBoard().getId();
-//            Board board = boardRepository.findById(boardId).orElseThrow(
-//                    () -> new IllegalArgumentException("찜한 명소가 없습니다.")
-//            );
-//            List<Comment> commentList = commentRepository.findAllByBoardIdOrderByModifiedDesc(boardId);
-//            //게시물 아이디로 해당 게시물에 달린 댓글들 찾는다
-//            List<CommentDto> commentDtos = new ArrayList<>();
-//            for (Comment comment : commentList){
-//                CommentDto commentDto = new CommentDto(comment);
-//                commentDtos.add(commentDto); //댓글을 dto리스트에 담는다
-//            }
-//            UserDto userDto = new UserDto(user);
-//            BoardDto boardDto = new BoardDto(board, commentDtos, userDto); //게시글 dto에 게시글과 댓글 dto리스트 담는다
-//            boardDtoList.add(boardDto); //게시글 dto리스트에 게시글 dto담는다
-//        }
-//        return boardDtoList;
-//    }
-//
-//
-//    //프로필 수정
-////    @Transactional
-////    public ResponseEntity editProfile(User user, UserDto userDto){
-////        User editUser = userRepository.findByUser(user);
-////        //editUser.updateProfile(userDto);
-////        return ResponseEntity.ok().build();
-////    }
-//}
+}

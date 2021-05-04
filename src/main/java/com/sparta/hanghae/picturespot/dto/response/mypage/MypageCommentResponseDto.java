@@ -1,4 +1,4 @@
-package com.sparta.hanghae.picturespot.dto;
+package com.sparta.hanghae.picturespot.dto.response.mypage;
 
 import com.sparta.hanghae.picturespot.model.Comment;
 import lombok.Getter;
@@ -6,21 +6,21 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-
 @Getter
 @NoArgsConstructor
-public class CommentDto {
-    private Long id;
+public class MypageCommentResponseDto {
+    private Long boardId;
+    private Long commentId;
     private String content;
     private String writer;
-    private Long boardId;
     private LocalDateTime modified;
 
-    public CommentDto(Comment comment){
-        this.id = comment.getId();
-        this.content = comment.getContent();
-        this.writer = comment.getUser().getNickname();
+    public MypageCommentResponseDto(Comment comment){
         this.boardId = comment.getBoard().getId();
+        this.commentId = comment.getId();
+        this.writer = comment.getUser().getNickname();
+        this.content = comment.getContent();
         this.modified = comment.getModified();
     }
+
 }

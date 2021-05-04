@@ -1,7 +1,7 @@
 package com.sparta.hanghae.picturespot.service;
 
 import com.sparta.hanghae.picturespot.dto.request.question.QCommentRequestDto;
-import com.sparta.hanghae.picturespot.dto.Message;
+import com.sparta.hanghae.picturespot.dto.response.question.Message;
 import com.sparta.hanghae.picturespot.model.QComment;
 import com.sparta.hanghae.picturespot.model.Question;
 import com.sparta.hanghae.picturespot.model.User;

@@ -3,6 +3,7 @@ package com.sparta.hanghae.picturespot.controller;
 import com.sparta.hanghae.picturespot.dto.request.question.QuestionRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.question.QuestionResponseDto;
 import com.sparta.hanghae.picturespot.model.User;
+import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import com.sparta.hanghae.picturespot.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +17,22 @@ import java.util.List;
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final CustomExceptionController customExceptionController;
 
     //문의하기 리스트
     @GetMapping("/qna")
-    public List<QuestionResponseDto> getAllQuestions(@RequestParam("page") int page, @RequestParam("size") int size){
+    public ResponseEntity getAllQuestions(@RequestParam("page") int page, @RequestParam("size") int size){
         //----/qna?page={page}&size={size}
         page = page - 1;
-        return questionService.getAllQuestions(page, size);
+        List<QuestionResponseDto> questionResponseDtos = questionService.getAllQuestions(page, size);
+        return customExceptionController.ok("문의하기 리스트", questionResponseDtos);
     }
 
     //문의하기 상세
     @GetMapping("/qna/{qnaId}/detail")
-    public QuestionResponseDto getQDetail(@PathVariable Long qnaId){
-        return questionService.getQDetail(qnaId);
+    public ResponseEntity getQDetail(@PathVariable Long qnaId){
+        QuestionResponseDto questionResponseDto = questionService.getQDetail(qnaId);
+        return customExceptionController.ok("문의하기 상세", questionResponseDto);
     }
 
     //문의하기 글쓰기

@@ -31,6 +31,7 @@ public class BoardService {
 
         return new BoardSaveResponseDto(boardEntity);
     }
+
     //게시물 삭제
     @Transactional
     public Long delete(Long boardId, Long userId) {

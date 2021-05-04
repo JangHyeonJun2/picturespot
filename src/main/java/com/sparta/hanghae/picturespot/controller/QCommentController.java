@@ -21,7 +21,6 @@ public class QCommentController {
     @PostMapping("/qcomment/{qnaId}")
     public ResponseEntity createQComment(@PathVariable Long qnaId, @RequestBody QCommentRequestDto qCommentRequestDto, @AuthenticationPrincipal User user){
         return qCommentService.createQComment(qnaId, qCommentRequestDto, user);
-
     }
 
     //문의하기 댓글 수정

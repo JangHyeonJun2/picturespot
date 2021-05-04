@@ -11,8 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    List<Board> findByUserOrderByModifiedDesc(User user);
-    List<Board> findAllByUserId(Long id);
+    List<Board> findAllByUserIdOrderByModifiedDesc(Long userId);
+    Optional<Board> findByIdOrderByModifiedDesc(Long boardId);
+    //List<Board> findAllByUserId(Long id);
     Optional<Board> findById(Long BoardId);
 
 }

@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -37,7 +35,7 @@ public class Board extends Timestamped{
     private User user;
 
     @Builder
-    public Board(String title, String content, String category, String[] imgUrls, BigDecimal latitude, BigDecimal longitude, int likeCount, User user) {
+    public Board(String title, String content, String category, String[] imgUrls, BigDecimal latitude, BigDecimal longitude, User user) {
         this.title = title;
         this.content = content;
         this.category = category;

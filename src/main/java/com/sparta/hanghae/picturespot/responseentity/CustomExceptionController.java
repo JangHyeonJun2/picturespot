@@ -14,6 +14,13 @@ public class CustomExceptionController<T> {
                 .status(status)
                 .body(messages);
     }
+    public ResponseEntity<Message> ok(String okMessage) {
+        status = HttpStatus.OK;
+        Message messages = new Message(okMessage);
+        return ResponseEntity
+                .status(status)
+                .body(messages);
+    }
 
     public ResponseEntity<Message> error(String errorMessage) {
         status = HttpStatus.BAD_REQUEST;

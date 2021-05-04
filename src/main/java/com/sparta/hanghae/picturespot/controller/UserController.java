@@ -47,19 +47,19 @@ public class UserController {
 //                MessageDto messageDto = new MessageDto("이메일 인증을 해주세요");
 //                return new ResponseEntity(messageDto,HttpStatus.INTERNAL_SERVER_ERROR);
 //            }else{
-                // 이메일 인증상태 확인
+            // 이메일 인증상태 확인
 //                if(emailCheck.getAuthCode().equals("Y")){
             userService.signup(signupRequestDto);
             messageDto = new MessageDto("성공");
-                    return new ResponseEntity(messageDto, HttpStatus.OK);
+            return new ResponseEntity(messageDto, HttpStatus.OK);
 //                }else{
 //                    MessageDto messageDto = new MessageDto("이메일 인증을 해주세요");
 //                    return new ResponseEntity(messageDto,HttpStatus.INTERNAL_SERVER_ERROR);
 //                }
-            }
+        }
 //        }else{
 //            MessageDto messageDto = new MessageDto("중복체크를 해주세요");
-            return new ResponseEntity(messageDto,HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity(messageDto,HttpStatus.INTERNAL_SERVER_ERROR);
 //        }
 
     }

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -40,6 +41,10 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final ModelMapper modelMapper;
     private final JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    private String from;
+
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
 
     public void signup(SignupRequestDto requestDto){
@@ -100,6 +105,7 @@ public class UserService {
             String auth = certified_key();
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
+            message.setFrom(from);
             message.setSubject("이메일 인증");
             message.setText(auth);
             javaMailSender.send(message);
