@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findAllByUserId(Long id);
+    List<Board> findByTitleIsLikeOrContentIsLike(String title, String content); //OrderByModifiedDesc
+    List<Board> findByTitleContainingOrContentContaining(String title, String content);
 }

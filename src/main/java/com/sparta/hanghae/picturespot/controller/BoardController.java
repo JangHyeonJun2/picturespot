@@ -1,6 +1,7 @@
 package com.sparta.hanghae.picturespot.controller;
 
 import com.sparta.hanghae.picturespot.dto.request.board.BoardSaveRequestDto;
+import com.sparta.hanghae.picturespot.dto.response.board.BoardGetSearchResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.board.BoardsGetResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.board.BoardSaveResponseDto;
 import com.sparta.hanghae.picturespot.model.User;
@@ -57,5 +58,16 @@ public class BoardController {
     public ResponseEntity delete(@PathVariable Long boardId, @AuthenticationPrincipal User user) {
         Long deleteBoardId = boardService.delete(boardId, user.getId());
         return customExceptionController.ok("게시물이 삭제되었습니다.", deleteBoardId);
+    }
+
+    //게시글 검색(제목 + 내용)
+    @GetMapping("/board/search")
+    public ResponseEntity search(@RequestParam("searchText") String searchText, @AuthenticationPrincipal User user){
+        //검색어가 비어있을 때
+        if (searchText.isEmpty()){
+            return customExceptionController.error("검색어가 비어있습니다.");
+        }
+        List<BoardGetSearchResponseDto> searchBoardList = boardService.search(searchText, user);
+        return customExceptionController.ok("검색 결과 입니다." , searchBoardList);
     }
 }

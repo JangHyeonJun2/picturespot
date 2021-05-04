@@ -1,6 +1,7 @@
 package com.sparta.hanghae.picturespot.service;
 
 import com.sparta.hanghae.picturespot.dto.request.board.BoardSaveRequestDto;
+import com.sparta.hanghae.picturespot.dto.response.board.BoardGetSearchResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.board.BoardsGetResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.board.BoardSaveResponseDto;
 import com.sparta.hanghae.picturespot.model.Board;
@@ -68,5 +69,26 @@ public class BoardService {
         }
 
         return boardGetResponseDtoList;
+    }
+
+    //검색 게시물 조회
+    public List<BoardGetSearchResponseDto> search(String searchText, User loginUser) {
+        List<BoardGetSearchResponseDto> searchResponseDtos = new ArrayList<>();
+
+//        searchText = "%" + searchText + "%";
+        List<Board> findSearchBoardList = boardRepository.findByTitleContainingOrContentContaining(searchText, searchText); //OrderByModifiedDesc
+        boolean likeCheck = true;
+        for (int i=0; i<findSearchBoardList.size(); i++) {
+            if (loginUser == null) {
+                likeCheck = false;
+            } else
+                likeCheck = heartRepository.existsByBoardIdAndUserId(findSearchBoardList.get(i).getId(), loginUser.getId());
+            //게시물에 대한 좋아요 개수
+            List<Heart> allByBoardId = heartRepository.findAllByBoardId(findSearchBoardList.get(i).getId());
+
+            BoardGetSearchResponseDto responseDto = new BoardGetSearchResponseDto(findSearchBoardList.get(i), likeCheck, allByBoardId.size());
+            searchResponseDtos.add(responseDto);
+        }
+        return searchResponseDtos;
     }
 }
