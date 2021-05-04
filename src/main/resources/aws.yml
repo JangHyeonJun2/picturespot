@@ -6,7 +6,11 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
-    
+    credentials:
+      accessKey: AKIA4PAY5UU4VMHS4TMJ
+      secretKey: 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
+
+
 #spring:
 #  datasource:
 #    url: jdbc:h2:tcp://localhost/~/picturespot
