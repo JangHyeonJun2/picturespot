@@ -15,6 +15,7 @@ import java.util.List;
 public class MypageResponseDto {
 
     //user
+    private String nickname;
     private String userImgUrl;
     private String userMsg;
 
@@ -39,6 +40,7 @@ public class MypageResponseDto {
     @Builder
     public MypageResponseDto(User userEntity, Board boardEntity, List<MypageCommentResponseDto> comments, boolean likeCheck, int likeCount) {
         //user정보
+        this.nickname = userEntity.getNickname();
         this.userImgUrl = userEntity.getImgUrl();
         this.userMsg = userEntity.getIntroduceMsg();
 

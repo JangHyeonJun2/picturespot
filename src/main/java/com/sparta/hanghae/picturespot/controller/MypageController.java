@@ -1,6 +1,8 @@
 package com.sparta.hanghae.picturespot.controller;
 
+import com.sparta.hanghae.picturespot.dto.request.mypage.ProfileRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.mypage.MypageResponseDto;
+import com.sparta.hanghae.picturespot.dto.response.mypage.ProfileResponseDto;
 import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import com.sparta.hanghae.picturespot.service.MypageService;
@@ -9,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -18,9 +22,8 @@ public class MypageController {
 
     private final MypageService mypageService;
     private final CustomExceptionController customExceptionController;
-    //private final S3Service s3Service;
+    private final S3Service s3Service;
 
-    //---- GET요청 내 명소 사진, 내 명소 지도, 좋아요 사진, 좋아요 지도 boardRepo에서----//
 
     //내 명소 + user정보
     @GetMapping("/mypage/myboard")
@@ -36,10 +39,13 @@ public class MypageController {
         return customExceptionController.ok("내가 찜한 게시물", likeBoards);
     }
 
-    //프로필 편집 requestParam
-//    @PutMapping("/editmyprofile")
-//    public ResponseEntity editProfile(@RequestParam(value = "file") MultipartFile files, @RequestParam("nickname") String nickname, @RequestParam("introduceMsg") String introduceMsg, @AuthenticationPrincipal User user){
-//        return mypageService.editProfile(files, nickname, introduceMsg, user);
-//    }
+    //프로필 편집
+    @PutMapping("/editmyprofile")
+    public ResponseEntity editProfile(@RequestParam(value = "file", required = false) MultipartFile file, @RequestParam(value = "nickname", required = false) String nickname, @RequestParam(value = "introduceMsg", required = false) String introduceMsg, @AuthenticationPrincipal User user) throws IOException {
+        String imgUrl = s3Service.upload(file, "profile");
+        ProfileRequestDto profileDto = new ProfileRequestDto(imgUrl, nickname, introduceMsg);
+        ProfileResponseDto myProfile = mypageService.editProfile(profileDto, user);
+        return customExceptionController.ok("내 프로필 정보", myProfile);
+    }
 
 }

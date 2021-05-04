@@ -1,5 +1,6 @@
 package com.sparta.hanghae.picturespot.model;
 
+import com.sparta.hanghae.picturespot.dto.request.mypage.ProfileRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -42,6 +43,12 @@ public class User extends Timestamped implements UserDetails {
 
     public void updatePw(String password) {
         this.password = password;
+    }
+
+    public void updateProfile(ProfileRequestDto profileRequestDto){
+        this.nickname = profileRequestDto.getNickname();
+        this.imgUrl = profileRequestDto.getImgUrl();
+        this.introduceMsg = profileRequestDto.getIntroduceMsg();
     }
 
     ////////////// UserDetails Override /////////////////

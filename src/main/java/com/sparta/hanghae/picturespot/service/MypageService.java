@@ -1,8 +1,10 @@
 package com.sparta.hanghae.picturespot.service;
 
 
+import com.sparta.hanghae.picturespot.dto.request.mypage.ProfileRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.mypage.MypageCommentResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.mypage.MypageResponseDto;
+import com.sparta.hanghae.picturespot.dto.response.mypage.ProfileResponseDto;
 import com.sparta.hanghae.picturespot.model.Board;
 import com.sparta.hanghae.picturespot.model.Comment;
 import com.sparta.hanghae.picturespot.model.Heart;
@@ -10,9 +12,11 @@ import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.repository.BoardRepository;
 import com.sparta.hanghae.picturespot.repository.CommentRepository;
 import com.sparta.hanghae.picturespot.repository.HeartRepository;
+import com.sparta.hanghae.picturespot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +28,7 @@ public class MypageService {
     private final BoardRepository boardRepository;
     private final HeartRepository heartRepository;
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
 
     //내 명소(내가올린게시물) + 댓글 + 좋아요 + user정보(이름, 프로필사진, intro메시지)
@@ -81,11 +86,14 @@ public class MypageService {
     }
 
 
-    //프로필 수정
-//    @Transactional
-//    public ResponseEntity editProfile(User user, UserDto userDto){
-//        User editUser = userRepository.findByUser(user);
-//        //editUser.updateProfile(userDto);
-//        return ResponseEntity.ok().build();
-//    }
+    //프로필 편집
+    @Transactional
+    public ProfileResponseDto editProfile(ProfileRequestDto profileDto, User user){
+        User editUser = userRepository.findById(user.getId()).orElseThrow(
+                () -> new IllegalArgumentException("해당하는 user가 없습니다.")
+        );
+        editUser.updateProfile(profileDto);
+        ProfileResponseDto profileResponseDto = new ProfileResponseDto(editUser);
+        return profileResponseDto;
+    }
 }
