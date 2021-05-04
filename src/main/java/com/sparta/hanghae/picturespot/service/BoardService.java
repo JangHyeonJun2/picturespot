@@ -76,7 +76,7 @@ public class BoardService {
         List<BoardGetSearchResponseDto> searchResponseDtos = new ArrayList<>();
 
 //        searchText = "%" + searchText + "%";
-        List<Board> findSearchBoardList = boardRepository.findByTitleContainingOrContentContaining(searchText, searchText); //OrderByModifiedDesc
+        List<Board> findSearchBoardList = boardRepository.findByTitleContainingOrContentContainingOrderByModifiedDesc(searchText, searchText); //OrderByModifiedDesc
         boolean likeCheck = true;
         for (int i=0; i<findSearchBoardList.size(); i++) {
             if (loginUser == null) {
