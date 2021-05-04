@@ -1,6 +1,7 @@
 package com.sparta.hanghae.picturespot.controller;
 
 import com.sparta.hanghae.picturespot.dto.request.board.BoardSaveRequestDto;
+import com.sparta.hanghae.picturespot.dto.response.board.BoardDetailResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.board.BoardGetSearchResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.board.BoardsGetResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.board.BoardSaveResponseDto;
@@ -69,5 +70,12 @@ public class BoardController {
         }
         List<BoardGetSearchResponseDto> searchBoardList = boardService.search(searchText, user);
         return customExceptionController.ok("검색 결과 입니다." , searchBoardList);
+    }
+
+    //게시글 상세 페이지
+    @GetMapping("/board/{boardId}/detail")
+    public ResponseEntity detail(@PathVariable Long boardId, @AuthenticationPrincipal User user) {
+        BoardDetailResponseDto detail = boardService.detail(boardId, user);
+        return customExceptionController.ok("해당 게시글 상세페이지 정보입니다..", detail);
     }
 }

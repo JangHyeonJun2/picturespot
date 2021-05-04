@@ -1,7 +1,6 @@
 package com.sparta.hanghae.picturespot.dto.response.board;
 
 import com.sparta.hanghae.picturespot.model.Board;
-import com.sparta.hanghae.picturespot.model.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,35 +10,35 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class BoardsGetResponseDto {
-    private Long boardId;
-    private Long writerId;
+public class BoardDetailResponseDto {
+    private Long boardId; //게시글 아이디
+    private Long userId; //게시글 작성자 아이디
     private String writerName;
     private String writerImgUrl;
     private String title;
     private String content;
+    private String[] imgUrls;
     private boolean liked;
     private int likeCount;
-    private String[] imgUrls;
-    private String category;
+    private String spotName;
+    private List<BoardDetailCommentsDto> boardDetailCommentDtoList = new ArrayList<>();
 
     @Builder
-    public BoardsGetResponseDto(User userEntity, Board boardEntity, boolean likeCheck, int likeCount) {
-        //writer의 정보 초기화
+    public BoardDetailResponseDto(Board boardEntity, boolean likeCheck, int likeCount, List<BoardDetailCommentsDto> boardDetailCommentsDtoList) {
         this.boardId = boardEntity.getId();
-        this.writerId = userEntity.getId();
-        this.writerName = userEntity.getNickname();
-        this.writerImgUrl = userEntity.getImgUrl();
-        //board 정보 초기화
+        this.userId = boardEntity.getUser().getId();
+        this.writerName = boardEntity.getUser().getNickname();
+        this.writerImgUrl = boardEntity.getUser().getImgUrl();
         this.title = boardEntity.getTitle();
         this.content = boardEntity.getContent();
-        this.category = boardEntity.getCategory();
         //게시물 배열 초기화
         this.imgUrls = new String[boardEntity.getImgUrls().length];
         for (int i=0; i<boardEntity.getImgUrls().length; i++) {
             this.imgUrls[i] = boardEntity.getImgUrls()[i];
         }
+        this.spotName = boardEntity.getSpotName();
         this.liked = likeCheck;
         this.likeCount = likeCount;
+        this.boardDetailCommentDtoList = boardDetailCommentsDtoList;
     }
 }
