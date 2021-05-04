@@ -16,6 +16,8 @@ public class MypageResponseDto {
 
     //user
     private String nickname;
+
+
     private String userImgUrl;
     private String userMsg;
 

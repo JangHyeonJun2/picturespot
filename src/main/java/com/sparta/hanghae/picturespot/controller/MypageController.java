@@ -48,4 +48,18 @@ public class MypageController {
         return customExceptionController.ok("내 프로필 정보", myProfile);
     }
 
+    //다른 사람 페이지(업로드 한 게시물)
+    @GetMapping("/story/{nickname}")
+    public ResponseEntity getNickStory(@PathVariable String nickname){
+        List<MypageResponseDto> nickStory = mypageService.getStory(nickname);
+        return customExceptionController.ok("다른 유저가 올린 게시물", nickStory);
+    }
+
+    //다른 사람 페이지(좋아요 한 게시물)
+    @GetMapping("/story/{nickname}/like")
+    public ResponseEntity getNickLike(@PathVariable String nickname){
+        List<MypageResponseDto> nickLikes = mypageService.getNickLike(nickname);
+        return customExceptionController.ok("다른 유저가 좋아요 한 게시물", nickLikes);
+    }
+
 }
