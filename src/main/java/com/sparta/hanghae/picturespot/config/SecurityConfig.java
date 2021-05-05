@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -68,6 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/index").permitAll()
+                .antMatchers("/oauth/token").permitAll()
                 .antMatchers(HttpMethod.GET, "/map/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/board/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/qna/**").permitAll()
@@ -77,12 +79,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/board/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-//                .oauth2Login()
-//                .loginPage("/index")
-                //.userInfoEndpoint()
-                //.userService(principalOauth2UserService)
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorization") // client 에서 처음 로그인 시도 URI
+                .and()
+                .loginPage("/index")
+                .userInfoEndpoint()
+                .userService(principalOauth2UserService);
 
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class);
+
+//        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+//                        UsernamePasswordAuthenticationFilter.class);
     }
 }

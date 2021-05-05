@@ -6,6 +6,8 @@ import com.sparta.hanghae.picturespot.dto.response.user.EmailResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.user.LoginResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.user.MessageDto;
 import com.sparta.hanghae.picturespot.model.EmailCheck;
+
+import com.sparta.hanghae.picturespot.model.PrincipalDetails;
 import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.repository.EmailCheckRepository;
 import com.sparta.hanghae.picturespot.service.UserService;
@@ -168,6 +170,14 @@ public class UserController {
         MessageDto messageDto = new MessageDto(user.getEmail());
         return new ResponseEntity(messageDto, HttpStatus.OK);
     }
+
+    @GetMapping("/user")
+    public String user(@AuthenticationPrincipal PrincipalDetails principalDetails){
+        System.out.println("principalDetails : "+principalDetails);
+        return "user";
+    }
+
+
 
 
 
