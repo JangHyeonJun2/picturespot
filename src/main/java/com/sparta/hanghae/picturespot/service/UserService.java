@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,9 +46,11 @@ public class UserService {
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
 
     public void signup(SignupRequestDto requestDto){
+
         String encodPassword = bCryptPasswordEncoder.encode(requestDto.getPassword());
         UserRole role = UserRole.USER;
         User user = new User(requestDto.getNickname(), requestDto.getEmail(), encodPassword, role);
+
         userRepository.save(user);
     }
 
@@ -194,11 +197,13 @@ public class UserService {
         if(user == null){
             throw new IllegalStateException("가입된 이메일이 없습니다.");
         }else{
+
             PwdCheck pwdCheck = pwdCheckRepository.findByEmail(pwEditRequestDto.getEmail());
             if(pwdCheck.getAuthCode().equals("Y")){
                 String encodPassword = bCryptPasswordEncoder.encode(pwEditRequestDto.getPassword());
                 user.updatePw(encodPassword);
             }
+
         }
     }
 

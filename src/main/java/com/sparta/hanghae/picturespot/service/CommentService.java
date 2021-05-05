@@ -1,7 +1,7 @@
 package com.sparta.hanghae.picturespot.service;
 
-import com.sparta.hanghae.picturespot.dto.request.Comment.CommentSaveRequestDto;
-import com.sparta.hanghae.picturespot.dto.request.Comment.CommentUpdateRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.comment.CommentSaveRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.comment.CommentUpdateRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.comment.CommentSaveResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.comment.CommentUpdateResponseDto;
 import com.sparta.hanghae.picturespot.model.Board;

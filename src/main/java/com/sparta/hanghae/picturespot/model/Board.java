@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -32,6 +30,7 @@ public class Board extends Timestamped{
     private BigDecimal longitude;
 
     private String spotName;
+
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")

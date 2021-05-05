@@ -83,3 +83,4 @@ public class BoardController {
         return customExceptionController.ok("모든 게시물 데이터 정보입니다." ,loadingBoardMapResponseDtos);
     }
 }
+

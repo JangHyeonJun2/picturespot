@@ -14,6 +14,7 @@ public class Heart {
     @GeneratedValue
     private Long id;
 
+    //@ManyToOne(cascade = CascadeType.ALL)
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;

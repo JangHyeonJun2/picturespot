@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -30,6 +31,14 @@ public class S3Service {
 
     public String[] upload(List<MultipartFile> multipartFile, String dirName) throws IOException {
         File[] uploadFile = convert(multipartFile)
+                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+
+        return upload(uploadFile, dirName);
+    }
+
+    //profile
+    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
+        File uploadFile = convert(multipartFile)
                 .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
 
         return upload(uploadFile, dirName);
@@ -49,6 +58,21 @@ public class S3Service {
             uploadImgUrl[i] = putS3(uploadFile[i],resultFileName);
             removeNewFile(uploadFile[i]);
         }
+        return uploadImgUrl;
+    }
+
+    //profile
+    private String upload(File uploadFile, String dirName) {
+
+        String fileName = uploadFile.getName().substring(uploadFile.getName().lastIndexOf('.'));
+        Date date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
+        SimpleDateFormat fourteen_format = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        String dateFileName = fourteen_format.format(date_now) + fileName;
+        String resultFileName = dirName + "/" + dateFileName;
+        String uploadImgUrl = putS3(uploadFile,resultFileName);
+        removeNewFile(uploadFile);
+
         return uploadImgUrl;
     }
 
@@ -89,5 +113,18 @@ public class S3Service {
 //        }
 //
 //        return Optional.empty();
+    }
+
+    //profile
+    private Optional<File> convert(MultipartFile file) throws IOException {
+        File convertFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+        if (!convertFile.createNewFile()) {
+                return Optional.empty();
+        }else {
+            try(FileOutputStream fos = new FileOutputStream(convertFile)) {
+                fos.write(file.getBytes());
+            }
+        }
+        return Optional.of(convertFile);
     }
 }

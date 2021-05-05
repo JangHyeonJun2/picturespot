@@ -1,7 +1,7 @@
 package com.sparta.hanghae.picturespot.controller;
 
-import com.sparta.hanghae.picturespot.dto.request.Comment.CommentSaveRequestDto;
-import com.sparta.hanghae.picturespot.dto.request.Comment.CommentUpdateRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.comment.CommentSaveRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.comment.CommentUpdateRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.comment.CommentSaveResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.comment.CommentUpdateResponseDto;
 import com.sparta.hanghae.picturespot.model.User;
@@ -22,7 +22,6 @@ public class CommentController {
     @PostMapping("/board/{boardId}/comment")
     public ResponseEntity addComment(@PathVariable Long boardId, @AuthenticationPrincipal User user, @RequestBody CommentSaveRequestDto requestDto) {
         CommentSaveResponseDto commentSaveResponseDto = commentService.addComment(boardId, user, requestDto);
-
 
         if (commentSaveResponseDto == null) {
             return customExceptionController.error("댓글이 비어있습니다.");

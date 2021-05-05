@@ -1,31 +1,24 @@
-package com.sparta.hanghae.picturespot.dto.request.Comment;
+package com.sparta.hanghae.picturespot.dto.request.comment;
 
 import com.sparta.hanghae.picturespot.model.Board;
 import com.sparta.hanghae.picturespot.model.Comment;
 import com.sparta.hanghae.picturespot.model.User;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Getter
 @NoArgsConstructor
-public class CommentSaveRequestDto {
+public class CommentUpdateRequestDto {
     private String content;
-    private Board board;
     private User user;
+    private Board board;
 
-    public CommentSaveRequestDto(String content) {
+    public CommentUpdateRequestDto(String content, User user, Board board) {
         this.content = content;
-    }
-    public void addBoardInComment(Board board) {
+        this.user =  user;
         this.board = board;
     }
-
-    public void addUserInComment(User user) {
-        this.user = user;
-    }
-
-
 
     public Comment toEntity() {
         return Comment.builder()

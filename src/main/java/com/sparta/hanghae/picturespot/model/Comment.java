@@ -1,10 +1,9 @@
 package com.sparta.hanghae.picturespot.model;
 
-import com.sparta.hanghae.picturespot.dto.request.Comment.CommentUpdateRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.comment.CommentUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.minidev.json.annotate.JsonIgnore;
 
 import javax.persistence.*;
 

@@ -35,16 +35,26 @@ dependencies {
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.0'
     
     compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'com.h2database:h2'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     
     //s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws'
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
     implementation 'com.amazonaws:aws-java-sdk-s3'
+
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+
+    //s3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws'
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
+    implementation 'com.amazonaws:aws-java-sdk-s3'
+
 }
 
 dependencyManagement { imports { mavenBom 'org.springframework.cloud:spring-cloud-aws:2.2.1.RELEASE' } }

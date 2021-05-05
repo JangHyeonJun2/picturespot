@@ -1,12 +1,11 @@
 package com.sparta.hanghae.picturespot.dto.response.board;
 
 import com.sparta.hanghae.picturespot.model.Board;
+import com.sparta.hanghae.picturespot.model.Comment;
 import com.sparta.hanghae.picturespot.model.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -42,4 +41,6 @@ public class BoardsGetResponseDto {
         this.liked = likeCheck;
         this.likeCount = likeCount;
     }
+
+
 }
