@@ -1,10 +1,7 @@
 package com.sparta.hanghae.picturespot.controller;
 
 import com.sparta.hanghae.picturespot.dto.request.board.BoardSaveRequestDto;
-import com.sparta.hanghae.picturespot.dto.response.board.BoardDetailResponseDto;
-import com.sparta.hanghae.picturespot.dto.response.board.BoardGetSearchResponseDto;
-import com.sparta.hanghae.picturespot.dto.response.board.BoardsGetResponseDto;
-import com.sparta.hanghae.picturespot.dto.response.board.BoardSaveResponseDto;
+import com.sparta.hanghae.picturespot.dto.response.board.*;
 import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import com.sparta.hanghae.picturespot.service.BoardService;
@@ -77,5 +74,12 @@ public class BoardController {
     public ResponseEntity detail(@PathVariable Long boardId, @AuthenticationPrincipal User user) {
         BoardDetailResponseDto detail = boardService.detail(boardId, user);
         return customExceptionController.ok("해당 게시글 상세페이지 정보입니다..", detail);
+    }
+
+    //지도페이지 로딩 될 때
+    @GetMapping("/map")
+    public ResponseEntity loadingMapBoard(@AuthenticationPrincipal User user) {
+        List<LoadingBoardMapResponseDto> loadingBoardMapResponseDtos = boardService.loadingMapBoard(user);
+        return customExceptionController.ok("모든 게시물 데이터 정보입니다." ,loadingBoardMapResponseDtos);
     }
 }
