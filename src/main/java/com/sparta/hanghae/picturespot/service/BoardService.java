@@ -93,7 +93,7 @@ public class BoardService {
         }
         return searchResponseDtos;
     }
-
+    //게시물 상세보기
     public BoardDetailResponseDto detail(Long boardId, User loginUser) {
         List<BoardDetailCommentsDto> detailCommentsDtoList = new ArrayList<>();
         boolean likeCheck = true;
@@ -114,5 +114,31 @@ public class BoardService {
         List<Heart> allBoardHeartCount = heartRepository.findAllByBoardId(findBoard.getId());
 
         return new BoardDetailResponseDto(findBoard,likeCheck,allBoardHeartCount.size(),detailCommentsDtoList);
+    }
+    //게시물 메인페이지(지도) 로딩될 때 데이터 보내주기
+    public List<LoadingBoardMapResponseDto>loadingMapBoard(User loginUser) {
+        List<Board> boards = boardRepository.findAll();
+        List<LoadingBoardMapResponseDto> loadingBoardMapResponseDtos = new ArrayList<>();
+
+
+        boolean likeCheck = true;
+
+        for (int i=0; i<boards.size(); i++) {
+            List<Comment> comments = commentRepository.findAllByBoardId(boards.get(i).getId());
+            List<BoardDetailCommentsDto> detailCommentsDtoList = new ArrayList<>();
+            for (int j=0; j<comments.size(); j++) {
+                BoardDetailCommentsDto commentsDto = new BoardDetailCommentsDto(comments.get(j));
+                detailCommentsDtoList.add(commentsDto);
+            }
+            if (loginUser == null) {
+                likeCheck = false;
+            } else {
+                likeCheck = heartRepository.existsByBoardIdAndUserId(boards.get(i).getId(), loginUser.getId());
+            }
+            List<Heart> allByBoardId = heartRepository.findAllByBoardId(boards.get(i).getId());
+            LoadingBoardMapResponseDto boardMapResponseDto = new LoadingBoardMapResponseDto(boards.get(i), likeCheck, allByBoardId.size(), detailCommentsDtoList);
+            loadingBoardMapResponseDtos.add(boardMapResponseDto);
+        }
+        return loadingBoardMapResponseDtos;
     }
 }

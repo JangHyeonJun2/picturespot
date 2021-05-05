@@ -16,6 +16,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Optional<Board> findById(Long BoardId);
     //List<Board> findByTitleIsLikeOrContentIsLike(String title, String content); //OrderByModifiedDesc
     List<Board> findByTitleContainingOrContentContainingOrderByModifiedDesc(String title, String content);
-
 }
 
