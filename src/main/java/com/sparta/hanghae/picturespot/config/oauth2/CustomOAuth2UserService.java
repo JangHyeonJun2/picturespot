@@ -73,7 +73,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user = new User();
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
         user.setProviderId(oAuth2UserInfo.getId());
-        user.setNickname(oAuth2UserInfo.getName());
+        user.setNickname(oAuth2UserInfo.getName()+"_"+oAuth2UserInfo.getId());
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setImgUrl(oAuth2UserInfo.getImageUrl());
         String encodPassword = bCryptPasswordEncoder.encode("test1234567");

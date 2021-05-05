@@ -4,6 +4,7 @@ import com.sparta.hanghae.picturespot.config.AppProperties;
 import com.sparta.hanghae.picturespot.config.jwt.JwtTokenProvider;
 import com.sparta.hanghae.picturespot.config.oauth2.exception.BadRequestException;
 import com.sparta.hanghae.picturespot.model.UserPrincipal;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import static com.sparta.hanghae.picturespot.config.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Component
+@Slf4j
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private JwtTokenProvider tokenProvider;
@@ -62,9 +64,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         String token = tokenProvider.createToken(userPrincipal.getEmail());
+        String nickname = userPrincipal.getNickname();
+        log.debug("================================");
+        log.debug("nickname :"+ nickname);
+        log.debug("================================");
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)
+                .queryParam("nickname", nickname)
                 .build().toUriString();
     }
 
