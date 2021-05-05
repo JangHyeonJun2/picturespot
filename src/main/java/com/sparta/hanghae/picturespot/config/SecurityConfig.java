@@ -3,13 +3,15 @@ package com.sparta.hanghae.picturespot.config;
 
 import com.sparta.hanghae.picturespot.config.jwt.JwtAuthenticationFilter;
 import com.sparta.hanghae.picturespot.config.jwt.JwtTokenProvider;
-import com.sparta.hanghae.picturespot.service.PrincipalOauth2UserService;
+import com.sparta.hanghae.picturespot.config.oauth2.CustomOAuth2UserService;
+import com.sparta.hanghae.picturespot.config.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.sparta.hanghae.picturespot.config.oauth2.OAuth2AuthenticationFailureHandler;
+import com.sparta.hanghae.picturespot.config.oauth2.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -31,11 +33,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
     private final JwtTokenProvider jwtTokenProvider;
-    private final PrincipalOauth2UserService principalOauth2UserService;
+    //private final PrincipalOauth2UserService principalOauth2UserService;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
+    }
+
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
     }
 
     @Bean
@@ -81,14 +91,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .oauth2Login()
                 .authorizationEndpoint()
-                .baseUri("/oauth2/authorization") // client 에서 처음 로그인 시도 URI
+                .baseUri("/oauth2/authorize")
+                .authorizationRequestRepository(cookieAuthorizationRequestRepository())
                 .and()
-                .loginPage("/index")
+                .redirectionEndpoint()
+                .baseUri("/login/oauth2/code/*")
+                .and()
+                //.loginPage("/index")
                 .userInfoEndpoint()
-                .userService(principalOauth2UserService);
+                .userService(customOAuth2UserService)
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler);
 
 
-//        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-//                        UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+                        UsernamePasswordAuthenticationFilter.class);
     }
 }
