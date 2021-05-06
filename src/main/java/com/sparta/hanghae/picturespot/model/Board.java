@@ -4,14 +4,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.annotation.Resource;
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
 @Entity
+//imgUrl을 분리함.
 public class Board extends Timestamped{
     @Id
     @GeneratedValue
@@ -25,11 +25,16 @@ public class Board extends Timestamped{
     private String category;
 
 //    @Column(columnDefinition="TEXT")
+<<<<<<< HEAD
 //    private String[] imgUrls;
 
 //    @ElementCollection
     @OrderColumn
     private String[] imgUrls;
+=======
+//    @ElementCollection
+//    private String[] imgUrls;
+>>>>>>> upstream/master
 
     private BigDecimal latitude;
 
@@ -43,12 +48,17 @@ public class Board extends Timestamped{
     private User user;
 
     @Builder
-    public Board(String title, String content, String category, String[] imgUrls, BigDecimal latitude, BigDecimal longitude, String spotName, User user) {
+    public Board(String title, String content, String category,  BigDecimal latitude, BigDecimal longitude, String spotName, User user) {
         this.title = title;
         this.content = content;
         this.category = category;
+<<<<<<< HEAD
 //        this.imgUrls = new String[imgUrls.length];
         this.imgUrls = imgUrls;
+=======
+
+//        this.imgUrls = imgUrls;
+>>>>>>> upstream/master
         this.latitude = latitude;
         this.longitude = longitude;
         this.spotName = spotName;
