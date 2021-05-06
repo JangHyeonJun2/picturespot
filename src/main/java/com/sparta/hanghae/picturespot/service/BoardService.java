@@ -56,7 +56,8 @@ public class BoardService {
     }
 
     //커뮤니티 게시글 조회
-    public List<BoardsGetResponseDto> getBoards(User loginUser) {
+    public List<BoardsGetResponseDto>
+    getBoards(User loginUser) {
         List<BoardsGetResponseDto> boardGetResponseDtoList = new ArrayList<>();
 
         List<Board> boardAll = boardRepository.findAll();
