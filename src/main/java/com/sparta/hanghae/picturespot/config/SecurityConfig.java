@@ -3,7 +3,10 @@ package com.sparta.hanghae.picturespot.config;
 
 import com.sparta.hanghae.picturespot.config.jwt.JwtAuthenticationFilter;
 import com.sparta.hanghae.picturespot.config.jwt.JwtTokenProvider;
-import com.sparta.hanghae.picturespot.service.PrincipalOauth2UserService;
+import com.sparta.hanghae.picturespot.config.oauth2.CustomOAuth2UserService;
+import com.sparta.hanghae.picturespot.config.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.sparta.hanghae.picturespot.config.oauth2.OAuth2AuthenticationFailureHandler;
+import com.sparta.hanghae.picturespot.config.oauth2.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 
 import org.modelmapper.ModelMapper;
@@ -30,11 +33,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter;
     private final JwtTokenProvider jwtTokenProvider;
-    private final PrincipalOauth2UserService principalOauth2UserService;
+    //private final PrincipalOauth2UserService principalOauth2UserService;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
+    }
+
+    @Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
     }
 
     @Bean
@@ -68,6 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/index").permitAll()
+                .antMatchers("/oauth/token").permitAll()
                 .antMatchers(HttpMethod.GET, "/map/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/board/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/board/**").permitAll()
@@ -78,12 +90,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE,"/qcomment/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
-//                .oauth2Login()
-//                .loginPage("/index")
-                //.userInfoEndpoint()
-                //.userService(principalOauth2UserService)
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorize")
+                .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+                .and()
+                .redirectionEndpoint()
+                .baseUri("/login/oauth2/code/*")
+                .and()
+                .userInfoEndpoint()
+                .userService(customOAuth2UserService)
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler);
 
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+
+        http.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class);
     }
 }

@@ -45,6 +45,7 @@ public class UserService {
 
     private static final String ADMIN_TOKEN = "AAABnv/xRVklrnYxKZ0aHgTBcXukeZygoC";
 
+    // 회원가입
     public void signup(SignupRequestDto requestDto){
 
         String encodPassword = bCryptPasswordEncoder.encode(requestDto.getPassword());
@@ -54,6 +55,7 @@ public class UserService {
         userRepository.save(user);
     }
 
+    // 로그인
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         User user = userRepository.findByEmail(loginRequestDto.getEmail());
         if(user == null){
@@ -65,6 +67,7 @@ public class UserService {
         return new LoginResponseDto(jwtTokenProvider.createToken(user.getEmail()), user.getNickname(), "성공");
     }
 
+    // @Vaild 에러체크
     public Map<String, String> validateHandling(Errors errors) {
         Map<String, String> validatorResult = new HashMap<>();
         for(FieldError error : errors.getFieldErrors()){
@@ -74,6 +77,7 @@ public class UserService {
         return validatorResult;
     }
 
+    // 닉네임 중복체크
     public boolean nickchk(String nickname) {
         User user = userRepository.findByNickname(nickname);
         if(user == null){
