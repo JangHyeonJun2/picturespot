@@ -77,7 +77,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setProviderId(oAuth2UserInfo.getId());
         user.setNickname("SFlash_"+certified_key());
         user.setEmail(oAuth2UserInfo.getEmail());
-        user.setImgUrl(oAuth2UserInfo.getImageUrl());
+        //user.setImgUrl(oAuth2UserInfo.getImageUrl());
         String encodPassword = bCryptPasswordEncoder.encode("test1234567");
         user.setPassword(encodPassword);
         user.setRole(UserRole.USER);
@@ -86,7 +86,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
         existingUser.setNickname(existingUser.getNickname());
-        existingUser.setImgUrl(oAuth2UserInfo.getImageUrl());
+        //existingUser.setImgUrl(oAuth2UserInfo.getImageUrl());
         return userRepository.save(existingUser);
     }
 

@@ -35,16 +35,12 @@ out/
 
 ### VS Code ###
 .vscode/
-<<<<<<< HEAD
-application.yml
-application.properties
-=======
+
 src/main/resources/application.yml
 /Users/janghyeonjun/Downloads/picturespot/src/main/resources/application.yml
 src/main/resources/aws.yml
 /Users/janghyeonjun/Downloads/picturespot/src/main/resources/aws.yml
->>>>>>> upstream/master
+/Users/janghyeonjun/Downloads/picturespot/src/main/resources/oauth2.yml
 application.properties
 aws.yml
-application.properties
-aws.yml
+oauth2.yml

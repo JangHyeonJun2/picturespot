@@ -5,6 +5,8 @@ import com.sparta.hanghae.picturespot.dto.request.comment.CommentUpdateRequestDt
 import com.sparta.hanghae.picturespot.dto.response.comment.CommentSaveResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.comment.CommentUpdateResponseDto;
 import com.sparta.hanghae.picturespot.model.User;
+import com.sparta.hanghae.picturespot.model.UserPrincipal;
+import com.sparta.hanghae.picturespot.repository.UserRepository;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import com.sparta.hanghae.picturespot.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +19,13 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
     private final CustomExceptionController customExceptionController;
+    private final UserRepository userRepository;
 
     //댓글 저장
     @PostMapping("/board/{boardId}/comment")
-    public ResponseEntity addComment(@PathVariable Long boardId, @AuthenticationPrincipal User user, @RequestBody CommentSaveRequestDto requestDto) {
-        CommentSaveResponseDto commentSaveResponseDto = commentService.addComment(boardId, user, requestDto);
+    public ResponseEntity addComment(@PathVariable Long boardId, @AuthenticationPrincipal UserPrincipal user, @RequestBody CommentSaveRequestDto requestDto) {
+        User findUser = findUserMethod(user);
+        CommentSaveResponseDto commentSaveResponseDto = commentService.addComment(boardId, findUser, requestDto);
 
         if (commentSaveResponseDto == null) {
             return customExceptionController.error("댓글이 비어있습니다.");
@@ -31,8 +35,9 @@ public class CommentController {
 
     //댓글 수정
     @PutMapping("/board/comment/{commentId}")
-    public ResponseEntity updateComment(@PathVariable Long commentId, @RequestBody CommentUpdateRequestDto requestDto, @AuthenticationPrincipal User user) {
-        CommentUpdateResponseDto responseDto = commentService.updateComment(commentId, requestDto, user);
+    public ResponseEntity updateComment(@PathVariable Long commentId, @RequestBody CommentUpdateRequestDto requestDto, @AuthenticationPrincipal UserPrincipal user) {
+        User findUser = findUserMethod(user);
+        CommentUpdateResponseDto responseDto = commentService.updateComment(commentId, requestDto, findUser);
         if (responseDto != null) {
             return customExceptionController.ok("댓글이 수정되었습니다.", responseDto);
         } else
@@ -41,8 +46,14 @@ public class CommentController {
 
 //    댓글 삭제
     @DeleteMapping("/board/comment/{commentId}")
-    public ResponseEntity deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal User user) {
-        commentService.deleteComment(commentId, user);
+    public ResponseEntity deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal user) {
+        User findUser = findUserMethod(user);
+        commentService.deleteComment(commentId, findUser);
         return customExceptionController.ok("댓글이 삭제되었습니다..",commentId);
     }
+
+    public  User findUserMethod(UserPrincipal userPrincipal) {
+        return userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+    }
+
 }

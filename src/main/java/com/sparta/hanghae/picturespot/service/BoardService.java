@@ -35,8 +35,6 @@ public class BoardService {
             boardImgUrlsRepository.save(boardImgSaveRequestDto.toEntity());
             boardImgReponseDtoList.add(boardImgSaveRequestDto);
         }
-
-
         return new BoardSaveResponseDto(boardEntity, boardImgReponseDtoList);
     }
 
