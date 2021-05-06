@@ -40,8 +40,8 @@ public class BoardController {
 
         String[] imgUrls = s3Service.upload(files, "board");
 
-        BoardSaveRequestDto boardSaveRequestDto = new BoardSaveRequestDto(title,content,category,latitude,longitude,imgUrls, spotName, user);
-        BoardSaveResponseDto responseDto = boardService.save(boardSaveRequestDto);
+        BoardSaveRequestDto boardSaveRequestDto = new BoardSaveRequestDto(title,content,category,latitude,longitude, spotName, user);
+        BoardSaveResponseDto responseDto = boardService.save(boardSaveRequestDto, imgUrls);
         return customExceptionController.ok("게시물을 저장하였습니다.", responseDto);
     }
 

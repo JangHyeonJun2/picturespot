@@ -1,5 +1,6 @@
 package com.sparta.hanghae.picturespot.dto.response.mypage;
 
+import com.sparta.hanghae.picturespot.dto.request.img.BoardImgCommonRequestDto;
 import com.sparta.hanghae.picturespot.model.Board;
 import com.sparta.hanghae.picturespot.model.User;
 import lombok.Builder;
@@ -7,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,8 +18,6 @@ public class MypageResponseDto {
 
     //user
     private String nickname;
-
-
     private String userImgUrl;
     private String userMsg;
 
@@ -26,7 +26,7 @@ public class MypageResponseDto {
     private String writer;
     private String title;
     private String content;
-    private String[] imgUrls;
+//    private String[] imgUrls;
     private String category;
     private String spotName;
     private LocalDateTime modified;
@@ -37,10 +37,11 @@ public class MypageResponseDto {
 
     //comments
     private List<MypageCommentResponseDto> comments;
+    private List<BoardImgCommonRequestDto> boardImgReponseDtoList = new ArrayList<>();
 
 
     @Builder
-    public MypageResponseDto(User userEntity, Board boardEntity, List<MypageCommentResponseDto> comments, boolean likeCheck, int likeCount) {
+    public MypageResponseDto(User userEntity, Board boardEntity, List<MypageCommentResponseDto> comments, boolean likeCheck, int likeCount, List<BoardImgCommonRequestDto> reponseDto) {
         //user정보
         this.nickname = userEntity.getNickname();
         this.userImgUrl = userEntity.getImgUrl();
@@ -55,10 +56,10 @@ public class MypageResponseDto {
         this.spotName = boardEntity.getSpotName();
         this.modified = boardEntity.getModified();
         //게시물 배열 초기화
-        this.imgUrls = new String[boardEntity.getImgUrls().length];
-        for (int i=0; i<boardEntity.getImgUrls().length; i++) {
-            this.imgUrls[i] = boardEntity.getImgUrls()[i];
-        }
+//        this.imgUrls = new String[boardEntity.getImgUrls().length];
+//        for (int i=0; i<boardEntity.getImgUrls().length; i++) {
+//            this.imgUrls[i] = boardEntity.getImgUrls()[i];
+//        }
 
         //좋아요
         this.liked = likeCheck;
@@ -66,6 +67,7 @@ public class MypageResponseDto {
 
         //댓글
         this.comments = comments;
-
+        //이미지
+        this.boardImgReponseDtoList = reponseDto;
     }
 }

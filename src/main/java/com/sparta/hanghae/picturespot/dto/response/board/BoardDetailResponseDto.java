@@ -1,5 +1,6 @@
 package com.sparta.hanghae.picturespot.dto.response.board;
 
+import com.sparta.hanghae.picturespot.dto.request.img.BoardImgCommonRequestDto;
 import com.sparta.hanghae.picturespot.model.Board;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,14 +18,14 @@ public class BoardDetailResponseDto {
     private String writerImgUrl;
     private String title;
     private String content;
-    private String[] imgUrls;
     private boolean liked;
     private int likeCount;
     private String spotName;
     private List<BoardDetailCommentsDto> boardDetailCommentDtoList = new ArrayList<>();
+    private List<BoardImgCommonRequestDto> requestDto = new ArrayList<>();
 
     @Builder
-    public BoardDetailResponseDto(Board boardEntity, boolean likeCheck, int likeCount, List<BoardDetailCommentsDto> boardDetailCommentsDtoList) {
+    public BoardDetailResponseDto(Board boardEntity, boolean likeCheck, int likeCount, List<BoardDetailCommentsDto> boardDetailCommentsDtoList, List<BoardImgCommonRequestDto> requestDto) {
         this.boardId = boardEntity.getId();
         this.userId = boardEntity.getUser().getId();
         this.writerName = boardEntity.getUser().getNickname();
@@ -32,13 +33,14 @@ public class BoardDetailResponseDto {
         this.title = boardEntity.getTitle();
         this.content = boardEntity.getContent();
         //게시물 배열 초기화
-        this.imgUrls = new String[boardEntity.getImgUrls().length];
-        for (int i=0; i<boardEntity.getImgUrls().length; i++) {
-            this.imgUrls[i] = boardEntity.getImgUrls()[i];
-        }
+//        this.imgUrls = new String[boardEntity.getImgUrls().length];
+//        for (int i=0; i<boardEntity.getImgUrls().length; i++) {
+//            this.imgUrls[i] = boardEntity.getImgUrls()[i];
+//        }
         this.spotName = boardEntity.getSpotName();
         this.liked = likeCheck;
         this.likeCount = likeCount;
         this.boardDetailCommentDtoList = boardDetailCommentsDtoList;
+        this.requestDto = requestDto;
     }
 }
