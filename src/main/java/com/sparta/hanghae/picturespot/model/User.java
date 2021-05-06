@@ -19,7 +19,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Entity
-public class User extends Timestamped{
+public class User extends Timestamped {
 
     //private Map<String, Object> attributes;
 
@@ -47,14 +47,14 @@ public class User extends Timestamped{
 
     private String providerId;
 
-    public User (String nickname, String email, String password, UserRole role){
+    public User(String nickname, String email, String password, UserRole role) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    public User (String nickname, String email, String password, UserRole role, AuthProvider provider, String providerId){
+    public User(String nickname, String email, String password, UserRole role, AuthProvider provider, String providerId) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
@@ -68,14 +68,15 @@ public class User extends Timestamped{
         this.password = password;
     }
 
-    public void updateProfile(ProfileRequestDto profileRequestDto){
+    public void updateProfile(ProfileRequestDto profileRequestDto) {
         this.imgUrl = profileRequestDto.getImgUrl();
         this.introduceMsg = profileRequestDto.getIntroduceMsg();
     }
 
-    public void updateNick(NicknameRequestDto nicknameRequestDto){
+    public void updateNick(NicknameRequestDto nicknameRequestDto) {
         this.nickname = nicknameRequestDto.getNickname();
     }
+}
 
     ////////////// UserDetails Override /////////////////
 
