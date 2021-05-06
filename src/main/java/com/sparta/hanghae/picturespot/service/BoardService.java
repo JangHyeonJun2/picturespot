@@ -102,18 +102,25 @@ public class BoardService {
         for (int i=0; i<findSearchBoardList.size(); i++) {
             List<BoardImgUrls> allBoardImgUrl = boardImgUrlsRepository.findAllByBoardId(findSearchBoardList.get(i).getId());
             List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>(); // 해당하는 boardImgUrls 담는 리스트
+            List<BoardDetailCommentsDto> detailCommentsDtoList = new ArrayList<>(); //댓글 리스트
 
             for (int j=0; j<allBoardImgUrl.size(); j++) {//ImgUrl들 넣어주기.
                 requestDtos.add(new BoardImgCommonRequestDto(allBoardImgUrl.get(j)));
+            }
+
+            List<Comment> allByBoardId = commentRepository.findAllByBoardId(findSearchBoardList.get(i).getId());
+            for (int k=0; k<allByBoardId.size(); k++) {
+                BoardDetailCommentsDto tempDto = new BoardDetailCommentsDto(allByBoardId.get(k));
+                detailCommentsDtoList.add(tempDto);
             }
             if (loginUser == null) {
                 likeCheck = false;
             } else
                 likeCheck = heartRepository.existsByBoardIdAndUserId(findSearchBoardList.get(i).getId(), loginUser.getId());
             //게시물에 대한 좋아요 개수
-            List<Heart> allByBoardId = heartRepository.findAllByBoardId(findSearchBoardList.get(i).getId());
+            List<Heart> allByBoardIdHeart = heartRepository.findAllByBoardId(findSearchBoardList.get(i).getId());
 
-            BoardGetSearchResponseDto responseDto = new BoardGetSearchResponseDto(findSearchBoardList.get(i), likeCheck, allByBoardId.size(), requestDtos);
+            BoardGetSearchResponseDto responseDto = new BoardGetSearchResponseDto(findSearchBoardList.get(i), likeCheck, allByBoardIdHeart.size(), detailCommentsDtoList,requestDtos);
             searchResponseDtos.add(responseDto);
         }
         return searchResponseDtos;

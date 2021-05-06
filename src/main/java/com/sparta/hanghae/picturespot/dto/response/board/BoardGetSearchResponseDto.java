@@ -20,10 +20,11 @@ public class BoardGetSearchResponseDto {
     private String category;
     private boolean likeCheck;
     private int likeCount;
+    private List<BoardDetailCommentsDto> boardDetailCommentDtoList = new ArrayList<>();
     private List<BoardImgCommonRequestDto> boardImgReponseDtoList = new ArrayList<>();
 
     @Builder
-    public BoardGetSearchResponseDto(Board boardEntity, boolean likeCheck, int likeCount, List<BoardImgCommonRequestDto> requestDto) {
+    public BoardGetSearchResponseDto(Board boardEntity, boolean likeCheck, int likeCount, List<BoardDetailCommentsDto> boardDetailCommentsDtoList, List<BoardImgCommonRequestDto> requestDto) {
         this.boardId = boardEntity.getId();
         this.writerName = boardEntity.getUser().getNickname();
         this.writerImgUrl = boardEntity.getUser().getImgUrl();
@@ -37,6 +38,7 @@ public class BoardGetSearchResponseDto {
         this.category = boardEntity.getCategory();
         this.likeCheck = likeCheck;
         this.likeCount = likeCount;
+        this.boardDetailCommentDtoList = boardDetailCommentsDtoList;
         this.boardImgReponseDtoList = requestDto;
     }
 }
