@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -25,6 +27,9 @@ public class Board extends Timestamped{
     @Column(columnDefinition="TEXT")
     private String[] imgUrls;
 
+//    @OneToMany()
+//    private List<ImgUrl> imgUrls = new ArrayList<>();
+
     private BigDecimal latitude;
 
     private BigDecimal longitude;
@@ -41,6 +46,7 @@ public class Board extends Timestamped{
         this.title = title;
         this.content = content;
         this.category = category;
+        this.imgUrls = new String[imgUrls.length];
         this.imgUrls = imgUrls;
         this.latitude = latitude;
         this.longitude = longitude;

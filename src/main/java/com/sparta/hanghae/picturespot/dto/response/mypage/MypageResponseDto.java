@@ -16,8 +16,6 @@ public class MypageResponseDto {
 
     //user
     private String nickname;
-
-
     private String userImgUrl;
     private String userMsg;
 
@@ -67,5 +65,11 @@ public class MypageResponseDto {
         //댓글
         this.comments = comments;
 
+    }
+
+    public MypageResponseDto(User user){
+        this.nickname = user.getNickname();
+        this.userMsg = user.getIntroduceMsg();
+        this.userImgUrl = user.getImgUrl();
     }
 }
