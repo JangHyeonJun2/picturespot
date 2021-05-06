@@ -24,11 +24,12 @@ public class Board extends Timestamped{
 
     private String category;
 
-    @Column(columnDefinition="TEXT")
-    private String[] imgUrls;
+//    @Column(columnDefinition="TEXT")
+//    private String[] imgUrls;
 
-//    @OneToMany()
-//    private List<ImgUrl> imgUrls = new ArrayList<>();
+//    @ElementCollection
+    @OrderColumn
+    private String[] imgUrls;
 
     private BigDecimal latitude;
 
@@ -46,7 +47,7 @@ public class Board extends Timestamped{
         this.title = title;
         this.content = content;
         this.category = category;
-        this.imgUrls = new String[imgUrls.length];
+//        this.imgUrls = new String[imgUrls.length];
         this.imgUrls = imgUrls;
         this.latitude = latitude;
         this.longitude = longitude;
