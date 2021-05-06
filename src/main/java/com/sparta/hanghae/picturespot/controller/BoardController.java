@@ -45,7 +45,7 @@ public class BoardController {
                                @RequestParam("longitude") BigDecimal longitude, @RequestParam("spotName") String spotName, @AuthenticationPrincipal UserPrincipal user) throws IOException {
 
 
-        String[] imgUrls = s3Service.upload(files, "board");
+        String[] imgUrls = s3Service.upload(files, "boauserrd");
         if (user == null) {
             return customExceptionController.error("로그인 사용자가 아닙니다.");
         }
