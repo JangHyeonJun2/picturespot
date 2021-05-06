@@ -25,8 +25,16 @@ public class Board extends Timestamped{
     private String category;
 
 //    @Column(columnDefinition="TEXT")
+<<<<<<< HEAD
+//    private String[] imgUrls;
+
+//    @ElementCollection
+    @OrderColumn
+    private String[] imgUrls;
+=======
 //    @ElementCollection
 //    private String[] imgUrls;
+>>>>>>> upstream/master
 
     private BigDecimal latitude;
 
@@ -44,8 +52,13 @@ public class Board extends Timestamped{
         this.title = title;
         this.content = content;
         this.category = category;
+<<<<<<< HEAD
+//        this.imgUrls = new String[imgUrls.length];
+        this.imgUrls = imgUrls;
+=======
 
 //        this.imgUrls = imgUrls;
+>>>>>>> upstream/master
         this.latitude = latitude;
         this.longitude = longitude;
         this.spotName = spotName;
