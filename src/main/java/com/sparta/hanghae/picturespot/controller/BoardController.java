@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ public class BoardController {
                                @RequestParam("longitude") BigDecimal longitude, @RequestParam("spotName") String spotName, @AuthenticationPrincipal UserPrincipal user) throws IOException {
 
 
-        String[] imgUrls = s3Service.upload(files, "boauserrd");
+        String[] imgUrls = s3Service.upload(Arrays.asList(files), "board");
         if (user == null) {
             return customExceptionController.error("로그인 사용자가 아닙니다.");
         }

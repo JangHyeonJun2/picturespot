@@ -33,5 +33,8 @@ public class PicturespotApplication {
                 .run(args);
 
     }
-
+//    @PostConstruct
+//    public void started(){
+//        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+//    }
 }
