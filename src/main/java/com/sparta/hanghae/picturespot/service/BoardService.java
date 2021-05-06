@@ -2,6 +2,7 @@ package com.sparta.hanghae.picturespot.service;
 
 import com.sparta.hanghae.picturespot.dto.request.img.BoardImgCommonRequestDto;
 import com.sparta.hanghae.picturespot.dto.request.board.BoardSaveRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.img.BoardImgSaveRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.board.*;
 import com.sparta.hanghae.picturespot.model.*;
 import com.sparta.hanghae.picturespot.repository.*;
@@ -27,10 +28,10 @@ public class BoardService {
     @Transactional
     public BoardSaveResponseDto save(BoardSaveRequestDto requestDto, String[] imgUrls) {
         Board boardEntity = boardRepository.save(requestDto.toEntity());
-        List<BoardImgCommonRequestDto> boardImgReponseDtoList = new ArrayList<>();
+        List<BoardImgSaveRequestDto> boardImgReponseDtoList = new ArrayList<>();
 
         for (String imgUrl : imgUrls) {
-            BoardImgCommonRequestDto boardImgSaveRequestDto = new BoardImgCommonRequestDto(boardEntity, imgUrl);
+            BoardImgSaveRequestDto boardImgSaveRequestDto = new BoardImgSaveRequestDto(boardEntity, imgUrl);
             boardImgUrlsRepository.save(boardImgSaveRequestDto.toEntity());
             boardImgReponseDtoList.add(boardImgSaveRequestDto);
         }
@@ -65,8 +66,16 @@ public class BoardService {
         for (int i=0; i<boardAll.size(); i++) {
             List<BoardImgUrls> allBoardImgUrls = boardImgUrlsRepository.findAllByBoardId(boardAll.get(i).getId());
             List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();
+            List<BoardDetailCommentsDto> detailCommentsDtoList = new ArrayList<>();
+
             for (int j=0; j<allBoardImgUrls.size(); j++) {
                 requestDtos.add(new BoardImgCommonRequestDto(allBoardImgUrls.get(j)));
+            }
+
+            List<Comment> allByBoardId = commentRepository.findAllByBoardId(boardAll.get(i).getId());
+            for (int k=0; k<allByBoardId.size(); k++) {
+                BoardDetailCommentsDto tempDto = new BoardDetailCommentsDto(allByBoardId.get(k));
+                detailCommentsDtoList.add(tempDto);
             }
             //로그인 사용자가 게시물을 좋아요 했는지 안했는지 체크!
             if (loginUser == null) {//로그인이 되어있지 않은 사용자일 때
@@ -74,9 +83,9 @@ public class BoardService {
             } else //로그인이 되어있는 사용자 일 때
                 likeCheck = heartRepository.existsByBoardIdAndUserId(boardAll.get(i).getId(), loginUser.getId());
             //게시물에 대한 좋아요 개수
-            List<Heart> allByBoardId = heartRepository.findAllByBoardId(boardAll.get(i).getId());
+            List<Heart> allByBoardIdHearts = heartRepository.findAllByBoardId(boardAll.get(i).getId());
 
-            BoardsGetResponseDto brdto = new BoardsGetResponseDto(boardAll.get(i).getUser(), boardAll.get(i), likeCheck, allByBoardId.size(), requestDtos);
+            BoardsGetResponseDto brdto = new BoardsGetResponseDto(boardAll.get(i).getUser(), boardAll.get(i), likeCheck, allByBoardIdHearts.size(), detailCommentsDtoList,requestDtos);
 
             boardGetResponseDtoList.add(brdto);
         }
@@ -127,6 +136,7 @@ public class BoardService {
         }
 
         List<Comment> allByBoardId = commentRepository.findAllByBoardId(findBoard.getId());
+
         for (int i=0; i<allByBoardId.size(); i++) {
             BoardDetailCommentsDto tempDto = new BoardDetailCommentsDto(allByBoardId.get(i));
             detailCommentsDtoList.add(tempDto);
