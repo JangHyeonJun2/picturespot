@@ -46,6 +46,7 @@ public class UserController {
             return new ResponseEntity(messageDto,HttpStatus.INTERNAL_SERVER_ERROR);
         }
         // 닉네임 중복체크 && 이메일 중복체크
+        //MessageDto messageDto = null;
         if(userService.nickchk(signupRequestDto.getNickname()) && (userService.emailchk(signupRequestDto.getEmail()))){ // 이거는 그냥 중복체크만 한거인데 인증을 한 상태인지 어캐 알지
             EmailCheck emailCheck = emailCheckRepository.findByEmail(signupRequestDto.getEmail());
             if(emailCheck==null){
@@ -105,7 +106,7 @@ public class UserController {
         return userService.login(loginRequestDto);
     }
 
-    // 이메일 찾기
+    // 이메일 찾기(nickname 필요)
     @PostMapping("/user/findemail")
     public EmailResponseDto findEmail(@RequestBody NicknameRequestDto nicknameRequestDto){
         return userService.findEmail(nicknameRequestDto.getNickname());

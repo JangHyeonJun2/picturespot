@@ -1,5 +1,7 @@
 package com.sparta.hanghae.picturespot.model;
 
+import com.sparta.hanghae.picturespot.dto.request.mypage.NicknameRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.mypage.ProfileRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -66,6 +68,15 @@ public class User extends Timestamped{
         this.password = password;
     }
 
+    public void updateProfile(ProfileRequestDto profileRequestDto){
+        this.imgUrl = profileRequestDto.getImgUrl();
+        this.introduceMsg = profileRequestDto.getIntroduceMsg();
+    }
+
+    public void updateNick(NicknameRequestDto nicknameRequestDto){
+        this.nickname = nicknameRequestDto.getNickname();
+    }
+
     ////////////// UserDetails Override /////////////////
 
 //    private static final String ROLE_PREFIX = "ROLE_";
@@ -107,9 +118,6 @@ public class User extends Timestamped{
 
 
     ////////////// OAuth2User Override /////////////////
-
-
-
 //    @Override
 //    public Map<String, Object> getAttributes() {
 //        return null;
@@ -119,4 +127,4 @@ public class User extends Timestamped{
 //    public String getName() {
 //        return null;
 //    }
-}
+
