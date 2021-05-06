@@ -17,9 +17,9 @@ import java.util.List;
 public class MypageResponseDto {
 
     //user
-    private String nickname;
-    private String userImgUrl;
-    private String userMsg;
+//    private String nickname;
+//    private String userImgUrl;
+//    private String userMsg;
 
     //board
     private Long boardId;
@@ -41,11 +41,11 @@ public class MypageResponseDto {
 
 
     @Builder
-    public MypageResponseDto(User userEntity, Board boardEntity, List<MypageCommentResponseDto> comments, boolean likeCheck, int likeCount, List<BoardImgCommonRequestDto> reponseDto) {
+    public MypageResponseDto(Board boardEntity, List<MypageCommentResponseDto> comments, boolean likeCheck, int likeCount, List<BoardImgCommonRequestDto> reponseDto) {
         //user정보
-        this.nickname = userEntity.getNickname();
-        this.userImgUrl = userEntity.getImgUrl();
-        this.userMsg = userEntity.getIntroduceMsg();
+//        this.nickname = userEntity.getNickname();
+//        this.userImgUrl = userEntity.getImgUrl();
+//        this.userMsg = userEntity.getIntroduceMsg();
 
         //board 정보
         this.boardId = boardEntity.getId();
@@ -71,9 +71,9 @@ public class MypageResponseDto {
         this.boardImgReponseDtoList = reponseDto;
     }
 
-    public MypageResponseDto(User user){
-        this.nickname = user.getNickname();
-        this.userMsg = user.getIntroduceMsg();
-        this.userImgUrl = user.getImgUrl();
-    }
+//    public MypageResponseDto(User user){
+//        this.nickname = user.getNickname();
+//        this.userMsg = user.getIntroduceMsg();
+//        this.userImgUrl = user.getImgUrl();
+//    }
 }
