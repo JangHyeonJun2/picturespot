@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Entity
+//imgUrl을 분리함.
 public class Board extends Timestamped{
     @Id
     @GeneratedValue
