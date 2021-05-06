@@ -6,6 +6,8 @@ import com.sparta.hanghae.picturespot.dto.response.mypage.MypageResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.mypage.NicknameResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.mypage.ProfileResponseDto;
 import com.sparta.hanghae.picturespot.model.User;
+import com.sparta.hanghae.picturespot.model.UserPrincipal;
+import com.sparta.hanghae.picturespot.repository.UserRepository;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import com.sparta.hanghae.picturespot.service.MypageService;
 import com.sparta.hanghae.picturespot.service.S3Service;
@@ -31,51 +33,62 @@ public class MypageController {
     private final CustomExceptionController customExceptionController;
     private final S3Service s3Service;
     private final UserService userService;
+    private final UserRepository userRepository;
 
 
     //내 명소 + user정보
     @GetMapping("/mypage/myboard")
-    public ResponseEntity getMyboard(@AuthenticationPrincipal User user){
-        List<MypageResponseDto> myBoards = mypageService.getMyboard(user);
+    public ResponseEntity getMyboard(@AuthenticationPrincipal UserPrincipal user){
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        List<MypageResponseDto> myBoards = mypageService.getMyboard(findUser);
         return customExceptionController.ok("내가 쓴 게시물", myBoards);
     }
 
     //찜 명소 + user정보
     @GetMapping("/mypage/likeboard")
-    public ResponseEntity getMylikeboard(@AuthenticationPrincipal User user){
-        List<MypageResponseDto> likeBoards = mypageService.getMylikeboard(user);
+    public ResponseEntity getMylikeboard(@AuthenticationPrincipal UserPrincipal user){
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        List<MypageResponseDto> likeBoards = mypageService.getMylikeboard(findUser);
         return customExceptionController.ok("내가 좋아요 한 게시물", likeBoards);
     }
 
     //프로필 편집(사진, 자기소개)
     @PutMapping("/editmyprofile")
-    public ResponseEntity editProfile(@RequestParam(value = "profileFile", required = false) MultipartFile file, @RequestParam(value = "introduceMsg", required = false) String introduceMsg, @AuthenticationPrincipal User user) throws IOException {
+    public ResponseEntity editProfile(@RequestParam(value = "profileFile", required = false) MultipartFile file, @RequestParam(value = "introduceMsg", required = false) String introduceMsg, @AuthenticationPrincipal UserPrincipal user) throws IOException {
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
         if (!file.isEmpty()){
             String imgUrl = s3Service.upload(file, "profile");
-            ProfileResponseDto myProfile = mypageService.editProfile(imgUrl, introduceMsg, user);
+            ProfileResponseDto myProfile = mypageService.editProfile(imgUrl, introduceMsg, findUser);
             return customExceptionController.ok("내 프로필 정보", myProfile);
         }else{
             String imgUrl = "";
-            ProfileResponseDto myProfile = mypageService.editProfile(imgUrl, introduceMsg, user);
+            ProfileResponseDto myProfile = mypageService.editProfile(imgUrl, introduceMsg, findUser);
             return customExceptionController.ok("내 프로필 정보", myProfile);
         }
     }
 
     //프로필 닉네임 변경
     @PutMapping("/editnickname")
-    public ResponseEntity editNick(@RequestBody NicknameRequestDto nickRequestDto, @AuthenticationPrincipal User user){
-        NicknameResponseDto newNickname = mypageService.editNick(nickRequestDto, user);
+    public ResponseEntity editNick(@RequestBody NicknameRequestDto nickRequestDto, @AuthenticationPrincipal UserPrincipal user){
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        NicknameResponseDto newNickname = mypageService.editNick(nickRequestDto, findUser);
         return customExceptionController.ok("새 닉네임", newNickname);
     }
 
     //비밀번호 변경
     @PutMapping("/editpwd")
-    public ResponseEntity editPwd(@RequestBody @Valid PasswordRequestDto pwdRequestDto, Errors errors, @AuthenticationPrincipal User user){
+    public ResponseEntity editPwd(@RequestBody @Valid PasswordRequestDto pwdRequestDto, Errors errors, @AuthenticationPrincipal UserPrincipal user){
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
         if(errors.hasErrors()){
             Map<String, String> error = userService.validateHandling(errors);
             return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
         }else{
-            return mypageService.editPwd(pwdRequestDto, user);
+            return mypageService.editPwd(pwdRequestDto, findUser);
         }
     }
 

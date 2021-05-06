@@ -3,6 +3,8 @@ package com.sparta.hanghae.picturespot.controller;
 import com.sparta.hanghae.picturespot.dto.request.question.QuestionRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.question.QuestionResponseDto;
 import com.sparta.hanghae.picturespot.model.User;
+import com.sparta.hanghae.picturespot.model.UserPrincipal;
+import com.sparta.hanghae.picturespot.repository.UserRepository;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import com.sparta.hanghae.picturespot.service.QuestionService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final CustomExceptionController customExceptionController;
+    private final UserRepository userRepository;
 
     //문의하기 리스트
     @GetMapping("/qna")
@@ -37,19 +40,25 @@ public class QuestionController {
 
     //문의하기 글쓰기
     @PostMapping("/qna")
-    public ResponseEntity createQuestion(@RequestBody QuestionRequestDto questionRequestDto, @AuthenticationPrincipal User user){
-        return questionService.createQuestion(questionRequestDto, user);
+    public ResponseEntity createQuestion(@RequestBody QuestionRequestDto questionRequestDto, @AuthenticationPrincipal UserPrincipal user){
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        return questionService.createQuestion(questionRequestDto, findUser);
     }
 
     //문의하기 수정
     @PutMapping("/qna/{qnaId}")
-    public ResponseEntity updateQuestion(@PathVariable Long qnaId, @RequestBody QuestionRequestDto questionRequestDto, @AuthenticationPrincipal User user){
-        return questionService.updateQuestion(qnaId, questionRequestDto, user);
+    public ResponseEntity updateQuestion(@PathVariable Long qnaId, @RequestBody QuestionRequestDto questionRequestDto, @AuthenticationPrincipal UserPrincipal user){
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        return questionService.updateQuestion(qnaId, questionRequestDto, findUser);
     }
 
     //문의하기 삭제
     @DeleteMapping("/qna/{qnaId}")
-    public ResponseEntity deleteQuestion(@PathVariable Long qnaId, @AuthenticationPrincipal User user){
-        return questionService.deleteQuestion(qnaId, user);
+    public ResponseEntity deleteQuestion(@PathVariable Long qnaId, @AuthenticationPrincipal UserPrincipal user){
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        return questionService.deleteQuestion(qnaId, findUser);
     }
 }
