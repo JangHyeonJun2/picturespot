@@ -39,30 +39,31 @@ public class MypageController {
     //유저 정보
     @GetMapping("/profile/{nickname}")
     public ResponseEntity getMyprofile(@PathVariable String nickname, @AuthenticationPrincipal UserPrincipal user){
-        if (user==null){
-            User findUser = userRepository.findByNickname(nickname);
-            ProfileResponseDto profile = mypageService.getMyprofile(findUser);
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+
+        if (!findUser.getNickname().equals(nickname)){
+            User others = userRepository.findByNickname(nickname);
+            ProfileResponseDto profile = mypageService.getMyprofile(others);
             return customExceptionController.ok("다른 유저의 프로필 정보", profile);
         }else{
-            User findUser = userRepository.findById(user.getId()).orElseThrow(
-                    ()->new IllegalArgumentException("해당 사용자가 없습니다."));
             ProfileResponseDto profile = mypageService.getMyprofile(findUser);
             return customExceptionController.ok("내 프로필 정보", profile);
         }
     }
 
-    //내 명소
-    @GetMapping("/mypage/myboard")
-    public ResponseEntity getMyboard(@AuthenticationPrincipal UserPrincipal user){
+    //유저가 올린 게시물
+    @GetMapping("/story/{nickname}/board")
+    public ResponseEntity getMyboard(@PathVariable String nickname, @AuthenticationPrincipal UserPrincipal user){
         User findUser = userRepository.findById(user.getId()).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
         List<MypageResponseDto> myBoards = mypageService.getMyboard(findUser);
         return customExceptionController.ok("내가 쓴 게시물", myBoards);
     }
 
-    //찜 명소
-    @GetMapping("/mypage/likeboard")
-    public ResponseEntity getMylikeboard(@AuthenticationPrincipal UserPrincipal user){
+    //유저가 좋아요 한 게시물
+    @GetMapping("/story/{nickname}/likeboard")
+    public ResponseEntity getMylikeboard(@PathVariable String nickname, @AuthenticationPrincipal UserPrincipal user){
         User findUser = userRepository.findById(user.getId()).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
         List<MypageResponseDto> likeBoards = mypageService.getMylikeboard(findUser);
