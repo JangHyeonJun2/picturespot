@@ -20,6 +20,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Random;
+
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
@@ -73,7 +75,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         User user = new User();
         user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
         user.setProviderId(oAuth2UserInfo.getId());
-        user.setNickname(oAuth2UserInfo.getName()+"_"+oAuth2UserInfo.getId());
+        user.setNickname("SFlash_"+certified_key());
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setImgUrl(oAuth2UserInfo.getImageUrl());
         String encodPassword = bCryptPasswordEncoder.encode("test1234567");
@@ -83,9 +85,27 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
-        existingUser.setNickname(oAuth2UserInfo.getName());
+        existingUser.setNickname(existingUser.getNickname());
         existingUser.setImgUrl(oAuth2UserInfo.getImageUrl());
         return userRepository.save(existingUser);
+    }
+
+    // 인증번호 생성
+    private String certified_key() {
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        int num = 0;
+
+        do {
+            num = random.nextInt(75) + 48;
+            if (num >= 48 && num <= 57){
+                sb.append((char) num);
+            } else {
+                continue;
+            }
+
+        } while (sb.length() < 6);
+        return sb.toString();
     }
 
 }
