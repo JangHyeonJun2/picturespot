@@ -1,5 +1,6 @@
 package com.sparta.hanghae.picturespot.model;
 
+import com.sparta.hanghae.picturespot.dto.request.mypage.NicknameRequestDto;
 import com.sparta.hanghae.picturespot.dto.request.mypage.ProfileRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,9 +47,12 @@ public class User extends Timestamped implements UserDetails {
     }
 
     public void updateProfile(ProfileRequestDto profileRequestDto){
-        this.nickname = profileRequestDto.getNickname();
         this.imgUrl = profileRequestDto.getImgUrl();
         this.introduceMsg = profileRequestDto.getIntroduceMsg();
+    }
+
+    public void updateNick(NicknameRequestDto nicknameRequestDto){
+        this.nickname = nicknameRequestDto.getNickname();
     }
 
     ////////////// UserDetails Override /////////////////

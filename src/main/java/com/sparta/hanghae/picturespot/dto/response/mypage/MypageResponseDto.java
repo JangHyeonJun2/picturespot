@@ -70,4 +70,10 @@ public class MypageResponseDto {
         //이미지
         this.boardImgReponseDtoList = reponseDto;
     }
+
+    public MypageResponseDto(User user){
+        this.nickname = user.getNickname();
+        this.userMsg = user.getIntroduceMsg();
+        this.userImgUrl = user.getImgUrl();
+    }
 }

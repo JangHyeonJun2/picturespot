@@ -25,6 +25,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework/spring-web
 //    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.3'
 
+    runtimeOnly 'mysql:mysql-connector-java'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
@@ -48,12 +49,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
-
-
-    //s3
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws'
-    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
-    implementation 'com.amazonaws:aws-java-sdk-s3'
 
 }
 
