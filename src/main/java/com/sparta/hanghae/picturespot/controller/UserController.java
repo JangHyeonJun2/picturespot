@@ -1,24 +1,29 @@
 package com.sparta.hanghae.picturespot.controller;
 
+import com.sparta.hanghae.picturespot.config.oauth2.exception.ResourceNotFoundException;
+import com.sparta.hanghae.picturespot.config.oauth2.user.CurrentUser;
 import com.sparta.hanghae.picturespot.dto.request.user.*;
 import com.sparta.hanghae.picturespot.dto.response.user.AuthResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.user.EmailResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.user.LoginResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.user.MessageDto;
 import com.sparta.hanghae.picturespot.model.EmailCheck;
+
+import com.sparta.hanghae.picturespot.model.UserPrincipal;
 import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.repository.EmailCheckRepository;
+import com.sparta.hanghae.picturespot.repository.UserRepository;
 import com.sparta.hanghae.picturespot.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
-import java.util.Random;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +31,7 @@ public class UserController {
 
     private final UserService userService;
     private final EmailCheckRepository emailCheckRepository;
+    private final UserRepository userRepository;
 
     // 회원가입
     @PostMapping("/user/signup")
@@ -169,6 +175,21 @@ public class UserController {
         MessageDto messageDto = new MessageDto(user.getEmail());
         return new ResponseEntity(messageDto, HttpStatus.OK);
     }
+
+    @GetMapping("/user")
+    public String user(@AuthenticationPrincipal UserPrincipal principalDetails){
+        System.out.println("principalDetails : "+principalDetails);
+        return "user";
+    }
+
+    @GetMapping("/user/me")
+    @PreAuthorize("hasRole('USER')")
+    public User getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+        return userRepository.findById(userPrincipal.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
+    }
+
+
 
 
 
