@@ -97,13 +97,14 @@ public class BoardService {
 
 //        searchText = "%" + searchText + "%";
         List<Board> findSearchBoardList = boardRepository.findByTitleContainingOrContentContainingOrderByModifiedDesc(searchText, searchText); //OrderByModifiedDesc
+//        List<Board> findSearchBoardList = boardRepository.findByTitleIsLikeOrContentIsLikeOrderByModifiedDesc(searchText, searchText); //OrderByModifiedDesc
         boolean likeCheck = true;
         for (int i=0; i<findSearchBoardList.size(); i++) {
             List<BoardImgUrls> allBoardImgUrl = boardImgUrlsRepository.findAllByBoardId(findSearchBoardList.get(i).getId());
             List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>(); // 해당하는 boardImgUrls 담는 리스트
 
             for (int j=0; j<allBoardImgUrl.size(); j++) {//ImgUrl들 넣어주기.
-                requestDtos.add(new BoardImgCommonRequestDto(allBoardImgUrl.get(i)));
+                requestDtos.add(new BoardImgCommonRequestDto(allBoardImgUrl.get(j)));
             }
             if (loginUser == null) {
                 likeCheck = false;

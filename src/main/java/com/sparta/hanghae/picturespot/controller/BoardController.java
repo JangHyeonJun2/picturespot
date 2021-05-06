@@ -39,7 +39,6 @@ public class BoardController {
     }
 
     //게시물 작성
-    //TODO 클라인트분들에게 장소도 넘겨주는지? 물어보기
     @PostMapping("/board")
     public ResponseEntity save(@RequestParam(value = "file", required = false) List<MultipartFile> files, @RequestParam("title") String title,
                                @RequestParam("content") String content, @RequestParam("category") String category, @RequestParam("latitude") BigDecimal latitude,
