@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class BoardsGetResponseDto {
     private Long boardId;
+    private LocalDateTime modified;
     private Long writerId;
     private String writerName;
     private String writerImgUrl;
@@ -24,12 +26,14 @@ public class BoardsGetResponseDto {
     private int likeCount;
     private String category;
     private List<BoardImgCommonRequestDto> boardImgReponseDtoList = new ArrayList<>();
+    private List<BoardDetailCommentsDto> boardDetailCommentDtoList = new ArrayList<>();
 
 
     @Builder
-    public BoardsGetResponseDto(User userEntity, Board boardEntity, boolean likeCheck, int likeCount, List<BoardImgCommonRequestDto> reponseDto) {
+    public BoardsGetResponseDto(User userEntity, Board boardEntity, boolean likeCheck, int likeCount, List<BoardDetailCommentsDto> boardDetailCommentsDtoList, List<BoardImgCommonRequestDto> reponseDto) {
         //writer의 정보 초기화
         this.boardId = boardEntity.getId();
+        this.modified = boardEntity.getModified();
         this.writerId = userEntity.getId();
         this.writerName = userEntity.getNickname();
         this.writerImgUrl = userEntity.getImgUrl();
@@ -44,6 +48,7 @@ public class BoardsGetResponseDto {
 //        }
         this.liked = likeCheck;
         this.likeCount = likeCount;
+        this.boardDetailCommentDtoList = boardDetailCommentsDtoList;
         this.boardImgReponseDtoList = reponseDto;
     }
 

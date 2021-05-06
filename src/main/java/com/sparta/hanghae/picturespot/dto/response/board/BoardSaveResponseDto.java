@@ -1,6 +1,7 @@
 package com.sparta.hanghae.picturespot.dto.response.board;
 
 import com.sparta.hanghae.picturespot.dto.request.img.BoardImgCommonRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.img.BoardImgSaveRequestDto;
 import com.sparta.hanghae.picturespot.model.Board;
 import com.sparta.hanghae.picturespot.model.User;
 import lombok.Getter;
@@ -19,10 +20,10 @@ public class BoardSaveResponseDto {
     private BigDecimal latitude;
     private BigDecimal logitude;
     private String spotName;
-    private List<BoardImgCommonRequestDto> boardImgReponseDtoList = new ArrayList<>();
+    private List<BoardImgSaveRequestDto> boardImgReponseDtoList = new ArrayList<>();
     private User user;
 
-    public BoardSaveResponseDto(Board entity, List<BoardImgCommonRequestDto> reponseDto) {
+    public BoardSaveResponseDto(Board entity, List<BoardImgSaveRequestDto> reponseDto) {
         this.title = entity.getTitle();
         this.content = entity.getContent();
         this.category = entity.getCategory();

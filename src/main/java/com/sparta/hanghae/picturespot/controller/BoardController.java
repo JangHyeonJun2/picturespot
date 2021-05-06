@@ -39,7 +39,9 @@ public class BoardController {
 
 
         String[] imgUrls = s3Service.upload(files, "board");
-
+        if (user == null) {
+            return customExceptionController.error("로그인 사용자가 아닙니다.");
+        }
         BoardSaveRequestDto boardSaveRequestDto = new BoardSaveRequestDto(title,content,category,latitude,longitude, spotName, user);
         BoardSaveResponseDto responseDto = boardService.save(boardSaveRequestDto, imgUrls);
         return customExceptionController.ok("게시물을 저장하였습니다.", responseDto);

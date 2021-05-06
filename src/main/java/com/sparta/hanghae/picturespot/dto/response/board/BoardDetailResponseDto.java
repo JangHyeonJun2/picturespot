@@ -22,7 +22,7 @@ public class BoardDetailResponseDto {
     private int likeCount;
     private String spotName;
     private List<BoardDetailCommentsDto> boardDetailCommentDtoList = new ArrayList<>();
-    private List<BoardImgCommonRequestDto> requestDto = new ArrayList<>();
+    private List<BoardImgCommonRequestDto> boardImgReponseDtoList = new ArrayList<>();
 
     @Builder
     public BoardDetailResponseDto(Board boardEntity, boolean likeCheck, int likeCount, List<BoardDetailCommentsDto> boardDetailCommentsDtoList, List<BoardImgCommonRequestDto> requestDto) {
@@ -41,6 +41,6 @@ public class BoardDetailResponseDto {
         this.liked = likeCheck;
         this.likeCount = likeCount;
         this.boardDetailCommentDtoList = boardDetailCommentsDtoList;
-        this.requestDto = requestDto;
+        this.boardImgReponseDtoList = requestDto;
     }
 }
