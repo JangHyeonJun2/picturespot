@@ -47,11 +47,12 @@ public class User extends Timestamped  {
 
     private String providerId;
 
-    public User(String nickname, String email, String password, UserRole role) {
+    public User(String nickname, String email, String password, UserRole role, AuthProvider provider) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.provider = provider;
     }
 
     public User(String nickname, String email, String password, UserRole role, AuthProvider provider, String providerId) {

@@ -21,8 +21,6 @@ import java.util.Date;
 public class JwtTokenProvider { // 토큰 생성, 검증
 
     private String secretKey = "ABCA7D35A0B04018B865E0817E1A41374FB06737CF00641E2A781F631B61C9AC";
-
-    private long tokenValidTime = 30*60*1000L; // token 발급 후 유효시간 30분
     private final UserDetailsService userDetailsService;//토큰에 저장된 유저 정보를 활용해야 하기 때문에 CustomUserDetatilService 라는 이름의 클래스를 만들고 UserDetailsService를 상속받아 재정의 하는 과정을 진행합니다.
 
     @PostConstruct // 서버가 돌아가면 제일 먼저 실행시키는 어노테이션
@@ -33,6 +31,8 @@ public class JwtTokenProvider { // 토큰 생성, 검증
     public String createToken(String userPk){
         Claims claims = Jwts.claims().setSubject(userPk);
         Date now = new Date();
+        // token 발급 후 유효시간 30분 테스트만 임시로 300분
+        long tokenValidTime = 30 * 60 * 10000L;
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
