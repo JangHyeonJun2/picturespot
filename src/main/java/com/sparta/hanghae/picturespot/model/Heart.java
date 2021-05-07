@@ -19,7 +19,7 @@ public class Heart {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "BOARD_ID")
     private Board board;
 

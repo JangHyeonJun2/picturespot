@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentUpdateResponseDto {
     private String content;
-    private User user;
-    private Board board;
+    private Long userId;
+    private Long boardId;
 
     public CommentUpdateResponseDto(Comment entity) {
         this.content = entity.getContent();
-        this.user = entity.getUser();
-        this.board = entity.getBoard();
+        this.userId = entity.getUser().getId();
+        this.boardId = entity.getBoard().getId();
     }
 }
