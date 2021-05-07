@@ -24,6 +24,7 @@ public class CommentController {
     //댓글 저장
     @PostMapping("/board/{boardId}/comment")
     public ResponseEntity addComment(@PathVariable Long boardId, @AuthenticationPrincipal UserPrincipal user, @RequestBody CommentSaveRequestDto requestDto) {
+
         User findUser = findUserMethod(user);
         CommentSaveResponseDto commentSaveResponseDto = commentService.addComment(boardId, findUser, requestDto);
 

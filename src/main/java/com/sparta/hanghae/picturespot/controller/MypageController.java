@@ -87,6 +87,8 @@ public class MypageController {
     public ResponseEntity editProfile(@RequestParam(value = "profileFile", required = false) MultipartFile file, @RequestParam(value = "introduceMsg", required = false) String introduceMsg, @AuthenticationPrincipal UserPrincipal user) throws IOException {
         User findUser = userRepository.findById(user.getId()).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+
+        System.out.println(file);
         if (!file.isEmpty()){
             String imgUrl = s3Service.upload(file, "profile");
             ProfileResponseDto myProfile = mypageService.editProfile(imgUrl, introduceMsg, findUser);

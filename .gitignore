@@ -44,3 +44,4 @@ src/main/resources/aws.yml
 application.properties
 aws.yml
 oauth2.yml
+aws.yml
