@@ -46,6 +46,7 @@ public class BoardController {
 
 
         String[] imgUrls = s3Service.upload(Arrays.asList(files), "board");
+
         if (user == null) {
             return customExceptionController.error("로그인 사용자가 아닙니다.");
         }
