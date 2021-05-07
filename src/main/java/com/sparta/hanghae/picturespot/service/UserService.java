@@ -5,10 +5,7 @@ import com.sparta.hanghae.picturespot.dto.request.user.*;
 import com.sparta.hanghae.picturespot.dto.response.user.AuthResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.user.EmailResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.user.LoginResponseDto;
-import com.sparta.hanghae.picturespot.model.EmailCheck;
-import com.sparta.hanghae.picturespot.model.PwdCheck;
-import com.sparta.hanghae.picturespot.model.User;
-import com.sparta.hanghae.picturespot.model.UserRole;
+import com.sparta.hanghae.picturespot.model.*;
 import com.sparta.hanghae.picturespot.repository.EmailCheckRepository;
 import com.sparta.hanghae.picturespot.repository.PwdCheckRepository;
 import com.sparta.hanghae.picturespot.repository.UserRepository;
@@ -50,7 +47,8 @@ public class UserService {
 
         String encodPassword = bCryptPasswordEncoder.encode(requestDto.getPassword());
         UserRole role = UserRole.USER;
-        User user = new User(requestDto.getNickname(), requestDto.getEmail(), encodPassword, role);
+        AuthProvider authProvider = AuthProvider.local;
+        User user = new User(requestDto.getNickname(), requestDto.getEmail(), encodPassword, role, authProvider);
 
         userRepository.save(user);
     }
@@ -236,7 +234,8 @@ public class UserService {
         }
         String encodPassword = bCryptPasswordEncoder.encode(adminSignupRequestDto.getPassword());
         UserRole role = UserRole.ADMIN;
-        User user = new User(adminSignupRequestDto.getNickname(), adminSignupRequestDto.getEmail(), encodPassword, role);
+        AuthProvider authProvider = AuthProvider.local;
+        User user = new User(adminSignupRequestDto.getNickname(), adminSignupRequestDto.getEmail(), encodPassword, role, authProvider);
         userRepository.save(user);
     }
 
