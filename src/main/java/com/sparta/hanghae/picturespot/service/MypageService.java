@@ -156,7 +156,8 @@ public class MypageService {
             Message message = new Message("비밀번호가 일치하지 않습니다.");
             return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        editUser.updatePw(pwdRequestDto.getNewPwd());
+        String newPw = bCryptPasswordEncoder.encode(pwdRequestDto.getNewPwd());
+        editUser.updatePw(newPw);
         Message message = new Message("비밀번호가 변경되었습니다.");
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
