@@ -169,28 +169,6 @@ public class UserController {
 
     }
 
-//    //@Secured("ROLE_ADMIN") secured 어노테이션을 사용할 때는 userDetails에서 ROLE_을 붙인 권한을 사용해줘야하는데 security 설정에서는 그냥 데이터베이스 컬럼에 들어가 있는 대로 검사하면 되는것 같다.
-//    @PostMapping("/test")
-//    public ResponseEntity test(@AuthenticationPrincipal User user){
-//        MessageDto messageDto = new MessageDto(user.getEmail());
-//        return new ResponseEntity(messageDto, HttpStatus.OK);
-//    }
-//
-//    @GetMapping("/user")
-//    public String user(@AuthenticationPrincipal UserPrincipal principalDetails){
-//        System.out.println("principalDetails : "+principalDetails);
-//        return "user";
-//    }
-//
-//    @GetMapping("/user/me")
-//    @PreAuthorize("hasRole('USER')")
-//    public User getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
-//        return userRepository.findById(userPrincipal.getId())
-//                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userPrincipal.getId()));
-//    }
-
-
-
-
+    
 
 }
