@@ -45,7 +45,11 @@ public class BoardService {
                 () -> new IllegalArgumentException("게시물이 존재 하지 않습니다."));
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new IllegalArgumentException("계정이 존재하지 않습니다."));
-
+        //board 와 boardImgUrl이 연관관계(즉 외래키 때문에) 해당 게시판의 이미지를 먼저 조회하고 삭제를 하고 게시판을 삭제해야한다.
+        List<BoardImgUrls> allByBoardId = boardImgUrlsRepository.findAllByBoardId(boardId);
+        for (int i=0; i<allByBoardId.size(); i++) {
+            boardImgUrlsRepository.delete(allByBoardId.get(i));
+        }
         if (board.getUser().getId().equals(userId)) {
             boardRepository.deleteById(boardId);
             return board.getId();//삭제된 게시물 id 리턴.
