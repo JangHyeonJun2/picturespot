@@ -19,7 +19,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Entity
-public class User extends Timestamped {
+public class User extends Timestamped  {
 
     //private Map<String, Object> attributes;
 

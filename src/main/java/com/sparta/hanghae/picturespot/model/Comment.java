@@ -26,6 +26,8 @@ public class Comment extends Timestamped{
     @JoinColumn(name = "BOARD_ID")
     private Board board;
 
+
+
     @Builder
     public Comment(String content, User user, Board board) {
         this.content = content;

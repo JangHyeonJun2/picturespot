@@ -44,7 +44,6 @@ public class BoardController {
                                @RequestParam("content") String content, @RequestParam("category") String category, @RequestParam("latitude") BigDecimal latitude,
                                @RequestParam("longitude") BigDecimal longitude, @RequestParam("spotName") String spotName, @AuthenticationPrincipal UserPrincipal user) throws IOException {
 
-
         String[] imgUrls = s3Service.upload(Arrays.asList(files), "board");
 
         if (user == null) {
@@ -93,7 +92,6 @@ public class BoardController {
     //지도페이지 로딩 될 때
     @GetMapping("/map")
     public ResponseEntity loadingMapBoard(@AuthenticationPrincipal UserPrincipal user) {
-
         User findUser = findUserMethod(user);
         List<LoadingBoardMapResponseDto> loadingBoardMapResponseDtos = boardService.loadingMapBoard(findUser);
         return customExceptionController.ok("모든 게시물 데이터 정보입니다." ,loadingBoardMapResponseDtos);

@@ -14,7 +14,7 @@ public class BoardImgUrls {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "BOARD_ID")
     private Board board;
 

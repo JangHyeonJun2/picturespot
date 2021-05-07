@@ -27,6 +27,7 @@ public class PicturespotApplication {
             + "classpath:application.yml,"
             + "classpath:aws.yml";
 
+
     public static void main(String[] args) {
         new SpringApplicationBuilder(PicturespotApplication.class)
                 .properties(APPLICATION_LOCATIONS)
