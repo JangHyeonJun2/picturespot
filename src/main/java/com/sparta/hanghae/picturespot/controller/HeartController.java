@@ -1,6 +1,7 @@
 package com.sparta.hanghae.picturespot.controller;
 
 import com.sparta.hanghae.picturespot.model.User;
+import com.sparta.hanghae.picturespot.model.UserPrincipal;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import com.sparta.hanghae.picturespot.service.HeartService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class HeartController {
     private final CustomExceptionController customExceptionController;
 
     @PostMapping("/board/{boardId}/like")
-    public ResponseEntity addHeart(@PathVariable Long boardId, @AuthenticationPrincipal User user) {
+    public ResponseEntity addHeart(@PathVariable Long boardId, @AuthenticationPrincipal UserPrincipal user) {
         boolean checkResult = heartService.addHeart(boardId, user.getId());
         if (checkResult) {
             return customExceptionController.ok("좋아요를 하였습니다.", true);
@@ -27,7 +28,7 @@ public class HeartController {
     }
 
     @DeleteMapping("/board/{boardId}/like")
-    public ResponseEntity deleteHeart(@PathVariable Long boardId, @AuthenticationPrincipal User user) {
+    public ResponseEntity deleteHeart(@PathVariable Long boardId, @AuthenticationPrincipal UserPrincipal user) {
         boolean checkResult = heartService.deleteHeart(boardId, user.getId());
 
         if (checkResult) {
