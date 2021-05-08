@@ -15,10 +15,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -48,14 +45,17 @@ public class S3Service {
     private String[] upload(File[] uploadFile, String dirName) {
         String[] uploadImgUrl = new String[uploadFile.length];
 
+
         for (int i=0; i<uploadFile.length; i++) {
 //            String fileName = uploadFile[i].getName().replace(" ", "");
             String fileName = uploadFile[i].getName().substring(uploadFile[i].getName().lastIndexOf('.'));
             Date date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
+            UUID uuid = UUID.randomUUID();
+            String subUUID = uuid.toString().substring(0, 8);
             SimpleDateFormat fourteen_format = new SimpleDateFormat("yyyyMMddHHmmss");
 
             String dateFileName = fourteen_format.format(date_now) + fileName;
-            String resultFileName = dirName + "/" + dateFileName;
+            String resultFileName = dirName + "/" + subUUID +dateFileName;
             uploadImgUrl[i] = putS3(uploadFile[i],resultFileName);
             removeNewFile(uploadFile[i]);
         }
@@ -66,6 +66,8 @@ public class S3Service {
     private String upload(File uploadFile, String dirName) {
 
         String fileName = uploadFile.getName().substring(uploadFile.getName().lastIndexOf('.'));
+
+
         Date date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
         SimpleDateFormat fourteen_format = new SimpleDateFormat("yyyyMMddHHmmss");
 
