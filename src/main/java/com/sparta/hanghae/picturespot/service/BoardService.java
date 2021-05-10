@@ -68,7 +68,7 @@ public class BoardService {
     getBoards(UserPrincipal loginUser) {
         List<BoardsGetResponseDto> boardGetResponseDtoList = new ArrayList<>();
 
-        List<Board> boardAll = boardRepository.findAll(Sort.by(Sort.Direction.DESC, "modified"));
+        List<Board> boardAll = boardRepository.findAllByOrderByModifiedDesc();
         boolean likeCheck = true;
         for (int i=0; i<boardAll.size(); i++) {
             List<BoardImgUrls> allBoardImgUrls = boardImgUrlsRepository.findAllByBoardId(boardAll.get(i).getId());
