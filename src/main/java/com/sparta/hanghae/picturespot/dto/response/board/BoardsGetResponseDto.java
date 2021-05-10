@@ -22,6 +22,7 @@ public class BoardsGetResponseDto {
     private String writerImgUrl;
     private String title;
     private String content;
+    private String spotName;
     private boolean liked;
     private int likeCount;
     private String category;
@@ -40,6 +41,7 @@ public class BoardsGetResponseDto {
         //board 정보 초기화
         this.title = boardEntity.getTitle();
         this.content = boardEntity.getContent();
+        this.spotName = boardEntity.getSpotName();
         this.category = boardEntity.getCategory();
         //게시물 배열 초기화
 //        this.imgUrls = new String[boardEntity.getImgUrls().length];
