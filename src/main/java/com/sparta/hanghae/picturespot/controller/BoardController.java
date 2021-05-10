@@ -94,8 +94,8 @@ public class BoardController {
     //지도페이지 로딩 될 때
     @GetMapping("/map")
     public ResponseEntity loadingMapBoard(@AuthenticationPrincipal UserPrincipal user) {
-        User findUser = findUserMethod(user);
-        List<LoadingBoardMapResponseDto> loadingBoardMapResponseDtos = boardService.loadingMapBoard(findUser);
+//        User findUser = findUserMethod(user);
+        List<LoadingBoardMapResponseDto> loadingBoardMapResponseDtos = boardService.loadingMapBoard(user);
         return customExceptionController.ok("모든 게시물 데이터 정보입니다." ,loadingBoardMapResponseDtos);
     }
 
