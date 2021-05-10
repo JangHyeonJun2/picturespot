@@ -8,6 +8,4 @@ import lombok.NoArgsConstructor;
 public class QCommentRequestDto {
     private Long id;
     private String content;
-    //private Long userId;
-    //private Long questionId;
 }
