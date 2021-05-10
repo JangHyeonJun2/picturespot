@@ -15,32 +15,24 @@ import org.springframework.web.bind.annotation.*;
 public class QCommentController {
 
     private final QCommentService qCommentService;
-    private final UserRepository userRepository;
-
     //----문의하기 댓글은 관리자만 작성할 수 있음----//
     //----문의하기 댓글은 문의하기 게시물 상세 요청 시 함께 볼 수 있음---//
 
     //문의하기 댓글 쓰기
     @PostMapping("/qcomment/{qnaId}")
     public ResponseEntity createQComment(@PathVariable Long qnaId, @RequestBody QCommentRequestDto qCommentRequestDto, @AuthenticationPrincipal UserPrincipal user){
-        User findUser = userRepository.findById(user.getId()).orElseThrow(
-                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
-        return qCommentService.createQComment(qnaId, qCommentRequestDto, findUser);
+        return qCommentService.createQComment(qnaId, qCommentRequestDto, user);
     }
 
     //문의하기 댓글 수정
     @PutMapping("/qcomment/{qcommentId}/qna/{qnaId}")
     public ResponseEntity updateQComment(@PathVariable Long qnaId, @PathVariable Long qcommentId, @RequestBody QCommentRequestDto qCommentRequestDto, @AuthenticationPrincipal UserPrincipal user){
-        User findUser = userRepository.findById(user.getId()).orElseThrow(
-                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
-        return qCommentService.updateQComment(qnaId, qcommentId, qCommentRequestDto, findUser);
+        return qCommentService.updateQComment(qnaId, qcommentId, qCommentRequestDto, user);
     }
 
     //문의하기 댓글 삭제
     @DeleteMapping("/qcomment/{qcommentId}/qna/{qnaId}")
     public ResponseEntity deleteQComment(@PathVariable Long qnaId, @PathVariable Long qcommentId, @AuthenticationPrincipal UserPrincipal user){
-        User findUser = userRepository.findById(user.getId()).orElseThrow(
-                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
-        return qCommentService.deleteQComment(qcommentId, qnaId, findUser);
+        return qCommentService.deleteQComment(qcommentId, qnaId, user);
     }
 }

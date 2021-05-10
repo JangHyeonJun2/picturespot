@@ -18,4 +18,5 @@ public class ProfileResponseDto {
         this.imgUrl = editUser.getImgUrl();
         this.introduceMsg = editUser.getIntroduceMsg();
     }
+
 }

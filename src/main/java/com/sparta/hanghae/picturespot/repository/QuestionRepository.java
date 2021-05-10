@@ -11,7 +11,6 @@ import java.util.Optional;
 
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     Page<Question> findAllByOrderByModifiedDesc(Pageable pageable);
-    //List<Question> findAllByOrderByModifiedDesc();
     Optional<Question> findById(Long qnaId);
     Optional<Question> findByUserAndId(User user, Long qnaId);
 }
