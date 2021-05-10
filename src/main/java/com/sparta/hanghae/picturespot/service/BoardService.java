@@ -165,7 +165,7 @@ public class BoardService {
         return new BoardDetailResponseDto(findBoard,likeCheck,allBoardHeartCount.size(),detailCommentsDtoList,requestDtos);
     }
     //게시물 메인페이지(지도) 로딩될 때 데이터 보내주기
-    public List<LoadingBoardMapResponseDto>loadingMapBoard(User loginUser) {
+    public List<LoadingBoardMapResponseDto>loadingMapBoard(UserPrincipal loginUser) {
         List<Board> boards = boardRepository.findAll();
         List<LoadingBoardMapResponseDto> loadingBoardMapResponseDtos = new ArrayList<>();
         boolean likeCheck = true;

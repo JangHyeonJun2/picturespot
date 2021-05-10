@@ -55,16 +55,18 @@ public class BoardController {
         return customExceptionController.ok("게시물을 저장하였습니다.", responseDto);
     }
 
-    //게시글 수정
+//    게시글 수정
 //    @PutMapping("/board/{boardId}")
-//    public ResponseEntity update(@PathVariable String boardId) {
-//
+//    public ResponseEntity update(@PathVariable String boardId, @RequestParam(value = "file", required = false) MultipartFile[] files,
+//                                 @RequestParam("title") String title, @RequestParam("content") String content,
+//                                 @RequestParam(value = "deleteImages", required = false) Long[] deleteImages) {
 //    }
 
     //게시글 삭제
     @DeleteMapping("/board/{boardId}")
     public ResponseEntity delete(@PathVariable Long boardId, @AuthenticationPrincipal UserPrincipal user) {
-        Long deleteBoardId = boardService.delete(boardId, user.getId());
+        User userMethod = findUserMethod(user);
+        Long deleteBoardId = boardService.delete(boardId, userMethod.getId());
         return customExceptionController.ok("게시물이 삭제되었습니다.", deleteBoardId);
     }
 
@@ -92,8 +94,8 @@ public class BoardController {
     //지도페이지 로딩 될 때
     @GetMapping("/map")
     public ResponseEntity loadingMapBoard(@AuthenticationPrincipal UserPrincipal user) {
-        User findUser = findUserMethod(user);
-        List<LoadingBoardMapResponseDto> loadingBoardMapResponseDtos = boardService.loadingMapBoard(findUser);
+//        User findUser = findUserMethod(user);
+        List<LoadingBoardMapResponseDto> loadingBoardMapResponseDtos = boardService.loadingMapBoard(user);
         return customExceptionController.ok("모든 게시물 데이터 정보입니다." ,loadingBoardMapResponseDtos);
     }
 
