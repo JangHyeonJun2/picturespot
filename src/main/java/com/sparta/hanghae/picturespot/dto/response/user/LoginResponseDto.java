@@ -9,10 +9,12 @@ public class LoginResponseDto {
     private String token;
     private String nickname;
     private String msg;
+    private Long userId;
 
-    public LoginResponseDto(String token, String nickname, String msg) {
+    public LoginResponseDto(String token, String nickname, String msg, Long userId) {
         this.token = token;
         this.nickname = nickname;
         this.msg = msg;
+        this.userId = userId;
     }
 }

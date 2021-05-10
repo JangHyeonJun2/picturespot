@@ -1,10 +1,8 @@
 package com.sparta.hanghae.picturespot.config.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
-
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider { // 토큰 생성, 검증
@@ -64,8 +62,16 @@ public class JwtTokenProvider { // 토큰 생성, 검증
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (Exception e) {
-            return false;
+        } catch (SignatureException e) {
+            throw new SignatureException("token에러");
+        } catch (MalformedJwtException e) {
+            throw new MalformedJwtException("token에러");
+        } catch (ExpiredJwtException e) {
+            throw new IllegalStateException("token에러");
+        } catch (UnsupportedJwtException e) {
+            throw new UnsupportedJwtException("token에러");
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("token에러");
         }
     }
 
