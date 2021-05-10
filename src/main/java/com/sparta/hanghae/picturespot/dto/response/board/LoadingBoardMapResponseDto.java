@@ -16,7 +16,6 @@ public class LoadingBoardMapResponseDto {
     private Long boardId;
     private String title;
     private String content;
-    private String[] imgUrls;
     private boolean liked;
     private int likeCount;
     private String writerName;

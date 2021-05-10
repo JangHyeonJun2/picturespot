@@ -21,7 +21,9 @@ public class BoardSaveResponseDto {
     private BigDecimal logitude;
     private String spotName;
     private List<BoardImgSaveRequestDto> boardImgReponseDtoList = new ArrayList<>();
-    private User user;
+    private Long userId;
+    private String nickName;
+
 
     public BoardSaveResponseDto(Board entity, List<BoardImgSaveRequestDto> reponseDto) {
         this.title = entity.getTitle();
@@ -31,6 +33,8 @@ public class BoardSaveResponseDto {
         this.logitude = entity.getLatitude();
         this.boardImgReponseDtoList = reponseDto;
         this.spotName = entity.getSpotName();
-        this.user = entity.getUser();
+        this.userId = entity.getUser().getId();
+        this.nickName = entity.getUser().getNickname();
+
     }
 }
