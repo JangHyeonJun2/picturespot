@@ -1,8 +1,10 @@
 package com.sparta.hanghae.picturespot.controller;
 
 import com.sparta.hanghae.picturespot.dto.request.board.BoardSaveRequestDto;
+import com.sparta.hanghae.picturespot.dto.request.board.BoardUpdateRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.board.*;
 import com.sparta.hanghae.picturespot.model.Board;
+import com.sparta.hanghae.picturespot.model.BoardImgUrls;
 import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.model.UserPrincipal;
 import com.sparta.hanghae.picturespot.repository.BoardRepository;
@@ -46,9 +48,6 @@ public class BoardController {
 
         String[] imgUrls = s3Service.upload(Arrays.asList(files), "board");
 
-        if (user == null) {
-            return customExceptionController.error("로그인 사용자가 아닙니다.");
-        }
         User findUser = findUserMethod(user);
         BoardSaveRequestDto boardSaveRequestDto = new BoardSaveRequestDto(title,content,category,latitude,longitude, spotName, findUser);
         BoardSaveResponseDto responseDto = boardService.save(boardSaveRequestDto, imgUrls);
@@ -56,11 +55,30 @@ public class BoardController {
     }
 
 //    게시글 수정
-//    @PutMapping("/board/{boardId}")
-//    public ResponseEntity update(@PathVariable String boardId, @RequestParam(value = "file", required = false) MultipartFile[] files,
-//                                 @RequestParam("title") String title, @RequestParam("content") String content,
-//                                 @RequestParam(value = "deleteImages", required = false) Long[] deleteImages) {
-//    }
+    @PutMapping("/board/{boardId}")
+    public ResponseEntity update(@PathVariable Long boardId, @RequestParam(value = "file", required = false) MultipartFile[] files,
+                                 @RequestParam("title") String title, @RequestParam("content") String content,
+                                 @RequestParam(value = "deleteImages", required = false) Long[] deleteImages,
+                                 @AuthenticationPrincipal UserPrincipal user) throws IOException {
+
+        User findUser = findUserMethod(user);
+        //s3에 이미지를 삭제하는 메서드
+        if (deleteImages != null)
+            s3Service.findImgUrls(deleteImages);
+        //s3에 이미지 업로드하고 업로드된 이미지 배열
+        String[] imgUrls =null;
+        if (files != null) {
+            imgUrls = s3Service.upload(Arrays.asList(files), "board"); //새로 추가된 이미지 s3에 저장.
+        }
+
+        BoardUpdateRequestDto boardUpdateRequestDto = new BoardUpdateRequestDto(boardId,title,content);
+        BoardDetailResponseDto updateBoard = boardService.update(boardUpdateRequestDto, findUser, deleteImages, imgUrls);
+
+        if (updateBoard == null)
+            return customExceptionController.error("사용자가 옳바르지 않습니다.");
+        else
+            return customExceptionController.ok("게시글이 수정되었습니다.", updateBoard);
+    }
 
     //게시글 삭제
     @DeleteMapping("/board/{boardId}")

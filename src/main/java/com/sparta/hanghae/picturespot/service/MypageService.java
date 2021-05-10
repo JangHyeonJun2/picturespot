@@ -17,10 +17,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 @RequiredArgsConstructor
@@ -33,42 +37,39 @@ public class MypageService {
     private final UserRepository userRepository;
     private final BoardImgUrlsRepository boardImgUrlsRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final S3Service s3Service;
+    private final UserService userService;
+
 
     //user정보(이름, 프로필사진, intro메시지)
-    public ProfileResponseDto getMyprofile(User user) {
-        ProfileResponseDto profileResponseDto = new ProfileResponseDto(user);
+    public ProfileResponseDto getMyprofile(Long userId) {
+        User findUser = userRepository.findById(userId).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        ProfileResponseDto profileResponseDto = new ProfileResponseDto(findUser);
         return profileResponseDto;
     }
 
 
     //내 명소(내가올린게시물) + 댓글 + 좋아요
-    public List<MypageResponseDto> getMyboard(User findUser, UserPrincipal user) {
-
-        //findUser : 그 사람의 페이지
-        //user : 현재 로그인한 사용자
-
+    public List<MypageResponseDto> getMyboard(Long userId, UserPrincipal user) {
+        User findUser = userRepository.findById(userId).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        //findUser : 그 사람의 페이지, user : 현재 로그인한 사용자
         List<MypageResponseDto> mypageDtoList = new ArrayList<>();
         List<Board> boardList = boardRepository.findAllByUserIdOrderByModifiedDesc(findUser.getId()); //user로 게시물 찾는다
-
-
         for (Board board : boardList) { //게시글
             Long boardId = board.getId();
-            Long userId = findUser.getId();
-
             List<BoardImgUrls> allBoardImgUrls = boardImgUrlsRepository.findAllByBoardId(board.getId()); //해당 board에 대한 이미지들 가져오기.
             List<Comment> comments = commentRepository.findAllByBoardIdOrderByModifiedDesc(boardId); //댓글
             List<MypageCommentResponseDto> commentResponseDtos = new ArrayList<>();
             List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();//board img list
-
             for (BoardImgUrls boardImgUrls : allBoardImgUrls) {
                 requestDtos.add(new BoardImgCommonRequestDto(boardImgUrls));
             }
-
             for (Comment comment : comments) {
                 MypageCommentResponseDto commentResponseDto = new MypageCommentResponseDto(comment);
                 commentResponseDtos.add(commentResponseDto);
             }
-
             if (user==null){
                 boolean likeCheck = false;
                 List<Heart> hearts = heartRepository.findAllByBoardId(boardId); //좋아요 수
@@ -82,44 +83,35 @@ public class MypageService {
                 //user정보, 게시글, 댓글, 좋아요 여부, 좋아요 수
                 mypageDtoList.add(mypageDto);
             }
-
         }
         return mypageDtoList;
-
-
     }
 
 
     //찜 명소(좋아요한 게시물) + 댓글 + 좋아요, 내가 올린 게시물은 제외
-    public List<MypageResponseDto> getMylikeboard(User findUser, UserPrincipal user) {
-
-        //findUser : 그 사람의 페이지
-        //user : 현재 로그인한 사용자
-
+    public List<MypageResponseDto> getMylikeboard(Long userId, UserPrincipal user) {
+        User findUser = userRepository.findById(userId).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        //findUser : 그 사람의 페이지, user : 현재 로그인한 사용자
         List<MypageResponseDto> mypageDtoList = new ArrayList<>();
         List<Heart> heartList = heartRepository.findAllByUser(findUser); //user가 누른 하트 찾기
-
         for (Heart hearts : heartList) {
             Long boardId = hearts.getBoard().getId(); //user가 누른 하트에서 게시물 아이디 찾기
-
             Board board = boardRepository.findByIdOrderByModifiedDesc(boardId).orElseThrow(//user가 좋아요 한 게시물
                     () -> new IllegalArgumentException("찜한 명소가 없습니다.")
             );
-            if (!board.getUser().getId().equals(findUser.getId())) { //게시물 작성자와 현재 user가 다를 때만(남이 쓴 게시물만)
+            if (!board.getUser().getId().equals(findUser.getId())) { //게시물 작성자와 페이지 user가 다를 때만(남이 쓴 게시물만)
                 List<Comment> comments = commentRepository.findAllByBoardIdOrderByModifiedDesc(board.getId()); //댓글
                 List<BoardImgUrls> allBoardImgUrls = boardImgUrlsRepository.findAllByBoardId(boardId);        //해당 게시물에 대한 이미지들 가져오기.
                 List<MypageCommentResponseDto> commentResponseDtos = new ArrayList<>();
                 List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();
-
                 for (BoardImgUrls boardImgUrls : allBoardImgUrls) {
                     requestDtos.add(new BoardImgCommonRequestDto(boardImgUrls));
                 }
-
                 for (Comment comment : comments) {
                     MypageCommentResponseDto commentResponseDto = new MypageCommentResponseDto(comment);
                     commentResponseDtos.add(commentResponseDto);
                 }
-
                 if (user==null){
                     boolean likeCheck = false;
                     List<Heart> heartsList = heartRepository.findAllByBoardId(boardId); //좋아요 수
@@ -138,50 +130,72 @@ public class MypageService {
         return mypageDtoList;
     }
 
+
     //프로필 편집(사진, 소개)
     @Transactional
-    public ProfileResponseDto editProfile(String imgUrl, String introduceMsg, User user) {
-        User editUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("해당하는 user가 없습니다.")
-        );
-        ProfileRequestDto profileDto = new ProfileRequestDto(imgUrl, introduceMsg);
-        editUser.updateProfile(profileDto);
-        ProfileResponseDto profileResponseDto = new ProfileResponseDto(editUser);
-        return profileResponseDto;
+    public ProfileResponseDto editProfile(UserPrincipal user, MultipartFile file, String introduceMsg, Long userId) throws IOException {
+        if (!userId.equals(user.getId())){
+            throw new IllegalArgumentException("본인만 편집할 수 있습니다.");
+        }
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        if (!(file == null)){
+            String imgUrl = s3Service.upload(file, "profile");
+            ProfileRequestDto profileDto = new ProfileRequestDto(imgUrl, introduceMsg);
+            findUser.updateProfile(profileDto);
+            ProfileResponseDto profileResponseDto = new ProfileResponseDto(findUser);
+            return profileResponseDto;
+        }else{
+            String imgUrl = findUser.getImgUrl();
+            ProfileRequestDto profileDto = new ProfileRequestDto(imgUrl, introduceMsg);
+            findUser.updateProfile(profileDto);
+            ProfileResponseDto profileResponseDto = new ProfileResponseDto(findUser);
+            return profileResponseDto;
+        }
     }
+
 
     //닉네임 변경
     @Transactional
-    public NicknameResponseDto editNick(NicknameRequestDto nickRequestDto, User user) {
-        User editUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("해당 user가 없습니다.")
-        );
-        editUser.updateNick(nickRequestDto);
-        NicknameResponseDto nicknameResponseDto = new NicknameResponseDto(editUser);
+    public NicknameResponseDto editNick(NicknameRequestDto nickRequestDto, UserPrincipal user, Long userId) {
+        if (!userId.equals(user.getId())){
+            throw new IllegalArgumentException("본인만 편집할 수 있습니다.");
+        }
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        findUser.updateNick(nickRequestDto);
+        NicknameResponseDto nicknameResponseDto = new NicknameResponseDto(findUser);
         return nicknameResponseDto;
     }
 
+
     //비밀번호 변경
     @Transactional
-    public ResponseEntity editPwd(PasswordRequestDto pwdRequestDto, User user) {
-        User editUser = userRepository.findById(user.getId()).orElseThrow(
-                () -> new IllegalArgumentException("해당 user가 없습니다.")
-        );
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
-        if (!encoder.matches(pwdRequestDto.getPwd(), user.getPassword())) {
-            Message message = new Message("비밀번호가 틀렸습니다.");
-            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity editPwd(PasswordRequestDto pwdRequestDto, Errors errors, UserPrincipal user, Long userId) {
+        if (!userId.equals(user.getId())){
+            throw new IllegalArgumentException("본인만 편집할 수 있습니다.");
         }
-        if (!pwdRequestDto.getNewPwd().equals(pwdRequestDto.getPwdChk())) {
-            Message message = new Message("비밀번호가 일치하지 않습니다.");
-            return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+        User findUser = userRepository.findById(user.getId()).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        if(errors.hasErrors()){
+            Map<String, String> error = userService.validateHandling(errors);
+            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        }else{
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            if (!encoder.matches(pwdRequestDto.getPwd(), findUser.getPassword())) {
+                Message message = new Message("비밀번호가 틀렸습니다.");
+                return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            if (!pwdRequestDto.getNewPwd().equals(pwdRequestDto.getPwdChk())) {
+                Message message = new Message("비밀번호가 일치하지 않습니다.");
+                return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            String newPw = bCryptPasswordEncoder.encode(pwdRequestDto.getNewPwd());
+            findUser.updatePw(newPw);
+            Message message = new Message("비밀번호가 변경되었습니다.");
+            return new ResponseEntity<>(message, HttpStatus.OK);
         }
-        String newPw = bCryptPasswordEncoder.encode(pwdRequestDto.getNewPwd());
-        editUser.updatePw(newPw);
-        Message message = new Message("비밀번호가 변경되었습니다.");
-        return new ResponseEntity<>(message, HttpStatus.OK);
+
     }
 
 

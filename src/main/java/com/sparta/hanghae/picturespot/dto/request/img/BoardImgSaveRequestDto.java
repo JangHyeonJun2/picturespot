@@ -17,14 +17,6 @@ public class BoardImgSaveRequestDto {
         this.board = board;
         this.imgUrl = imgUrl;
     }
-    public BoardImgSaveRequestDto(Board board, BoardImgUrls boardImgUrls) {
-        this.board = board;
-        this.imgUrl = boardImgUrls.getImgUrl();
-    }
-
-    public BoardImgSaveRequestDto(BoardImgUrls boardImgUrls) {
-        this.imgUrl = boardImgUrls.getImgUrl();
-    }
 
     public BoardImgUrls toEntity() {
         return BoardImgUrls.builder()

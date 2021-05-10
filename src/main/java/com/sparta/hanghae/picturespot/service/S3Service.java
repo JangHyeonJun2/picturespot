@@ -3,8 +3,12 @@ package com.sparta.hanghae.picturespot.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteBucketRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
+import com.sparta.hanghae.picturespot.model.BoardImgUrls;
+import com.sparta.hanghae.picturespot.repository.BoardImgUrlsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +26,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class S3Service {
     private final AmazonS3Client amazonS3Client;
+    private final BoardImgUrlsRepository boardImgUrlsRepository;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -34,13 +39,7 @@ public class S3Service {
         return upload(uploadFile, dirName);
     }
 
-    //profile
-    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
-        File uploadFile = convert(multipartFile)
-                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
 
-        return upload(uploadFile, dirName);
-    }
 
     private String[] upload(File[] uploadFile, String dirName) {
         String[] uploadImgUrl = new String[uploadFile.length];
@@ -63,6 +62,43 @@ public class S3Service {
         return uploadImgUrl;
     }
 
+    private Optional<File[]> convert(List<MultipartFile> file) throws IOException {
+        File[] convertFiles = new File[file.size()];
+        for (int i=0; i<file.size(); i++) {
+            convertFiles[i] = new File(file.get(i).getOriginalFilename());
+            if (!convertFiles[i].createNewFile()) {
+                return Optional.empty();
+            }else {
+                try(FileOutputStream fos = new FileOutputStream(convertFiles[i])) {
+                    fos.write(file.get(i).getBytes());
+                }
+            }
+        }
+        return Optional.of(convertFiles);
+    }
+
+    //bucket에 있는 imgUrl 삭제하는 메서드.
+    public void delete(BoardImgUrls[] boardImgUrls, String dirName) throws IOException {
+        String[] imgUrls = new String[boardImgUrls.length];
+        for (int i=0; i<boardImgUrls.length; i++) {
+            imgUrls[i] = boardImgUrls[i].getImgUrl().substring(boardImgUrls[i].getImgUrl().lastIndexOf("/")+1);
+        }
+
+        for (String imgUrl : imgUrls) {
+            String objkeyArr = dirName + "/" +imgUrl;
+            DeleteObjectsRequest delObjReq = new DeleteObjectsRequest(bucket).withKeys(objkeyArr);
+            amazonS3Client.deleteObjects(delObjReq);
+        }
+    }
+
+    //profile
+    public String upload(MultipartFile multipartFile, String dirName) throws IOException {
+        File uploadFile = convert(multipartFile)
+                .orElseThrow(() -> new IllegalArgumentException("MultipartFile -> File로 전환이 실패했습니다."));
+
+        return upload(uploadFile, dirName);
+    }
+
     //profile
     private String upload(File uploadFile, String dirName) {
 
@@ -80,6 +116,21 @@ public class S3Service {
         return uploadImgUrl;
     }
 
+    //profile
+    private Optional<File> convert(MultipartFile file) throws IOException {
+        File convertFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+        if (!convertFile.createNewFile()) {
+                return Optional.empty();
+        }else {
+            try(FileOutputStream fos = new FileOutputStream(convertFile)) {
+                fos.write(file.getBytes());
+            }
+        }
+        return Optional.of(convertFile);
+    }
+
+
+
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
 
@@ -94,41 +145,13 @@ public class S3Service {
         }
     }
 
-    private Optional<File[]> convert(List<MultipartFile> file) throws IOException {
-        File[] convertFiles = new File[file.size()];
-        for (int i=0; i<file.size(); i++) {
-            convertFiles[i] = new File(file.get(i).getOriginalFilename());
-            if (!convertFiles[i].createNewFile()) {
-                return Optional.empty();
-            }else {
-                try(FileOutputStream fos = new FileOutputStream(convertFiles[i])) {
-                    fos.write(file.get(i).getBytes());
-                }
-            }
-        }
-        return Optional.of(convertFiles);
+    //삭제할 이미지를 id로 찾고 delete 메서드 호출
+    public void findImgUrls(Long[] deleteImages) throws IOException {
+        BoardImgUrls[] imgUrls = new BoardImgUrls[deleteImages.length]; //id로 찾은 boardImgUrl들을 담을 배열 선언.
 
-//        File convertFile = new File(file.getOriginalFilename());
-//        if(convertFile.createNewFile()) {
-//            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-//                fos.write(file.getBytes());
-//            }
-//            return Optional.of(convertFile);
-//        }
-//
-//        return Optional.empty();
-    }
-
-    //profile
-    private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
-        if (!convertFile.createNewFile()) {
-                return Optional.empty();
-        }else {
-            try(FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(file.getBytes());
-            }
+        for (int i=0; i< deleteImages.length; i++) {
+            imgUrls[i] = boardImgUrlsRepository.findById(deleteImages[i]).orElseThrow(() -> new IllegalArgumentException("해당 이미지는 없습니다."));
         }
-        return Optional.of(convertFile);
+        delete(imgUrls, "board");
     }
 }
