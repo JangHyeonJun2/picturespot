@@ -11,9 +11,11 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class BoardImgCommonRequestDto {
+    private Long imgUrlId;
     private String imgUrl;
 
     public BoardImgCommonRequestDto(BoardImgUrls boardImgUrls) {
+        this.imgUrlId = boardImgUrls.getId();
         this.imgUrl = boardImgUrls.getImgUrl();
     }
 }
