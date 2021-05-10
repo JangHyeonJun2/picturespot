@@ -36,50 +36,35 @@ public class MypageController {
     private final UserRepository userRepository;
 
 
-    //유저 정보
-    @GetMapping("/profile/{nickname}")
-    public ResponseEntity getMyprofile(@PathVariable String nickname, @AuthenticationPrincipal UserPrincipal user){
-        User findUser = userRepository.findById(user.getId()).orElseThrow(
-                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
 
-        if (!findUser.getNickname().equals(nickname)){
-            User others = userRepository.findByNickname(nickname);
-            ProfileResponseDto profile = mypageService.getMyprofile(others);
-            return customExceptionController.ok("다른 유저의 프로필 정보", profile);
-        }else{
-            ProfileResponseDto profile = mypageService.getMyprofile(findUser);
-            return customExceptionController.ok("내 프로필 정보", profile);
-        }
+    //유저 정보
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity getMyprofile(@PathVariable Long userId){
+        User findUser = userRepository.findById(userId).orElseThrow(
+                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
+        ProfileResponseDto profile = mypageService.getMyprofile(findUser);
+        return customExceptionController.ok("프로필 정보", profile);
     }
 
     //유저가 올린 게시물
-    @GetMapping("/story/{nickname}/board")
-    public ResponseEntity getMyboard(@PathVariable String nickname, @AuthenticationPrincipal UserPrincipal user){
-        User findUser = userRepository.findById(user.getId()).orElseThrow(
+    @GetMapping("/story/{userId}/board")
+    public ResponseEntity getMyboard(@PathVariable Long userId, @AuthenticationPrincipal UserPrincipal user){
+        User findUser = userRepository.findById(userId).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
-        if (!findUser.getNickname().equals(nickname)) {
-            User others = userRepository.findByNickname(nickname);
-            List<MypageResponseDto> myBoards = mypageService.getMyboard(others);
-            return customExceptionController.ok("다른 유저가 작성한 게시물", myBoards);
-        }else{
-            List<MypageResponseDto> myBoards = mypageService.getMyboard(findUser);
-            return customExceptionController.ok("내가 작성한 게시물", myBoards);
-        }
+
+        List<MypageResponseDto> myBoards = mypageService.getMyboard(findUser, user);
+        return customExceptionController.ok("유저가 작성한 게시물", myBoards);
     }
 
     //유저가 좋아요 한 게시물
-    @GetMapping("/story/{nickname}/likeboard")
-    public ResponseEntity getMylikeboard(@PathVariable String nickname, @AuthenticationPrincipal UserPrincipal user){
-        User findUser = userRepository.findById(user.getId()).orElseThrow(
+    @GetMapping("/story/{userId}/likeboard")
+    public ResponseEntity getMylikeboard(@PathVariable Long userId, @AuthenticationPrincipal UserPrincipal user){
+        User findUser = userRepository.findById(userId).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
-        if (!findUser.getNickname().equals(nickname)) {
-            User others = userRepository.findByNickname(nickname);
-            List<MypageResponseDto> myBoards = mypageService.getMylikeboard(others);
-            return customExceptionController.ok("다른 유저가 좋아요 한 게시물", myBoards);
-        }else{
-            List<MypageResponseDto> myBoards = mypageService.getMylikeboard(findUser);
-            return customExceptionController.ok("내가 좋아요 한 게시물", myBoards);
-        }
+
+        List<MypageResponseDto> myBoards = mypageService.getMylikeboard(findUser, user);
+        return customExceptionController.ok("유저가 좋아요 한 게시물", myBoards);
+
     }
 
     //프로필 편집(사진, 자기소개)

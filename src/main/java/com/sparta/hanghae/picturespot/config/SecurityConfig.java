@@ -85,6 +85,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/board/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/qna/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/qna/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/profile/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/story/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/qcomment/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT,"/qcomment/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE,"/qcomment/**").hasRole("ADMIN")
