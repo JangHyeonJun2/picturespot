@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class BoardDetailResponseDto {
     private String writerImgUrl;
     private String title;
     private String content;
+    private LocalDateTime modified;
     private boolean liked;
     private int likeCount;
     private String spotName;
@@ -32,11 +34,7 @@ public class BoardDetailResponseDto {
         this.writerImgUrl = boardEntity.getUser().getImgUrl();
         this.title = boardEntity.getTitle();
         this.content = boardEntity.getContent();
-        //게시물 배열 초기화
-//        this.imgUrls = new String[boardEntity.getImgUrls().length];
-//        for (int i=0; i<boardEntity.getImgUrls().length; i++) {
-//            this.imgUrls[i] = boardEntity.getImgUrls()[i];
-//        }
+        this.modified = boardEntity.getModified();
         this.spotName = boardEntity.getSpotName();
         this.liked = likeCheck;
         this.likeCount = likeCount;

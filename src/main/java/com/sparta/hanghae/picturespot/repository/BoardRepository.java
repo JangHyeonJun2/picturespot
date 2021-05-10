@@ -12,10 +12,7 @@ import java.util.Optional;
 public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findAllByUserIdOrderByModifiedDesc(Long userId);
     Optional<Board> findByIdOrderByModifiedDesc(Long boardId);
-    //List<Board> findAllByUserId(Long id);
     Optional<Board> findById(Long BoardId);
-    //List<Board> findByTitleIsLikeOrContentIsLike(String title, String content); //OrderByModifiedDesc
     List<Board> findByTitleContainingOrContentContainingOrderByModifiedDesc(String title, String content);
-    List<Board> findByTitleIsLikeOrContentIsLikeOrderByModifiedDesc(String title, String content);
 }
 

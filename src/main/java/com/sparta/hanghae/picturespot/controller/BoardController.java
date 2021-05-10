@@ -66,10 +66,14 @@ public class BoardController {
         if (deleteImages != null)
             s3Service.findImgUrls(deleteImages);
         //s3에 이미지 업로드하고 업로드된 이미지 배열
-        String[] imgUrls = s3Service.upload(Arrays.asList(files), "board"); //새로 추가된 이미지 s3에 저장.
+        String[] imgUrls =null;
+        if (files != null) {
+            imgUrls = s3Service.upload(Arrays.asList(files), "board"); //새로 추가된 이미지 s3에 저장.
+        }
 
         BoardUpdateRequestDto boardUpdateRequestDto = new BoardUpdateRequestDto(boardId,title,content);
         BoardDetailResponseDto updateBoard = boardService.update(boardUpdateRequestDto, findUser, deleteImages, imgUrls);
+
         if (updateBoard == null)
             return customExceptionController.error("사용자가 옳바르지 않습니다.");
         else

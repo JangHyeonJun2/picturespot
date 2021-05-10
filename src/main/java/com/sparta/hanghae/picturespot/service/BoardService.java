@@ -9,6 +9,7 @@ import com.sparta.hanghae.picturespot.model.*;
 import com.sparta.hanghae.picturespot.repository.*;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,7 +68,7 @@ public class BoardService {
     getBoards(UserPrincipal loginUser) {
         List<BoardsGetResponseDto> boardGetResponseDtoList = new ArrayList<>();
 
-        List<Board> boardAll = boardRepository.findAll();
+        List<Board> boardAll = boardRepository.findAll(Sort.by(Sort.Direction.DESC, "modified"));
         boolean likeCheck = true;
         for (int i=0; i<boardAll.size(); i++) {
             List<BoardImgUrls> allBoardImgUrls = boardImgUrlsRepository.findAllByBoardId(boardAll.get(i).getId());
@@ -198,6 +199,7 @@ public class BoardService {
         return loadingBoardMapResponseDtos;
     }
 
+    //게시글 수정(이미지 삭제, 추가, 타이틀, 내용 수정)
     @Transactional
     public BoardDetailResponseDto update(BoardUpdateRequestDto boardUpdateRequestDto, User loginUser, Long[] deleteImgUrlId,  String[] imgUrls)  {
         Board board = boardRepository.findById(boardUpdateRequestDto.getBoardId()).orElseThrow(() -> new IllegalArgumentException("해당 게시물은 없습니다."));
@@ -214,7 +216,7 @@ public class BoardService {
         }
 
         //boardImgUrls 의 테이블에 새로운 imgUrls 를 저장.
-        if (imgUrls.length > 0) {
+        if (imgUrls != null) {
             for (String imgUrl : imgUrls) {
                 BoardImgSaveRequestDto boardImgSaveRequestDto = new BoardImgSaveRequestDto(board, imgUrl);
                 boardImgUrlsRepository.save(boardImgSaveRequestDto.toEntity());
