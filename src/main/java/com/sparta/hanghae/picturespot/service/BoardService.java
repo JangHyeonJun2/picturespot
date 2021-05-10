@@ -1,11 +1,13 @@
 package com.sparta.hanghae.picturespot.service;
 
+import com.sparta.hanghae.picturespot.dto.request.board.BoardUpdateRequestDto;
 import com.sparta.hanghae.picturespot.dto.request.img.BoardImgCommonRequestDto;
 import com.sparta.hanghae.picturespot.dto.request.board.BoardSaveRequestDto;
 import com.sparta.hanghae.picturespot.dto.request.img.BoardImgSaveRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.board.*;
 import com.sparta.hanghae.picturespot.model.*;
 import com.sparta.hanghae.picturespot.repository.*;
+import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,7 @@ public class BoardService {
     private final HeartRepository heartRepository;
     private final CommentRepository commentRepository;
     private final BoardImgUrlsRepository boardImgUrlsRepository;
-
+    private final CustomExceptionController customExceptionController;
 
     //게시물 저장
     @Transactional
@@ -194,5 +196,58 @@ public class BoardService {
             loadingBoardMapResponseDtos.add(boardMapResponseDto);
         }
         return loadingBoardMapResponseDtos;
+    }
+
+    @Transactional
+    public BoardDetailResponseDto update(BoardUpdateRequestDto boardUpdateRequestDto, User loginUser, Long[] deleteImgUrlId,  String[] imgUrls)  {
+        Board board = boardRepository.findById(boardUpdateRequestDto.getBoardId()).orElseThrow(() -> new IllegalArgumentException("해당 게시물은 없습니다."));
+        if (board.getUser().getId().equals(loginUser.getId())) {
+            board.update(boardUpdateRequestDto);
+        } else {
+            return null;
+        }
+        //boardImgUrls 의 테이블에 deleteImgUrl 들을 삭제.
+        if (deleteImgUrlId != null) {
+            for (Long id : deleteImgUrlId) {
+                boardImgUrlsRepository.deleteById(id);
+            }
+        }
+
+        //boardImgUrls 의 테이블에 새로운 imgUrls 를 저장.
+        if (imgUrls.length > 0) {
+            for (String imgUrl : imgUrls) {
+                BoardImgSaveRequestDto boardImgSaveRequestDto = new BoardImgSaveRequestDto(board, imgUrl);
+                boardImgUrlsRepository.save(boardImgSaveRequestDto.toEntity());
+            }
+        }
+
+        List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();
+        List<BoardDetailCommentsDto> detailCommentsDtoList = new ArrayList<>();
+        boolean likeCheck = true;
+
+        //해당 board에 대한 imgUrl들을 가져오기.
+        List<BoardImgUrls> allBoardImgs = boardImgUrlsRepository.findAllByBoardId(board.getId());
+        //가져온 imgUrl들을 담을 dto리스트 만들기.
+
+        //반목문을 돌려서 리스트에 imgUrl들을 담기.
+        for (BoardImgUrls boardImgUrl : allBoardImgs) {
+            requestDtos.add(new BoardImgCommonRequestDto(boardImgUrl));
+        }
+
+        List<Comment> allByBoardId = commentRepository.findAllByBoardId(board.getId());
+
+        for (int i=0; i<allByBoardId.size(); i++) {
+            BoardDetailCommentsDto tempDto = new BoardDetailCommentsDto(allByBoardId.get(i));
+            detailCommentsDtoList.add(tempDto);
+        }
+        if (loginUser == null) {
+            likeCheck = false;
+        } else {
+            likeCheck = heartRepository.existsByBoardIdAndUserId(board.getId(), loginUser.getId());
+        }
+
+        //게시물에 대한 좋아요 개수
+        List<Heart> allBoardHeartCount = heartRepository.findAllByBoardId(board.getId());
+        return new BoardDetailResponseDto(board,likeCheck,allBoardHeartCount.size(),detailCommentsDtoList,requestDtos);
     }
 }

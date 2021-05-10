@@ -1,8 +1,10 @@
 package com.sparta.hanghae.picturespot.model;
 
+import com.sparta.hanghae.picturespot.dto.request.board.BoardUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
@@ -55,5 +57,11 @@ public class Board extends Timestamped{
         this.longitude = longitude;
         this.spotName = spotName;
         this.user = user;
+    }
+
+    @Transactional
+    public void update(BoardUpdateRequestDto boardUpdateRequestDto) {
+        this.title = boardUpdateRequestDto.getTitle();
+        this.content = boardUpdateRequestDto.getContent();
     }
 }
