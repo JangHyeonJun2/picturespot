@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -23,6 +25,9 @@ public class Question extends Timestamped{
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.REMOVE)
+    private List<QComment> qcomments = new ArrayList<>();
 
 
     public Question(QuestionRequestDto questionRequestDto, User user){
