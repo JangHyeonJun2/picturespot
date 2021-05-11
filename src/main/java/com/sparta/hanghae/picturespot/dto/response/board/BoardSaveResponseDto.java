@@ -14,7 +14,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class BoardSaveResponseDto {
-    private Long boardId;
     private String title;
     private String content;
     private String category;
@@ -27,7 +26,6 @@ public class BoardSaveResponseDto {
 
 
     public BoardSaveResponseDto(Board entity, List<BoardImgSaveRequestDto> reponseDto) {
-        this.boardId = entity.getId();
         this.title = entity.getTitle();
         this.content = entity.getContent();
         this.category = entity.getCategory();

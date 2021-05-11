@@ -12,7 +12,8 @@ import javax.persistence.*;
 @Entity
 public class BoardImgUrls {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "BOARDIMGURLS_ID")
     private Long id;
 
     @ManyToOne

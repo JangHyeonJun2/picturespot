@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 public class Question extends Timestamped{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "QUESTION_ID")
     private Long id;
 
