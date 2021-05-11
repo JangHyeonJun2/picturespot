@@ -8,7 +8,10 @@ import com.sparta.hanghae.picturespot.service.QCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,14 +23,14 @@ public class QCommentController {
 
     //문의하기 댓글 쓰기
     @PostMapping("/qcomment/{qnaId}")
-    public ResponseEntity createQComment(@PathVariable Long qnaId, @RequestBody QCommentRequestDto qCommentRequestDto, @AuthenticationPrincipal UserPrincipal user){
-        return qCommentService.createQComment(qnaId, qCommentRequestDto, user);
+    public ResponseEntity createQComment(@PathVariable Long qnaId, @RequestBody @Valid QCommentRequestDto qCommentRequestDto, Errors errors, @AuthenticationPrincipal UserPrincipal user){
+        return qCommentService.createQComment(qnaId, qCommentRequestDto, errors, user);
     }
 
     //문의하기 댓글 수정
     @PutMapping("/qcomment/{qcommentId}/qna/{qnaId}")
-    public ResponseEntity updateQComment(@PathVariable Long qnaId, @PathVariable Long qcommentId, @RequestBody QCommentRequestDto qCommentRequestDto, @AuthenticationPrincipal UserPrincipal user){
-        return qCommentService.updateQComment(qnaId, qcommentId, qCommentRequestDto, user);
+    public ResponseEntity updateQComment(@PathVariable Long qnaId, @PathVariable Long qcommentId, @RequestBody @Valid QCommentRequestDto qCommentRequestDto, Errors errors, @AuthenticationPrincipal UserPrincipal user){
+        return qCommentService.updateQComment(qnaId, qcommentId, qCommentRequestDto, errors, user);
     }
 
     //문의하기 댓글 삭제
