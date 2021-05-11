@@ -8,12 +8,14 @@ import com.sparta.hanghae.picturespot.dto.response.user.LoginResponseDto;
 import com.sparta.hanghae.picturespot.model.*;
 import com.sparta.hanghae.picturespot.repository.EmailCheckRepository;
 import com.sparta.hanghae.picturespot.repository.PwdCheckRepository;
+import com.sparta.hanghae.picturespot.repository.RefreshTokenRepository;
 import com.sparta.hanghae.picturespot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +38,7 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final ModelMapper modelMapper;
     private final JavaMailSender javaMailSender;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Value("${spring.mail.username}")
     private String from;
@@ -54,6 +57,7 @@ public class UserService {
     }
 
     // 로그인
+    @Transactional
     public LoginResponseDto login(LoginRequestDto loginRequestDto) {
         User user = userRepository.findByEmail(loginRequestDto.getEmail());
         if(user == null){
@@ -62,7 +66,13 @@ public class UserService {
         if(!bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())){
             throw new IllegalStateException("잘못된 비밀번호 입니다.");
         }
-        return new LoginResponseDto(jwtTokenProvider.createToken(user.getEmail()), user.getNickname(), "성공", user.getId());
+        TokenDto tokenDto = jwtTokenProvider.createToken(user.getEmail());
+
+        // refresh Token 저장
+        RefreshToken refreshToken = new RefreshToken(user.getEmail(), tokenDto.getRefreshToken());
+        refreshTokenRepository.save(refreshToken);
+
+        return new LoginResponseDto(tokenDto.getAccessToken(), tokenDto.getRefreshToken(), user.getNickname(), "성공", user.getId(), user.getRole());
     }
 
     // @Vaild 에러체크
@@ -240,5 +250,29 @@ public class UserService {
     }
 
 
+    @Transactional
+    public TokenDto reissue(TokenDto tokenDto, UserPrincipal user) {
+        //1. Refresh Token 검증
+        if (!jwtTokenProvider.validateToken(tokenDto.getRefreshToken())){
+            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+        }
 
+        String email = user.getEmail();
+
+        RefreshToken refreshToken = refreshTokenRepository.findByTokenKey(email).orElseThrow(
+                () -> new RuntimeException("로그아웃된 사용자입니다.")
+        );
+
+        if (!refreshToken.getTokenValue().equals(tokenDto.getRefreshToken())){
+            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+        }
+
+        // 새로운 토큰 생성
+        TokenDto newTokenDto = jwtTokenProvider.createToken(email);
+
+        // 저장소 정보 업데이트
+        refreshToken.updateValue(newTokenDto.getRefreshToken());
+
+        return newTokenDto;
+    }
 }

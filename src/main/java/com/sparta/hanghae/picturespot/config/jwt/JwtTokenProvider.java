@@ -1,5 +1,6 @@
 package com.sparta.hanghae.picturespot.config.jwt;
 
+import com.sparta.hanghae.picturespot.dto.request.user.TokenDto;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,9 @@ import java.util.Date;
 public class JwtTokenProvider { // 토큰 생성, 검증
 
     private String secretKey = "ABCA7D35A0B04018B865E0817E1A41374FB06737CF00641E2A781F631B61C9AC";
+    private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000*60*30;            //30분
+    private static final long REFRESH_TOKEN_EXPRIRE_TIME = 1000*60*60*24*7;     //7일
+
     private final UserDetailsService userDetailsService;//토큰에 저장된 유저 정보를 활용해야 하기 때문에 CustomUserDetatilService 라는 이름의 클래스를 만들고 UserDetailsService를 상속받아 재정의 하는 과정을 진행합니다.
 
     @PostConstruct // 서버가 돌아가면 제일 먼저 실행시키는 어노테이션
@@ -26,18 +30,25 @@ public class JwtTokenProvider { // 토큰 생성, 검증
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String userPk){
+    public TokenDto createToken(String userPk){
         Claims claims = Jwts.claims().setSubject(userPk);
         Date now = new Date();
         // token 발급 후 유효시간 30분 테스트만 임시로 300분
-        long tokenValidTime = 30 * 60 * 10000L;
-        return Jwts.builder()
+        //long tokenValidTime = 30 * 60 * 10000L;
+        String accessToken = Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
-                .setExpiration(new Date(now.getTime() + tokenValidTime)) // set Expire Time
+                .setExpiration(new Date(now.getTime() + ACCESS_TOKEN_EXPIRE_TIME)) // set Expire Time
                 .signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘과
                 // signature 에 들어갈 secret값 세팅
                 .compact();
+
+        String refreshToken = Jwts.builder()
+                .setExpiration(new Date(now.getTime() + REFRESH_TOKEN_EXPRIRE_TIME))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+
+        return new TokenDto(accessToken, refreshToken);
     }
 
     // JWT 토큰에서 인증 정보 조회
@@ -62,22 +73,20 @@ public class JwtTokenProvider { // 토큰 생성, 검증
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
-//        } catch (SignatureException e) {
-//            throw new SignatureException("token에러");
-//        } catch (MalformedJwtException e) {
-//            throw new MalformedJwtException("token에러");
-//        } catch (ExpiredJwtException e) {
-//            throw new IllegalStateException("token에러");
-//        } catch (UnsupportedJwtException e) {
-//            throw new UnsupportedJwtException("token에러");
-//        } catch (IllegalArgumentException e) {
-//            throw new IllegalArgumentException("token에러");
-//        }
-        } catch (Exception e) {
-            return false;
+        } catch (SignatureException ex) {
+            log.error("Invalid JWT signature");
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string is empty.");
         }
+        return false;
+        
     }
-
 
 
 }

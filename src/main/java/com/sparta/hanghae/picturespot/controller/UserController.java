@@ -169,6 +169,12 @@ public class UserController {
 
     }
 
+    // refresh토큰 재발급?
+    @PostMapping("/user/reissue")
+    public ResponseEntity<TokenDto> reissue(@RequestBody TokenDto tokenDto, @AuthenticationPrincipal UserPrincipal user){
+        return ResponseEntity.ok(userService.reissue(tokenDto, user));
+    }
+
 
 
 }
