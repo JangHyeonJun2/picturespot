@@ -62,16 +62,19 @@ public class JwtTokenProvider { // 토큰 생성, 검증
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (SignatureException e) {
-            throw new SignatureException("token에러");
-        } catch (MalformedJwtException e) {
-            throw new MalformedJwtException("token에러");
-        } catch (ExpiredJwtException e) {
-            throw new IllegalStateException("token에러");
-        } catch (UnsupportedJwtException e) {
-            throw new UnsupportedJwtException("token에러");
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("token에러");
+//        } catch (SignatureException e) {
+//            throw new SignatureException("token에러");
+//        } catch (MalformedJwtException e) {
+//            throw new MalformedJwtException("token에러");
+//        } catch (ExpiredJwtException e) {
+//            throw new IllegalStateException("token에러");
+//        } catch (UnsupportedJwtException e) {
+//            throw new UnsupportedJwtException("token에러");
+//        } catch (IllegalArgumentException e) {
+//            throw new IllegalArgumentException("token에러");
+//        }
+        } catch (Exception e) {
+            return false;
         }
     }
 
