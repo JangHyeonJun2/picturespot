@@ -14,14 +14,14 @@ public class BoardSaveRequestDto {
     private String title;
     private String content;
     private String category;
-    private BigDecimal latitude;
-    private BigDecimal logitude;
+    private double latitude;
+    private double logitude;
 //    private String[] imgUrls;
     private String spotName;
     private User user;
 
     @Builder
-    public BoardSaveRequestDto(String title, String content, String category, BigDecimal latitude, BigDecimal logitude, String spotName, User user) {
+    public BoardSaveRequestDto(String title, String content, String category, double latitude, double logitude, String spotName, User user) {
         this.title = title;
         this.content = content;
         this.category = category;

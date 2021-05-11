@@ -20,8 +20,8 @@ public class LoadingBoardMapResponseDto {
     private int likeCount;
     private String writerName;
     private String writerImgUrl;
-    private BigDecimal latitude;
-    private BigDecimal longitude;
+    private double latitude;
+    private double longitude;
     private String spotName;
     private String category;
     private List<BoardDetailCommentsDto> boardDetailCommentDtoList = new ArrayList<>();

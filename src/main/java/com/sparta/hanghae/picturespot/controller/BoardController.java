@@ -43,8 +43,8 @@ public class BoardController {
     //게시물 작성
     @PostMapping("/board")
     public ResponseEntity save(@RequestParam(value = "file", required = false) MultipartFile[] files, @RequestParam("title") String title,
-                               @RequestParam("content") String content, @RequestParam("category") String category, @RequestParam("latitude") BigDecimal latitude,
-                               @RequestParam("longitude") BigDecimal longitude, @RequestParam("spotName") String spotName, @AuthenticationPrincipal UserPrincipal user) throws IOException {
+                               @RequestParam("content") String content, @RequestParam("category") String category, @RequestParam("latitude") double latitude,
+                               @RequestParam("longitude") double longitude, @RequestParam("spotName") String spotName, @AuthenticationPrincipal UserPrincipal user) throws IOException {
 
         String[] imgUrls = s3Service.upload(Arrays.asList(files), "board");
 

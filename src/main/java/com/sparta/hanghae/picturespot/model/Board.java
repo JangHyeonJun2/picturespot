@@ -28,9 +28,9 @@ public class Board extends Timestamped{
 
     private String category;
 
-    private BigDecimal latitude;
+    private double latitude;
 
-    private BigDecimal longitude;
+    private double longitude;
 
     private String spotName;
 
@@ -49,7 +49,7 @@ public class Board extends Timestamped{
     private List<Heart> hearts = new ArrayList<>();
 
     @Builder
-    public Board(String title, String content, String category,  BigDecimal latitude, BigDecimal longitude, String spotName, User user) {
+    public Board(String title, String content, String category,  double latitude, double longitude, String spotName, User user) {
         this.title = title;
         this.content = content;
         this.category = category;
