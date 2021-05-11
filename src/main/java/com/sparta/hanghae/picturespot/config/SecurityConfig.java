@@ -1,6 +1,8 @@
 package com.sparta.hanghae.picturespot.config;
 
 
+import com.sparta.hanghae.picturespot.config.jwt.JwtAccessDeniedHandler;
+import com.sparta.hanghae.picturespot.config.jwt.JwtAuthenticationEntryPoint;
 import com.sparta.hanghae.picturespot.config.jwt.JwtAuthenticationFilter;
 import com.sparta.hanghae.picturespot.config.jwt.JwtTokenProvider;
 import com.sparta.hanghae.picturespot.config.oauth2.CustomOAuth2UserService;
@@ -37,6 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public ModelMapper modelMapper(){
@@ -71,6 +75,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)// 세션을 사용하지 않곘다.
         .and()
+                // exceptionHandling 할때 직접 만든 클래스를 추가
+                .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+                .and()
                 .addFilter(corsFilter) // @CrossOrigin는 인증이 안필요하면 controller에 달아서 사용해도되지만 인증이 필요한 경우는 시큐리티 필터에 추가해줘야 한다.
                 .formLogin().disable()
                 .httpBasic().disable() // Authorization 키값에 id와 비밀번호를 담아서 보내는 방식이다.

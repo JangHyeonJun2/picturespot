@@ -38,6 +38,19 @@ public class UserPrincipal implements OAuth2User, UserDetails {
         );
     }
 
+    public static UserPrincipal adminCreate(User user) {
+        List<GrantedAuthority> authorities = Collections.
+                singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"));
+
+        return new UserPrincipal(
+                user.getId(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getNickname(),
+                authorities
+        );
+    }
+
     public static UserPrincipal create(User user, Map<String, Object> attributes) {
         UserPrincipal userPrincipal = UserPrincipal.create(user);
         userPrincipal.setAttributes(attributes);
