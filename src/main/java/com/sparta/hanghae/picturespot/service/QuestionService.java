@@ -18,10 +18,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -60,7 +64,11 @@ public class QuestionService {
 
     //문의하기 글쓰기
     @Transactional
-    public ResponseEntity createQuestion(QuestionRequestDto questionRequestDto, UserPrincipal user){
+    public ResponseEntity createQuestion(QuestionRequestDto questionRequestDto, Errors errors, UserPrincipal user){
+        if(errors.hasErrors()){
+            Map<String, String> error = validateHandling(errors);
+            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         User findUser = userRepository.findById(user.getId()).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
         Question question = new Question(questionRequestDto, findUser);
@@ -71,7 +79,11 @@ public class QuestionService {
 
     //문의하기 수정
     @Transactional
-    public ResponseEntity updateQuestion(Long qnaId, QuestionRequestDto questionRequestDto, UserPrincipal user){
+    public ResponseEntity updateQuestion(Long qnaId, QuestionRequestDto questionRequestDto, Errors errors, UserPrincipal user){
+        if(errors.hasErrors()){
+            Map<String, String> error = validateHandling(errors);
+            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         User findUser = userRepository.findById(user.getId()).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
         Question question = questionRepository.findByUserAndId(findUser, qnaId).orElseThrow(
@@ -97,6 +109,16 @@ public class QuestionService {
         questionRepository.delete(question); //문의하기 게시물 삭제
         Message message = new Message("게시글이 삭제되었습니다.");
         return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    // @Vaild 에러체크
+    public Map<String, String> validateHandling(Errors errors) {
+        Map<String, String> validatorResult = new HashMap<>();
+        for(FieldError error : errors.getFieldErrors()){
+            String validKeyName = error.getField();
+            validatorResult.put(validKeyName, error.getDefaultMessage());
+        }
+        return validatorResult;
     }
 }
 
