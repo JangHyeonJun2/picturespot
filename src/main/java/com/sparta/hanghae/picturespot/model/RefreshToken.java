@@ -10,9 +10,7 @@ import javax.persistence.*;
 @Entity
 public class RefreshToken {
 
-    @Id @GeneratedValue
-    private Long id;
-
+    @Id
     private String tokenKey;
     private String tokenValue;
 

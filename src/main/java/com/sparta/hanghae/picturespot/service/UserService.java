@@ -251,24 +251,29 @@ public class UserService {
 
 
     @Transactional
-    public TokenDto reissue(TokenDto tokenDto, UserPrincipal user) {
+    public TokenDto reissue(TokenDto tokenDto) {
         //1. Refresh Token 검증
         if (!jwtTokenProvider.validateToken(tokenDto.getRefreshToken())){
             throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
         }
 
-        String email = user.getEmail();
+        Authentication authentication = jwtTokenProvider.getAuthentication(tokenDto.getAccessToken());
 
-        RefreshToken refreshToken = refreshTokenRepository.findByTokenKey(email).orElseThrow(
-                () -> new RuntimeException("로그아웃된 사용자입니다.")
-        );
+
+        // 3. Refresh Token 저장소에서 Member ID를 기반으로 Refresh Token 값 가져오기
+        RefreshToken refreshToken = refreshTokenRepository.findByTokenKey(authentication.getName())
+                .orElseThrow(() -> new RuntimeException("로그아웃 된 사용자입니다."));
+
+        /////////////////////////
+
 
         if (!refreshToken.getTokenValue().equals(tokenDto.getRefreshToken())){
             throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
         }
 
         // 새로운 토큰 생성
-        TokenDto newTokenDto = jwtTokenProvider.createToken(email);
+        // authentication.getName으로 이메일 가져올 수 있다. 토큰 생성할때 이메일을 넣어서 생성해서 가능한것 같다.
+        TokenDto newTokenDto = jwtTokenProvider.createToken(authentication.getName());
 
         // 저장소 정보 업데이트
         refreshToken.updateValue(newTokenDto.getRefreshToken());

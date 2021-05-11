@@ -87,6 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 권한 설정
                 .authorizeRequests()
                 .antMatchers("/user/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/user/**").permitAll()
                 .antMatchers("/index").permitAll()
                 .antMatchers("/oauth/token").permitAll()
                 .antMatchers(HttpMethod.GET, "/map/**").permitAll()
