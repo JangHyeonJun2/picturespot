@@ -2,6 +2,7 @@ package com.sparta.hanghae.picturespot.service;
 
 import com.sparta.hanghae.picturespot.model.UserPrincipal;
 import com.sparta.hanghae.picturespot.model.User;
+import com.sparta.hanghae.picturespot.model.UserRole;
 import com.sparta.hanghae.picturespot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,12 @@ public class CustomUserDetailsService implements UserDetailsService { //db에서
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
-        return UserPrincipal.create(user);
+        if(user.getRole() == UserRole.USER){
+            return UserPrincipal.create(user);
+        }else{
+            return UserPrincipal.adminCreate(user);
+        }
+
+
     }
 }

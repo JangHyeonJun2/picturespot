@@ -65,13 +65,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         String token = tokenProvider.createToken(userPrincipal.getEmail());
         String nickname = userPrincipal.getNickname();
-        log.debug("================================");
-        log.debug("nickname :"+ nickname);
-        log.debug("================================");
+        Long userId = userPrincipal.getId();
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)
                 .queryParam("nickname", nickname)
+                .queryParam("userId", userId)
                 .build().toUriString();
     }
 

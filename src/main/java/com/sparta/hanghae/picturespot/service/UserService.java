@@ -62,7 +62,7 @@ public class UserService {
         if(!bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())){
             throw new IllegalStateException("잘못된 비밀번호 입니다.");
         }
-        return new LoginResponseDto(jwtTokenProvider.createToken(user.getEmail()), user.getNickname(), "성공");
+        return new LoginResponseDto(jwtTokenProvider.createToken(user.getEmail()), user.getNickname(), "성공", user.getId());
     }
 
     // @Vaild 에러체크
