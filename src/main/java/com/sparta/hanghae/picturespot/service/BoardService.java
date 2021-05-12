@@ -67,7 +67,6 @@ public class BoardService {
     public List<BoardsGetResponseDto>
     getBoards(UserPrincipal loginUser) {
         List<BoardsGetResponseDto> boardGetResponseDtoList = new ArrayList<>();
-
         List<Board> boardAll = boardRepository.findAllByOrderByModifiedDesc();
         boolean likeCheck = true;
         for (int i=0; i<boardAll.size(); i++) {
