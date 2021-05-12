@@ -2,6 +2,7 @@ package com.sparta.hanghae.picturespot.service;
 
 import com.sparta.hanghae.picturespot.dto.request.question.QCommentRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.question.Message;
+import com.sparta.hanghae.picturespot.dto.response.question.QCommentResponseDto;
 import com.sparta.hanghae.picturespot.model.QComment;
 import com.sparta.hanghae.picturespot.model.Question;
 import com.sparta.hanghae.picturespot.model.User;
@@ -32,10 +33,11 @@ public class QCommentService {
 
     //문의하기 댓글 쓰기
     @Transactional
-    public ResponseEntity createQComment(Long qnaId, QCommentRequestDto qCommentRequestDto, Errors errors, UserPrincipal user){
+    public QCommentResponseDto createQComment(Long qnaId, QCommentRequestDto qCommentRequestDto, Errors errors, UserPrincipal user){
         if(errors.hasErrors()){
             Map<String, String> error = validateHandling(errors);
-            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new IllegalArgumentException("댓글을 입력해주세요");
+//            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         User findUser = userRepository.findById(user.getId()).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
@@ -48,16 +50,15 @@ public class QCommentService {
         );
         QComment qComment = new QComment(question, qCommentRequestDto, findUser);
         qCommentRepository.save(qComment);
-        Message message = new Message("댓글이 등록되었습니다.");
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new QCommentResponseDto(qComment);
     }
 
     //문의하기 댓글 수정
     @Transactional
-    public ResponseEntity updateQComment(Long qnaId, Long qcommentId, QCommentRequestDto qCommentRequestDto, Errors errors, UserPrincipal user){
+    public QCommentResponseDto updateQComment(Long qnaId, Long qcommentId, QCommentRequestDto qCommentRequestDto, Errors errors, UserPrincipal user){
         if(errors.hasErrors()){
             Map<String, String> error = validateHandling(errors);
-            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new IllegalArgumentException("댓글을 입력해주세요");
         }
         User findUser = userRepository.findById(user.getId()).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
@@ -70,7 +71,7 @@ public class QCommentService {
         );
         qComment.update(qCommentRequestDto);
         Message message = new Message("댓글이 수정되었습니다.");
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new QCommentResponseDto(qComment);
     }
 
     //문의하기 댓글 삭제
