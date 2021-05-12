@@ -13,11 +13,11 @@ public class LoginResponseDto {
     private Long userId;
     private UserRole role;
 
-    public LoginResponseDto(String token, String nickname, String msg, Long userId, UserRole userRole) {
+    public LoginResponseDto(String token, String nickname, String msg, Long userId, UserRole role) {
         this.token = token;
         this.nickname = nickname;
         this.msg = msg;
         this.userId = userId;
-        this.role = userRole;
+        this.role = role;
     }
 }
