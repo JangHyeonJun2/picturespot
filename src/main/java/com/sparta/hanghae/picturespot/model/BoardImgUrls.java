@@ -22,11 +22,9 @@ public class BoardImgUrls {
 
     private String imgUrl;
 
-    private Long ArticleId;
-
     @Builder
-    public BoardImgUrls(String imgUrl, Long boardId) {
+    public BoardImgUrls(String imgUrl, Board board) {
         this.imgUrl = imgUrl;
-        this.ArticleId = boardId;
+        this.board = board;
     }
 }

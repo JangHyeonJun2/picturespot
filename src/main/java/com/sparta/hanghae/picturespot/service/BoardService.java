@@ -31,7 +31,7 @@ public class BoardService {
 
     //게시물 저장
     @Transactional
-    public BoardSaveResponseDto save(BoardSaveRequestDto requestDto, String[] imgUrls) {
+    public Long save(BoardSaveRequestDto requestDto, String[] imgUrls) {
         Board boardEntity = boardRepository.save(requestDto.toEntity());
         List<BoardImgSaveRequestDto> boardImgReponseDtoList = new ArrayList<>();
 
@@ -40,7 +40,7 @@ public class BoardService {
             boardImgUrlsRepository.save(boardImgSaveRequestDto.toEntity());
             boardImgReponseDtoList.add(boardImgSaveRequestDto);
         }
-        return new BoardSaveResponseDto(boardEntity, boardImgReponseDtoList);
+        return boardEntity.getId();
     }
 
     //게시물 삭제
