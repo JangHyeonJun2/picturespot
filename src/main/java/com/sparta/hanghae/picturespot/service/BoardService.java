@@ -9,6 +9,8 @@ import com.sparta.hanghae.picturespot.model.*;
 import com.sparta.hanghae.picturespot.repository.*;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,8 +66,7 @@ public class BoardService {
     }
 
     //커뮤니티 게시글 조회
-    public List<BoardsGetResponseDto>
-    getBoards(UserPrincipal loginUser) {
+    public List<BoardsGetResponseDto> getBoards(UserPrincipal loginUser) {
         List<BoardsGetResponseDto> boardGetResponseDtoList = new ArrayList<>();
         List<Board> boardAll = boardRepository.findAllByOrderByModifiedDesc();
         boolean likeCheck = true;
@@ -169,6 +170,7 @@ public class BoardService {
     //게시물 메인페이지(지도) 로딩될 때 데이터 보내주기
     public List<LoadingBoardMapResponseDto>loadingMapBoard(UserPrincipal loginUser) {
         List<Board> boards = boardRepository.findAll();
+
         List<LoadingBoardMapResponseDto> loadingBoardMapResponseDtos = new ArrayList<>();
         boolean likeCheck = true;
 
@@ -250,5 +252,31 @@ public class BoardService {
         //게시물에 대한 좋아요 개수
         List<Heart> allBoardHeartCount = heartRepository.findAllByBoardId(board.getId());
         return new BoardDetailResponseDto(board,likeCheck,allBoardHeartCount.size(),detailCommentsDtoList,requestDtos);
+    }
+
+    public List<Board> fetchBoardPage(Long lastBoardId, int size, UserPrincipal user) {
+        List<Board> boards = fetchPages(lastBoardId, size);
+        return boards;
+    }
+
+    public List<Board> fetchPages(Long lastBoardId, int size) {
+        PageRequest pageRequest = PageRequest.of(0, size);
+        return boardRepository.findAllEntityGraphWithUserByIdLessThanOrderByIdDesc(lastBoardId, pageRequest);
+    }
+
+//    List<BoardPageResponseDto> toDtos(List<Board> boards) {
+//        List<BoardPageResponseDto> responseDtos = new ArrayList<>();
+//        BoardPageResponseDto boardPageResponseDto;
+//        BoardDetailCommentsDto boardDetailCommentsDto;
+//        boolean likeCheck = false;
+//        int lickCount = 1;
+//        for (int i=0; i<boards.size(); i++) {
+//            boardDetailCommentsDto = new BoardDetailCommentsDto()
+//            boardPageResponseDto = new BoardPageResponseDto(boards.get(i), likeCheck, lickCount, )
+//        }
+//    }
+
+    public List<Board> findAll() {
+        return boardRepository.findAll();
     }
 }

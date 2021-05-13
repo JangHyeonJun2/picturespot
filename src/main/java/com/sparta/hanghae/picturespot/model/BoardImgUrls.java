@@ -13,7 +13,6 @@ import javax.persistence.*;
 public class BoardImgUrls {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "BOARDIMGURLS_ID")
     private Long id;
 
     @ManyToOne
@@ -22,9 +21,11 @@ public class BoardImgUrls {
 
     private String imgUrl;
 
+    private Long ArticleId;
+
     @Builder
-    public BoardImgUrls(Board board, String imgUrl) {
-        this.board = board;
+    public BoardImgUrls(String imgUrl, Long boardId) {
         this.imgUrl = imgUrl;
+        this.ArticleId = boardId;
     }
 }

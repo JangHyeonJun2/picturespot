@@ -9,18 +9,18 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class BoardImgSaveRequestDto {
-    private Board board;
+    private Long boardId;
     private String imgUrl;
 
     @Builder
     public BoardImgSaveRequestDto(Board board, String imgUrl) {
-        this.board = board;
+        this.boardId = board.getId();
         this.imgUrl = imgUrl;
     }
 
     public BoardImgUrls toEntity() {
         return BoardImgUrls.builder()
-                .board(board)
+                .boardId(boardId)
                 .imgUrl(imgUrl)
                 .build();
     }
