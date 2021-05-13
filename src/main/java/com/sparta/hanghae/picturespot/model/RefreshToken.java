@@ -2,13 +2,14 @@ package com.sparta.hanghae.picturespot.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.redis.core.RedisHash;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class RefreshToken {
+public class RefreshToken extends Timestamped {
 
     @Id
     private String tokenKey;
@@ -18,8 +19,8 @@ public class RefreshToken {
         this.tokenValue = token;
     }
 
-    public RefreshToken(String key, String value){
-        this.tokenKey = key;
+    public RefreshToken(String tokenKey, String value){
+        this.tokenKey = tokenKey;
         this.tokenValue = value;
     }
 }

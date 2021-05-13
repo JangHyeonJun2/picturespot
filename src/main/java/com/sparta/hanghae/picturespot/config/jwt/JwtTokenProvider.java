@@ -18,10 +18,10 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider { // 토큰 생성, 검증
-
+// 1000*60*60*24*7
     private String secretKey = "ABCA7D35A0B04018B865E0817E1A41374FB06737CF00641E2A781F631B61C9AC";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000*60*30;            //30분
-    private static final long REFRESH_TOKEN_EXPRIRE_TIME = 1000*60*60*24*7;     //7일
+    private static final long REFRESH_TOKEN_EXPRIRE_TIME = 1000*60*60;     //7일, 테스트를 위해 1시간으로
 
     private final UserDetailsService userDetailsService;//토큰에 저장된 유저 정보를 활용해야 하기 때문에 CustomUserDetatilService 라는 이름의 클래스를 만들고 UserDetailsService를 상속받아 재정의 하는 과정을 진행합니다.
 
