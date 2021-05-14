@@ -18,6 +18,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Optional<Board> findByIdOrderByModifiedDesc(Long boardId);
     Optional<Board> findById(Long BoardId);
     List<Board> findByTitleContainingOrContentContainingOrderByModifiedDesc(String title, String content);
+
     List<Board> findAllByOrderByModifiedDesc();
 
     @EntityGraph(attributePaths = {"comments","comments.user"})
@@ -25,5 +26,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query("select a from Board a join fetch a.comments s")
     List<Board> findAllJoinFetch();
+
+//    @Query("select a " + "from Board a "+ "join fetch a.comments ")
+//    List<Board> findAllByFetchJoin();
 }
 
