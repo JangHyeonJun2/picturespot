@@ -59,9 +59,12 @@ public class MypageService {
         List<Board> boardList = boardRepository.findAllByUserIdOrderByModifiedDesc(findUser.getId()); //user로 게시물 찾는다
         for (Board board : boardList) { //게시글
             Long boardId = board.getId();
+
             List<BoardImgUrls> allBoardImgUrls = boardImgUrlsRepository.findAllByBoardId(board.getId()); //해당 board에 대한 이미지들 가져오기.
             List<Comment> comments = commentRepository.findAllByBoardIdOrderByModifiedDesc(boardId); //댓글
+
             List<MypageCommentResponseDto> commentResponseDtos = new ArrayList<>();
+
             List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();//board img list
             for (BoardImgUrls boardImgUrls : allBoardImgUrls) {
                 requestDtos.add(new BoardImgCommonRequestDto(boardImgUrls));

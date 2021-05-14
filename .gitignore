@@ -45,3 +45,4 @@ application.properties
 aws.yml
 oauth2.yml
 aws.yml
+application.yml
