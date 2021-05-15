@@ -9,14 +9,12 @@ import com.sparta.hanghae.picturespot.model.*;
 import com.sparta.hanghae.picturespot.repository.*;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -71,18 +69,18 @@ public class BoardService {
         List<Board> boardAll = boardRepository.findAllByOrderByModifiedDesc();
         boolean likeCheck = true;
         for (int i=0; i<boardAll.size(); i++) {
-            List<BoardImgUrls> allBoardImgUrls = boardImgUrlsRepository.findAllByBoardId(boardAll.get(i).getId());
-            List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();
-            List<BoardDetailCommentsDto> detailCommentsDtoList = new ArrayList<>();
+            Set<BoardImgUrls> allBoardImgUrls = boardAll.get(i).getBoardImgUrls();
+            Set<Comment> allComments = boardAll.get(i).getComments();
+
+            List<BoardImgCommonRequestDto> boardImgCommonRequestDtos = new ArrayList<>();
+            List<BoardDetailCommentsDto> boardDetailCommentsDtos = new ArrayList<>();
+
 
             for (int j=0; j<allBoardImgUrls.size(); j++) {
-                requestDtos.add(new BoardImgCommonRequestDto(allBoardImgUrls.get(j)));
+                boardImgCommonRequestDtos.add(new BoardImgCommonRequestDto(allBoardImgUrls.iterator().next()));
             }
-
-            List<Comment> allByBoardId = commentRepository.findAllByBoardId(boardAll.get(i).getId());
-            for (int k=0; k<allByBoardId.size(); k++) {
-                BoardDetailCommentsDto tempDto = new BoardDetailCommentsDto(allByBoardId.get(k));
-                detailCommentsDtoList.add(tempDto);
+            for (int k=0; k<allComments.size(); k++) {
+                boardDetailCommentsDtos.add(new BoardDetailCommentsDto(allComments.iterator().next()));
             }
             //로그인 사용자가 게시물을 좋아요 했는지 안했는지 체크!
             if (loginUser == null) {//로그인이 되어있지 않은 사용자일 때
@@ -90,9 +88,9 @@ public class BoardService {
             } else //로그인이 되어있는 사용자 일 때
                 likeCheck = heartRepository.existsByBoardIdAndUserId(boardAll.get(i).getId(), loginUser.getId());
             //게시물에 대한 좋아요 개수
-            List<Heart> allByBoardIdHearts = heartRepository.findAllByBoardId(boardAll.get(i).getId());
+            List<Heart> allByBoardIdHearts = boardAll.get(i).getHearts();
 
-            BoardsGetResponseDto brdto = new BoardsGetResponseDto(boardAll.get(i).getUser(), boardAll.get(i), likeCheck, allByBoardIdHearts.size(), detailCommentsDtoList,requestDtos);
+            BoardsGetResponseDto brdto = new BoardsGetResponseDto(boardAll.get(i).getUser(), boardAll.get(i), likeCheck, allByBoardIdHearts.size(), boardDetailCommentsDtos,boardImgCommonRequestDtos);
 
             boardGetResponseDtoList.add(brdto);
         }
@@ -109,52 +107,56 @@ public class BoardService {
 //        List<Board> findSearchBoardList = boardRepository.findByTitleIsLikeOrContentIsLikeOrderByModifiedDesc(searchText, searchText); //OrderByModifiedDesc
         boolean likeCheck = true;
         for (int i=0; i<findSearchBoardList.size(); i++) {
-            List<BoardImgUrls> allBoardImgUrl = boardImgUrlsRepository.findAllByBoardId(findSearchBoardList.get(i).getId());
-            List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>(); // 해당하는 boardImgUrls 담는 리스트
+            Set<BoardImgUrls> allBoardImgUrl = findSearchBoardList.get(i).getBoardImgUrls();
+            Set<Comment> allBoardComments = findSearchBoardList.get(i).getComments();
+
+            List<BoardImgCommonRequestDto> boardImgCommonRequestDtos = new ArrayList<>(); // 해당하는 boardImgUrls 담는 리스트
             List<BoardDetailCommentsDto> detailCommentsDtoList = new ArrayList<>(); //댓글 리스트
 
             for (int j=0; j<allBoardImgUrl.size(); j++) {//ImgUrl들 넣어주기.
-                requestDtos.add(new BoardImgCommonRequestDto(allBoardImgUrl.get(j)));
+                boardImgCommonRequestDtos.add(new BoardImgCommonRequestDto(allBoardImgUrl.iterator().next()));
             }
 
-            List<Comment> allByBoardId = commentRepository.findAllByBoardId(findSearchBoardList.get(i).getId());
-            for (int k=0; k<allByBoardId.size(); k++) {
-                BoardDetailCommentsDto tempDto = new BoardDetailCommentsDto(allByBoardId.get(k));
-                detailCommentsDtoList.add(tempDto);
+            for (int k=0; k<allBoardComments.size(); k++) {
+                detailCommentsDtoList.add(new BoardDetailCommentsDto(allBoardComments.iterator().next()));
             }
             if (loginUser == null) {
                 likeCheck = false;
             } else
                 likeCheck = heartRepository.existsByBoardIdAndUserId(findSearchBoardList.get(i).getId(), loginUser.getId());
             //게시물에 대한 좋아요 개수
-            List<Heart> allByBoardIdHeart = heartRepository.findAllByBoardId(findSearchBoardList.get(i).getId());
+            List<Heart> allByBoardIdHeart = findSearchBoardList.get(i).getHearts();
 
-            BoardGetSearchResponseDto responseDto = new BoardGetSearchResponseDto(findSearchBoardList.get(i), likeCheck, allByBoardIdHeart.size(), detailCommentsDtoList,requestDtos);
+            BoardGetSearchResponseDto responseDto = new BoardGetSearchResponseDto(findSearchBoardList.get(i), likeCheck, allByBoardIdHeart.size(), detailCommentsDtoList,boardImgCommonRequestDtos);
             searchResponseDtos.add(responseDto);
         }
         return searchResponseDtos;
     }
     //게시물 상세보기
-    public BoardDetailResponseDto detail(Long boardId, User loginUser) {
+    public BoardDetailResponseDto detail(Long boardId, UserPrincipal loginUser) {
+        Board findBoard = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다."));
+
+        //가져온 imgUrl 들을 담을 dto리스트 만들기.
+        List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();
+        //가져온 comment 들을 담을 dto리스트 만들기.
         List<BoardDetailCommentsDto> detailCommentsDtoList = new ArrayList<>();
+
         boolean likeCheck = true;
 
-        Board findBoard = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다."));
-        //해당 board에 대한 imgUrl들을 가져오기.
-        List<BoardImgUrls> allBoardImgs = boardImgUrlsRepository.findAllByBoardId(findBoard.getId());
-        //가져온 imgUrl들을 담을 dto리스트 만들기.
-        List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();
+
+        //해당 board에 대한 imgUrl 들을 가져오기.
+        Set<BoardImgUrls> boardImgUrls = findBoard.getBoardImgUrls();
+        //해당 board에 대한 comment 들을 가져오기.
+        Set<Comment> boardComments = findBoard.getComments();
+
 
         //반목문을 돌려서 리스트에 imgUrl들을 담기.
-        for (BoardImgUrls boardImgUrl : allBoardImgs) {
+        for (BoardImgUrls boardImgUrl : boardImgUrls) {
             requestDtos.add(new BoardImgCommonRequestDto(boardImgUrl));
         }
 
-        List<Comment> allByBoardId = commentRepository.findAllByBoardId(findBoard.getId());
-
-        for (int i=0; i<allByBoardId.size(); i++) {
-            BoardDetailCommentsDto tempDto = new BoardDetailCommentsDto(allByBoardId.get(i));
-            detailCommentsDtoList.add(tempDto);
+        for (Comment comment : boardComments) {
+            detailCommentsDtoList.add(new BoardDetailCommentsDto(comment));
         }
         if (loginUser == null) {
             likeCheck = false;
@@ -163,41 +165,56 @@ public class BoardService {
         }
 
         //게시물에 대한 좋아요 개수
-        List<Heart> allBoardHeartCount = heartRepository.findAllByBoardId(findBoard.getId());
+        List<Heart> allBoardHeartCount = findBoard.getHearts();
 
         return new BoardDetailResponseDto(findBoard,likeCheck,allBoardHeartCount.size(),detailCommentsDtoList,requestDtos);
     }
     //게시물 메인페이지(지도) 로딩될 때 데이터 보내주기
     public List<LoadingBoardMapResponseDto>loadingMapBoard(UserPrincipal loginUser) {
-        List<Board> boards = boardRepository.findAll();
+//        List<Board> boards = boardRepository.findAll();
+//        List<LoadingBoardMapResponseDto> loadingBoardMapResponseDtos = new ArrayList<>();
+//        boolean likeCheck = true;
+//
+//        for (int i=0; i<boards.size(); i++) {
+//            Set<Comment> comments = boards.get(i).getComments();
+//            Set<BoardImgUrls> BoardImgUrls = boards.get(i).getBoardImgUrls();
+//
+//            List<BoardDetailCommentsDto> detailCommentsDtoList = new ArrayList<>();
+//            List<BoardImgCommonRequestDto> boardImgCommonRequestDtoList = new ArrayList<>();
+//
+//
+//            for (BoardImgUrls boardImgUrls : BoardImgUrls) {
+//                boardImgCommonRequestDtoList.add(new BoardImgCommonRequestDto(boardImgUrls));
+//            }
+//
+//            for (Comment comment : comments) {
+//                detailCommentsDtoList.add(new BoardDetailCommentsDto(comment));
+//            }
+//
+//            if (loginUser == null) {
+//                likeCheck = false;
+//            } else {
+//                likeCheck = heartRepository.existsByBoardIdAndUserId(boards.get(i).getId(), loginUser.getId());
+//            }
+//            List<Heart> allByBoardId = boards.get(i).getHearts();
+//            LoadingBoardMapResponseDto boardMapResponseDto = new LoadingBoardMapResponseDto(boards.get(i), likeCheck, allByBoardId.size(), detailCommentsDtoList,boardImgCommonRequestDtoList);
+//            loadingBoardMapResponseDtos.add(boardMapResponseDto);
+//        }
+//        return loadingBoardMapResponseDtos;
 
-        List<LoadingBoardMapResponseDto> loadingBoardMapResponseDtos = new ArrayList<>();
-        boolean likeCheck = true;
-
-        for (int i=0; i<boards.size(); i++) {
-            List<Comment> comments = commentRepository.findAllByBoardId(boards.get(i).getId());
-            List<BoardDetailCommentsDto> detailCommentsDtoList = new ArrayList<>();
-            List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();
-            List<BoardImgUrls> allBoardImgUrls = boardImgUrlsRepository.findAllByBoardId(boards.get(i).getId());
-
-            for (BoardImgUrls boardImgUrls : allBoardImgUrls) {
-                requestDtos.add(new BoardImgCommonRequestDto(boardImgUrls));
-            }
-
-            for (int j=0; j<comments.size(); j++) {
-                BoardDetailCommentsDto commentsDto = new BoardDetailCommentsDto(comments.get(j));
-                detailCommentsDtoList.add(commentsDto);
-            }
-            if (loginUser == null) {
-                likeCheck = false;
-            } else {
-                likeCheck = heartRepository.existsByBoardIdAndUserId(boards.get(i).getId(), loginUser.getId());
-            }
-            List<Heart> allByBoardId = heartRepository.findAllByBoardId(boards.get(i).getId());
-            LoadingBoardMapResponseDto boardMapResponseDto = new LoadingBoardMapResponseDto(boards.get(i), likeCheck, allByBoardId.size(), detailCommentsDtoList,requestDtos);
-            loadingBoardMapResponseDtos.add(boardMapResponseDto);
+        List<LoadingBoardMapResponseDto> responseDtos = new ArrayList<>();
+        List<Board> boards = boardRepository.findAllFetchJoin();
+        boolean liked = true;
+        for (Board board : boards) {
+            Set<BoardDetailCommentsDto> detailCommentsDtos = Comment.toDtoList(board.getComments());
+            Set<BoardImgCommonRequestDto> imgCommonRequestDtos = BoardImgUrls.toDtoList(board.getBoardImgUrls());
+            if (loginUser == null)
+                liked = false;
+            else
+                liked = heartRepository.existsByBoardIdAndUserId(board.getId(), loginUser.getId());
+            responseDtos.add(new LoadingBoardMapResponseDto(board, liked, board.getHearts().size(), detailCommentsDtos, imgCommonRequestDtos));
         }
-        return loadingBoardMapResponseDtos;
+        return responseDtos;
     }
 
     //게시글 수정(이미지 삭제, 추가, 타이틀, 내용 수정)
@@ -224,24 +241,22 @@ public class BoardService {
             }
         }
 
-        List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();
-        List<BoardDetailCommentsDto> detailCommentsDtoList = new ArrayList<>();
+        List<BoardImgCommonRequestDto> boardImgCommonRequestDtoList = new ArrayList<>();
+        List<BoardDetailCommentsDto> boardDetailCommentsDtoList = new ArrayList<>();
         boolean likeCheck = true;
 
         //해당 board에 대한 imgUrl들을 가져오기.
-        List<BoardImgUrls> allBoardImgs = boardImgUrlsRepository.findAllByBoardId(board.getId());
-        //가져온 imgUrl들을 담을 dto리스트 만들기.
+        Set<BoardImgUrls> allBoardImgs = board.getBoardImgUrls();
 
         //반목문을 돌려서 리스트에 imgUrl들을 담기.
         for (BoardImgUrls boardImgUrl : allBoardImgs) {
-            requestDtos.add(new BoardImgCommonRequestDto(boardImgUrl));
+            boardImgCommonRequestDtoList.add(new BoardImgCommonRequestDto(boardImgUrl));
         }
+        //해당 board에 대한 comment 들을 가져오기.
+        Set<Comment> allComments = board.getComments();
 
-        List<Comment> allByBoardId = commentRepository.findAllByBoardId(board.getId());
-
-        for (int i=0; i<allByBoardId.size(); i++) {
-            BoardDetailCommentsDto tempDto = new BoardDetailCommentsDto(allByBoardId.get(i));
-            detailCommentsDtoList.add(tempDto);
+        for (Comment comment : allComments) {
+            boardDetailCommentsDtoList.add(new BoardDetailCommentsDto(comment));
         }
         if (loginUser == null) {
             likeCheck = false;
@@ -250,19 +265,19 @@ public class BoardService {
         }
 
         //게시물에 대한 좋아요 개수
-        List<Heart> allBoardHeartCount = heartRepository.findAllByBoardId(board.getId());
-        return new BoardDetailResponseDto(board,likeCheck,allBoardHeartCount.size(),detailCommentsDtoList,requestDtos);
+        List<Heart> allBoardHeartCount = board.getHearts();
+        return new BoardDetailResponseDto(board,likeCheck,allBoardHeartCount.size(),boardDetailCommentsDtoList,boardImgCommonRequestDtoList);
     }
 
-    public List<Board> fetchBoardPage(Long lastBoardId, int size, UserPrincipal user) {
-        List<Board> boards = fetchPages(lastBoardId, size);
-        return boards;
-    }
-
-    public List<Board> fetchPages(Long lastBoardId, int size) {
-        PageRequest pageRequest = PageRequest.of(0, size);
-        return boardRepository.findAllEntityGraphWithUserByIdLessThanOrderByIdDesc(lastBoardId, pageRequest);
-    }
+//    public List<Board> fetchBoardPage(Long lastBoardId, int size, UserPrincipal user) {
+//        List<Board> boards = fetchPages(lastBoardId, size);
+//        return boards;
+//    }
+//
+//    public List<Board> fetchPages(Long lastBoardId, int size) {
+//        PageRequest pageRequest = PageRequest.of(0, size);
+//        return boardRepository.findByIdLessThan(lastBoardId);
+//    }
 
 //    List<BoardPageResponseDto> toDtos(List<Board> boards) {
 //        List<BoardPageResponseDto> responseDtos = new ArrayList<>();
@@ -276,7 +291,4 @@ public class BoardService {
 //        }
 //    }
 
-    public List<Board> findAll() {
-        return boardRepository.findAll();
-    }
 }

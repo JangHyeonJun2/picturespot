@@ -16,13 +16,13 @@ import java.util.Optional;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findAllByUserIdOrderByModifiedDesc(Long userId);
+
     Optional<Board> findByIdOrderByModifiedDesc(Long boardId);
-    Optional<Board> findById(Long BoardId);
+
     List<Board> findByTitleContainingOrContentContainingOrderByModifiedDesc(String title, String content);
 
     List<Board> findAllByOrderByModifiedDesc();
 
-    Page<Board> findByIdLessThanOrderByModifiedDesc(Long lastId, Pageable pageable);
     Page<Board> findByIdLessThanAndUserIdOrderByModifiedDesc(Long lastId, Long userId, Pageable pageable);
 
     @EntityGraph(attributePaths = {"comments","comments.user"})
@@ -30,6 +30,42 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query("select a from Board a join fetch a.comments s")
     List<Board> findAllJoinFetch();
+
+
+
+//    Page<Board> findAll(Pageable pageRequest);
+//
+//    @Query("select a from Board a left join fetch a.comments s")
+//    List<Board> findAllJoinFetch();
+//
+//
+//    @Query("SELECT distinct b " +
+//            "FROM Board b " +
+//            "left JOIN FETCH b.comments " +
+//            "left JOIN FETCH b.boardImgUrls " +
+//            "left JOIN fetch b.hearts")
+//    List<Board> findByIdLessThan(Long lastBoardId);
+//
+//
+    @Query("SELECT distinct b " +
+              "FROM Board b " +
+              "left JOIN FETCH b.comments " +
+              "left JOIN FETCH b.boardImgUrls " +
+              "left JOIN fetch b.hearts")
+    List<Board> findAllFetchJoin();
+//
+//
+//    Page<Board> findByIdInOrderByIdDesc(List<Board> ac, Pageable pageRequest);
+//
+//    List<Board> findByIdLessThanOrderByIdDesc(Long lastBoardId, Pageable pageable);
+
+
+//    @Query(value = "SELECT b" +
+//            " FROM Board b" +
+//            " LEFT JOIN Follow f" +
+//            " ON p.member.id = f.toMember.id" +
+//            " WHERE f.fromMember.id = :memberId AND p.id < :lastPostId")
+//    List<Board> findByIdLessThanAndUserInOrderByIdDesc(long lastId, List<User> collect, Pageable pageRequest);
 
 }
 
