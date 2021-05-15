@@ -104,8 +104,7 @@ public class BoardController {
     @GetMapping("/board/{boardId}/detail")
     public ResponseEntity detail(@PathVariable Long boardId, @AuthenticationPrincipal UserPrincipal user) {
 
-        User findUser = findUserMethod(user);
-        BoardDetailResponseDto detail = boardService.detail(boardId, findUser);
+        BoardDetailResponseDto detail = boardService.detail(boardId, user);
         return customExceptionController.ok("해당 게시글 상세페이지 정보입니다..", detail);
     }
 
