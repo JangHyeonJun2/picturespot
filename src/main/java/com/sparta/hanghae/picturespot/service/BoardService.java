@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -152,6 +149,7 @@ public class BoardService {
         Set<BoardImgUrls> boardImgUrls = findBoard.getBoardImgUrls();
         //해당 board에 대한 comment 들을 가져오기.
         Set<Comment> boardComments = findBoard.getComments();//TODO 최신순으로 다시 정렬
+        List<Comment> sortCommentByModified = boardComments.stream().sorted(Comparator.comparing(Timestamped::getModified).reversed()).collect(Collectors.toList());// 정렬
 
 
 
@@ -160,7 +158,7 @@ public class BoardService {
             requestDtos.add(new BoardImgCommonRequestDto(boardImgUrl));
         }
 
-        for (Comment comment : boardComments) {
+        for (Comment comment : sortCommentByModified) {
             detailCommentsDtoList.add(new BoardDetailCommentsDto(comment));
         }
         if (loginUser == null) {
