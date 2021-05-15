@@ -9,12 +9,16 @@ import com.sparta.hanghae.picturespot.model.*;
 import com.sparta.hanghae.picturespot.repository.*;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -147,7 +151,8 @@ public class BoardService {
         //해당 board에 대한 imgUrl 들을 가져오기.
         Set<BoardImgUrls> boardImgUrls = findBoard.getBoardImgUrls();
         //해당 board에 대한 comment 들을 가져오기.
-        Set<Comment> boardComments = findBoard.getComments();
+        Set<Comment> boardComments = findBoard.getComments();//TODO 최신순으로 다시 정렬
+
 
 
         //반목문을 돌려서 리스트에 imgUrl들을 담기.
@@ -269,26 +274,27 @@ public class BoardService {
         return new BoardDetailResponseDto(board,likeCheck,allBoardHeartCount.size(),boardDetailCommentsDtoList,boardImgCommonRequestDtoList);
     }
 
-//    public List<Board> fetchBoardPage(Long lastBoardId, int size, UserPrincipal user) {
-//        List<Board> boards = fetchPages(lastBoardId, size);
-//        return boards;
-//    }
-//
-//    public List<Board> fetchPages(Long lastBoardId, int size) {
-//        PageRequest pageRequest = PageRequest.of(0, size);
-//        return boardRepository.findByIdLessThan(lastBoardId);
-//    }
+    public List<BoardListGetResponseDto> fetchBoardPage(Long lastBoardId, int size, UserPrincipal loginUser) {
+        List<Board> boards = fetchPages(lastBoardId, size);
+        List<BoardListGetResponseDto> infinityScrollDto = new ArrayList<>();
+        BoardListGetResponseDto boardListGetResponseDto;
+        boolean likeCheck = true;
 
-//    List<BoardPageResponseDto> toDtos(List<Board> boards) {
-//        List<BoardPageResponseDto> responseDtos = new ArrayList<>();
-//        BoardPageResponseDto boardPageResponseDto;
-//        BoardDetailCommentsDto boardDetailCommentsDto;
-//        boolean likeCheck = false;
-//        int lickCount = 1;
-//        for (int i=0; i<boards.size(); i++) {
-//            boardDetailCommentsDto = new BoardDetailCommentsDto()
-//            boardPageResponseDto = new BoardPageResponseDto(boards.get(i), likeCheck, lickCount, )
-//        }
-//    }
+        for (int i=0; i<boards.size(); i++) {
+            //로그인에 따라 좋아요 판별!
+            if (loginUser == null) {
+                likeCheck = false;
+            } else {
+                likeCheck = heartRepository.existsByBoardIdAndUserId(boards.get(i).getId(), loginUser.getId());
+            }
+            boardListGetResponseDto = new BoardListGetResponseDto(boards.get(i), likeCheck, boards.get(i).getHearts().size());
+            infinityScrollDto.add(boardListGetResponseDto);
+        }
+        return infinityScrollDto;
+    }
 
+    public List<Board> fetchPages(Long lastBoardId, int size) {
+        PageRequest pageRequest = PageRequest.of(0, size);
+        return boardRepository.findByIdLessThanOrderByIdDesc(lastBoardId,pageRequest);
+    }
 }

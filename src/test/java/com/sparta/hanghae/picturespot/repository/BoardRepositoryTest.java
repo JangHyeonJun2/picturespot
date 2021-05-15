@@ -110,4 +110,9 @@ class BoardRepositoryTest {
         }
     }
 
+    @Test
+    public void 패치조인날짜순정렬() {
+        List<Board> boards = boardRepository.findAllFetchJoinOrderByModifiedDesc();
+    }
+
 }
