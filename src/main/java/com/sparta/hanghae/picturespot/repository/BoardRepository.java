@@ -38,7 +38,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 //
     @Query("SELECT distinct b " +
               "FROM Board b " +
-              "left JOIN FETCH b.comments " +
               "left JOIN FETCH b.boardImgUrls " +
               "left JOIN fetch b.hearts")
     List<Board> findAllFetchJoin();

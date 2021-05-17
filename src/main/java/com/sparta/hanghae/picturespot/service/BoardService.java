@@ -209,13 +209,8 @@ public class BoardService {
         List<Board> boards = boardRepository.findAllFetchJoin();
         boolean liked = true;
         for (Board board : boards) {
-            Set<BoardDetailCommentsDto> detailCommentsDtos = Comment.toDtoList(board.getComments());
             Set<BoardImgCommonRequestDto> imgCommonRequestDtos = BoardImgUrls.toDtoList(board.getBoardImgUrls());
-            if (loginUser == null)
-                liked = false;
-            else
-                liked = heartRepository.existsByBoardIdAndUserId(board.getId(), loginUser.getId());
-            responseDtos.add(new LoadingBoardMapResponseDto(board, liked, board.getHearts().size(), detailCommentsDtos, imgCommonRequestDtos));
+            responseDtos.add(new LoadingBoardMapResponseDto(board, imgCommonRequestDtos));
         }
         return responseDtos;
     }
