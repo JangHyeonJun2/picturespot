@@ -50,8 +50,8 @@ public class BoardController {
 
         User findUser = findUserMethod(user);
         BoardSaveRequestDto boardSaveRequestDto = new BoardSaveRequestDto(title,content,category,latitude,longitude, spotName, findUser);
-        Long boardId = boardService.save(boardSaveRequestDto, imgUrls);
-        return customExceptionController.ok("게시물을 저장하였습니다.", boardId);
+        BoardSaveResponseDto boardSaveResponseDto = boardService.save(boardSaveRequestDto, imgUrls);
+        return customExceptionController.ok("게시물을 저장하였습니다.", boardSaveResponseDto);
     }
 
 //    게시글 수정
