@@ -34,9 +34,9 @@ class BoardServiceTest {
         List<LoadingBoardMapResponseDto> responseDtos = new ArrayList<>();
         List<Board> boards = boardRepository.findAllFetchJoin();
         for (Board board : boards) {
-            Set<BoardDetailCommentsDto> detailCommentsDtos = Comment.toDtoList(board.getComments());
+//            Set<BoardDetailCommentsDto> detailCommentsDtos = Comment.toDtoList(board.getComments());
             Set<BoardImgCommonRequestDto> imgCommonRequestDtos = BoardImgUrls.toDtoList(board.getBoardImgUrls());
-            responseDtos.add(new LoadingBoardMapResponseDto(board, false, board.getHearts().size(), detailCommentsDtos, imgCommonRequestDtos));
+            responseDtos.add(new LoadingBoardMapResponseDto(board,  imgCommonRequestDtos));
         }
 
 //        Assertions.assertThat(34).isEqualTo(responseDtos.size());
