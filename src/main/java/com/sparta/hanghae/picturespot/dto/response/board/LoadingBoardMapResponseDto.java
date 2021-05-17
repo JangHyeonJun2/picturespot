@@ -21,9 +21,9 @@ public class LoadingBoardMapResponseDto {
     private Long boardId;
 //    private String title;
 //    private String content;
-//    private boolean liked;
+    private boolean liked;
 //    private int likeCount;
-//    private String writerName;
+    private String writerName;
 //    private String writerImgUrl;
     private double latitude;
     private double longitude;
@@ -51,13 +51,13 @@ public class LoadingBoardMapResponseDto {
 //        this.boardDetailCommentDtoList = detailCommentsDtos;
 //        this.boardImgReponseDtoList = reponseDto;
 //    }
-    public LoadingBoardMapResponseDto(Board boardEntity, Set<BoardImgCommonRequestDto> reponseDto2) {
+    public LoadingBoardMapResponseDto(Board boardEntity,boolean liked, Set<BoardImgCommonRequestDto> reponseDto2) {
         this.boardId = boardEntity.getId();
 //        this.title = boardEntity.getTitle();
 //        this.content = boardEntity.getContent();
-//        this.liked = liked;
+        this.liked = liked;
 //        this.likeCount = likeCount;
-//        this.writerName = boardEntity.getUser().getNickname();
+        this.writerName = boardEntity.getUser().getNickname();
 //        this.writerImgUrl = boardEntity.getUser().getImgUrl();
         this.latitude = boardEntity.getLatitude();
         this.longitude = boardEntity.getLongitude();
