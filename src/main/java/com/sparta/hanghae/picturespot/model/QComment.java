@@ -11,7 +11,8 @@ import javax.persistence.*;
 @Entity
 public class QComment extends Timestamped{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "QCOMMENT_ID")
     private Long id;
 
     private String content;

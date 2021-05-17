@@ -43,15 +43,15 @@ public class BoardController {
     //게시물 작성
     @PostMapping("/board")
     public ResponseEntity save(@RequestParam(value = "file", required = false) MultipartFile[] files, @RequestParam("title") String title,
-                               @RequestParam("content") String content, @RequestParam("category") String category, @RequestParam("latitude") BigDecimal latitude,
-                               @RequestParam("longitude") BigDecimal longitude, @RequestParam("spotName") String spotName, @AuthenticationPrincipal UserPrincipal user) throws IOException {
+                               @RequestParam("content") String content, @RequestParam("category") String category, @RequestParam("latitude") double latitude,
+                               @RequestParam("longitude") double longitude, @RequestParam("spotName") String spotName, @AuthenticationPrincipal UserPrincipal user) throws IOException {
 
         String[] imgUrls = s3Service.upload(Arrays.asList(files), "board");
 
         User findUser = findUserMethod(user);
         BoardSaveRequestDto boardSaveRequestDto = new BoardSaveRequestDto(title,content,category,latitude,longitude, spotName, findUser);
-        BoardSaveResponseDto responseDto = boardService.save(boardSaveRequestDto, imgUrls);
-        return customExceptionController.ok("게시물을 저장하였습니다.", responseDto);
+        Long boardId = boardService.save(boardSaveRequestDto, imgUrls);
+        return customExceptionController.ok("게시물을 저장하였습니다.", boardId);
     }
 
 //    게시글 수정
@@ -104,8 +104,7 @@ public class BoardController {
     @GetMapping("/board/{boardId}/detail")
     public ResponseEntity detail(@PathVariable Long boardId, @AuthenticationPrincipal UserPrincipal user) {
 
-        User findUser = findUserMethod(user);
-        BoardDetailResponseDto detail = boardService.detail(boardId, findUser);
+        BoardDetailResponseDto detail = boardService.detail(boardId, user);
         return customExceptionController.ok("해당 게시글 상세페이지 정보입니다..", detail);
     }
 
@@ -117,9 +116,18 @@ public class BoardController {
         return customExceptionController.ok("모든 게시물 데이터 정보입니다." ,loadingBoardMapResponseDtos);
     }
 
+    //무한스크롤
+    @GetMapping("/board/community/scroll")
+    public ResponseEntity boardCommunityScroll(@AuthenticationPrincipal UserPrincipal user, @RequestParam Long lastBoardId, @RequestParam int size) {
+        List<BoardListGetResponseDto> responseDtoList = boardService.fetchBoardPage(lastBoardId, size, user);
+        return customExceptionController.ok("무한스크롤 데이터!!",responseDtoList);
+    }
+
     public  User findUserMethod(UserPrincipal userPrincipal) {
         return userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
     }
+
+
 
 }
 

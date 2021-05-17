@@ -10,8 +10,10 @@ import com.sparta.hanghae.picturespot.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -39,14 +41,16 @@ public class QuestionController {
 
     //문의하기 글쓰기
     @PostMapping("/qna")
-    public ResponseEntity createQuestion(@RequestBody QuestionRequestDto questionRequestDto, @AuthenticationPrincipal UserPrincipal user){
-        return questionService.createQuestion(questionRequestDto, user);
+    public ResponseEntity createQuestion(@RequestBody @Valid QuestionRequestDto questionRequestDto, Errors errors, @AuthenticationPrincipal UserPrincipal user){
+        QuestionResponseDto question = questionService.createQuestion(questionRequestDto, errors, user);
+        return customExceptionController.ok("게시글 등록 완료", question);
     }
 
     //문의하기 수정
     @PutMapping("/qna/{qnaId}")
-    public ResponseEntity updateQuestion(@PathVariable Long qnaId, @RequestBody QuestionRequestDto questionRequestDto, @AuthenticationPrincipal UserPrincipal user){
-        return questionService.updateQuestion(qnaId, questionRequestDto, user);
+    public ResponseEntity updateQuestion(@PathVariable Long qnaId, @RequestBody @Valid QuestionRequestDto questionRequestDto, Errors errors, @AuthenticationPrincipal UserPrincipal user){
+        QuestionResponseDto question = questionService.updateQuestion(qnaId, questionRequestDto, errors, user);
+        return customExceptionController.ok("게시글 수정 완료", question);
     }
 
     //문의하기 삭제

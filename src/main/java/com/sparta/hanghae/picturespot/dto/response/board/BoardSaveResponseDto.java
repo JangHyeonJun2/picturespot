@@ -17,8 +17,8 @@ public class BoardSaveResponseDto {
     private String title;
     private String content;
     private String category;
-    private BigDecimal latitude;
-    private BigDecimal longitude;
+    private double latitude;
+    private double longitude;
     private String spotName;
     private List<BoardImgSaveRequestDto> boardImgReponseDtoList = new ArrayList<>();
     private Long userId;

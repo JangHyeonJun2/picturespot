@@ -21,8 +21,8 @@ public class MypageResponseDto {
     private String writer;
     private String title;
     private String content;
-    private BigDecimal latitude;
-    private BigDecimal longitude;
+    private double latitude;
+    private double longitude;
     private String category;
     private String spotName;
     private LocalDateTime modified;

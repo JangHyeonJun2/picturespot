@@ -4,13 +4,18 @@ import com.sparta.hanghae.picturespot.dto.request.board.BoardUpdateRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -18,7 +23,7 @@ import java.util.List;
 //imgUrl을 분리함.
 public class Board extends Timestamped{
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BOARD_ID")
     private Long id;
 
@@ -28,9 +33,9 @@ public class Board extends Timestamped{
 
     private String category;
 
-    private BigDecimal latitude;
+    private double latitude;
 
-    private BigDecimal longitude;
+    private double longitude;
 
     private String spotName;
 
@@ -39,17 +44,19 @@ public class Board extends Timestamped{
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
-    private List<BoardImgUrls> boardImgUrls = new ArrayList<>();
+//    @BatchSize(size = 900)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<BoardImgUrls> boardImgUrls = new HashSet<>();
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
-    private List<Comment> comments = new ArrayList<>();
+//    @BatchSize(size = 900)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Heart> hearts = new ArrayList<>();
 
     @Builder
-    public Board(String title, String content, String category,  BigDecimal latitude, BigDecimal longitude, String spotName, User user) {
+    public Board(String title, String content, String category,  double latitude, double longitude, String spotName, User user) {
         this.title = title;
         this.content = content;
         this.category = category;

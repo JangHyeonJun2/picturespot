@@ -14,24 +14,18 @@ public class BoardSaveRequestDto {
     private String title;
     private String content;
     private String category;
-    private BigDecimal latitude;
-    private BigDecimal logitude;
-//    private String[] imgUrls;
+    private double latitude;
+    private double longitude;
     private String spotName;
     private User user;
 
     @Builder
-    public BoardSaveRequestDto(String title, String content, String category, BigDecimal latitude, BigDecimal logitude, String spotName, User user) {
+    public BoardSaveRequestDto(String title, String content, String category, double latitude, double longitude, String spotName, User user) {
         this.title = title;
         this.content = content;
         this.category = category;
         this.latitude = latitude;
-        this.logitude = logitude;
-        //배열 사이즈 초기화 및 값 설정.
-//        this.imgUrls = new String[imgUrls.length];
-//        for (int i=0; i<imgUrls.length; i++) {
-//            this.imgUrls[i] = imgUrls[i];
-//        }
+        this.longitude = longitude;
         this.spotName = spotName;
         this.user = user;
     }
@@ -42,7 +36,7 @@ public class BoardSaveRequestDto {
                 .content(content)
                 .category(category)
                 .latitude(latitude)
-                .longitude(logitude)
+                .longitude(longitude)
                 .spotName(spotName)
                 .user(user)
                 .build();

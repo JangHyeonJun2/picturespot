@@ -22,9 +22,8 @@ import java.util.Map;
 public class User extends Timestamped  {
 
     //private Map<String, Object> attributes;
-
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
     private Long id;
     @Column(nullable = false)

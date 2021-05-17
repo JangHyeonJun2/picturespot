@@ -2,7 +2,6 @@ package com.sparta.hanghae.picturespot.dto.response.board;
 
 import com.sparta.hanghae.picturespot.dto.request.img.BoardImgCommonRequestDto;
 import com.sparta.hanghae.picturespot.model.Board;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,37 +9,36 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 @NoArgsConstructor
-public class BoardDetailResponseDto {
-    private Long boardId; //게시글 아이디
-    private Long userId; //게시글 작성자 아이디
+@Getter
+public class BoardPageResponseDto {
+    private Long boardId;
+    private LocalDateTime modified;
+    private Long writerId;
     private String writerName;
     private String writerImgUrl;
     private String title;
     private String content;
-    private String category;
-    private LocalDateTime modified;
+    private String spotName;
     private boolean liked;
     private int likeCount;
-    private String spotName;
-    private List<BoardDetailCommentsDto> boardDetailCommentDtoList = new ArrayList<>();
+    private String category;
     private List<BoardImgCommonRequestDto> boardImgReponseDtoList = new ArrayList<>();
+    private List<BoardDetailCommentsDto> boardDetailCommentDtoList = new ArrayList<>();
 
-    @Builder
-    public BoardDetailResponseDto(Board boardEntity, boolean likeCheck, int likeCount, List<BoardDetailCommentsDto> boardDetailCommentsDtoList, List<BoardImgCommonRequestDto> requestDto) {
+    public BoardPageResponseDto(Board boardEntity, boolean likeCheck, int likeCount, List<BoardDetailCommentsDto> boardDetailCommentsDtoList, List<BoardImgCommonRequestDto> reponseDto) {
         this.boardId = boardEntity.getId();
-        this.userId = boardEntity.getUser().getId();
+        this.modified = boardEntity.getModified();
+        this.writerId = boardEntity.getUser().getId();
         this.writerName = boardEntity.getUser().getNickname();
         this.writerImgUrl = boardEntity.getUser().getImgUrl();
         this.title = boardEntity.getTitle();
         this.content = boardEntity.getContent();
-        this.category = boardEntity.getCategory();
-        this.modified = boardEntity.getModified();
         this.spotName = boardEntity.getSpotName();
         this.liked = likeCheck;
         this.likeCount = likeCount;
+        this.category = boardEntity.getCategory();
+        this.boardImgReponseDtoList = reponseDto;
         this.boardDetailCommentDtoList = boardDetailCommentsDtoList;
-        this.boardImgReponseDtoList = requestDto;
     }
 }

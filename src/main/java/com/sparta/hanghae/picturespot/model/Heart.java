@@ -11,7 +11,8 @@ import javax.persistence.*;
 @Entity
 public class Heart {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "HEART_ID")
     private Long id;
 
     //@ManyToOne(cascade = CascadeType.ALL)

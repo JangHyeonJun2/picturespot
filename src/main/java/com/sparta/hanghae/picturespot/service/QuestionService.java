@@ -18,10 +18,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -54,32 +58,38 @@ public class QuestionService {
             QCommentResponseDto qCommentDto = new QCommentResponseDto(qComment);
             qCommentResponseDtos.add(qCommentDto);
         }
-        QuestionResponseDto questionReponseDto = new QuestionResponseDto(question, qCommentResponseDtos);
-        return questionReponseDto;
+        return new QuestionResponseDto(question, qCommentResponseDtos);
     }
 
     //문의하기 글쓰기
     @Transactional
-    public ResponseEntity createQuestion(QuestionRequestDto questionRequestDto, UserPrincipal user){
+    public QuestionResponseDto createQuestion(QuestionRequestDto questionRequestDto, Errors errors, UserPrincipal user){
+        if(errors.hasErrors()){
+            Map<String, String> error = validateHandling(errors);
+            throw new IllegalArgumentException("title과 content 모두 입력해주세요");
+//            return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         User findUser = userRepository.findById(user.getId()).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
         Question question = new Question(questionRequestDto, findUser);
         questionRepository.save(question);
-        Message message = new Message("게시글이 작성되었습니다.");
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new QuestionResponseDto(question);
     }
 
     //문의하기 수정
     @Transactional
-    public ResponseEntity updateQuestion(Long qnaId, QuestionRequestDto questionRequestDto, UserPrincipal user){
+    public QuestionResponseDto updateQuestion(Long qnaId, QuestionRequestDto questionRequestDto, Errors errors, UserPrincipal user){
+        if(errors.hasErrors()){
+            Map<String, String> error = validateHandling(errors);
+            throw new IllegalArgumentException("title과 content 모두 입력해주세요");
+        }
         User findUser = userRepository.findById(user.getId()).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
         Question question = questionRepository.findByUserAndId(findUser, qnaId).orElseThrow(
                 () -> new IllegalArgumentException("작성자만 수정 가능")
         );
         question.update(questionRequestDto);
-        Message message = new Message("게시글이 수정되었습니다.");
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return new QuestionResponseDto(question);
     }
 
     //문의하기 삭제
@@ -97,6 +107,16 @@ public class QuestionService {
         questionRepository.delete(question); //문의하기 게시물 삭제
         Message message = new Message("게시글이 삭제되었습니다.");
         return new ResponseEntity<>(message, HttpStatus.OK);
+    }
+
+    // @Vaild 에러체크
+    public Map<String, String> validateHandling(Errors errors) {
+        Map<String, String> validatorResult = new HashMap<>();
+        for(FieldError error : errors.getFieldErrors()){
+            String validKeyName = error.getField();
+            validatorResult.put(validKeyName, error.getDefaultMessage());
+        }
+        return validatorResult;
     }
 }
 

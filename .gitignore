@@ -41,6 +41,7 @@ src/main/resources/application.yml
 src/main/resources/aws.yml
 /Users/janghyeonjun/Downloads/picturespot/src/main/resources/aws.yml
 /Users/janghyeonjun/Downloads/picturespot/src/main/resources/oauth2.yml
+/Users/janghyeonjun/Downloads/picturespot/src/test/resources/application.yml
 application.properties
 aws.yml
 oauth2.yml
