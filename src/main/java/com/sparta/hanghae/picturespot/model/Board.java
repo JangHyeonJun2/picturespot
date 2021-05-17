@@ -45,7 +45,7 @@ public class Board extends Timestamped{
     private User user;
 
 //    @BatchSize(size = 900)
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<BoardImgUrls> boardImgUrls = new HashSet<>();
 
 //    @BatchSize(size = 900)

@@ -7,6 +7,7 @@ import com.sparta.hanghae.picturespot.model.Board;
 import com.sparta.hanghae.picturespot.model.BoardImgUrls;
 import com.sparta.hanghae.picturespot.model.Comment;
 import com.sparta.hanghae.picturespot.model.Timestamped;
+import com.sparta.hanghae.picturespot.repository.BoardImgUrlsRepository;
 import com.sparta.hanghae.picturespot.repository.BoardRepository;
 import com.sparta.hanghae.picturespot.repository.HeartRepository;
 import org.assertj.core.api.Assertions;
@@ -28,6 +29,8 @@ class BoardServiceTest {
     HeartRepository heartRepository;
     @Autowired
     BoardService boardService;
+    @Autowired
+    BoardImgUrlsRepository boardImgUrlsRepository;
 
     @Test
     public void 맵로딩될때패치조인으로_한번에_데이터받기() {
@@ -66,5 +69,10 @@ class BoardServiceTest {
             System.out.println(comment.getModified());
         }
         System.out.println();
+    }
+
+    @Test
+    public void 이미지삭제() {
+//        boardImgUrlsRepository.deleteById(136L);
     }
 }

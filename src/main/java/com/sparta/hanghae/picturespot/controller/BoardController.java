@@ -127,7 +127,5 @@ public class BoardController {
         return userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
     }
 
-
-
 }
 
