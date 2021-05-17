@@ -21,7 +21,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-//        try {
+        try {
             // 헤더에서 JWT 를 받아옵니다.
             String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
             System.out.println("===============================");
@@ -35,12 +35,12 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             chain.doFilter(request, response);
-//        } catch (Exception e){
-//            JSONObject json = new JSONObject();
-//            json.put("message", "tokenExpired");
-//            PrintWriter out = response.getWriter();
-//            out.print(json);
-//        }
+        } catch (Exception e){
+            JSONObject json = new JSONObject();
+            json.put("message", "tokenExpired");
+            PrintWriter out = response.getWriter();
+            out.print(json);
+        }
     }
 }
 

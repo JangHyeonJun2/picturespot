@@ -77,8 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
                 // exceptionHandling 할때 직접 만든 클래스를 추가
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
+                //.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                //.accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
                 .addFilter(corsFilter) // @CrossOrigin는 인증이 안필요하면 controller에 달아서 사용해도되지만 인증이 필요한 경우는 시큐리티 필터에 추가해줘야 한다.
                 .formLogin().disable()
