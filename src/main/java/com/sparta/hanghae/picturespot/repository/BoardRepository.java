@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import java.util.Optional;
@@ -57,7 +58,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 //
 //    Page<Board> findByIdInOrderByIdDesc(List<Board> ac, Pageable pageRequest);
 //
-//    List<Board> findByIdLessThanOrderByIdDesc(Long lastBoardId, Pageable pageable);
+    List<Board> findByIdLessThanOrderByIdDesc(Long lastBoardId, Pageable pageable);
+
+    @Query("SELECT distinct b " +
+            "FROM Board b " +
+            "left JOIN FETCH b.comments " +
+            "left JOIN FETCH b.boardImgUrls " +
+            "left JOIN fetch b.hearts")
+    List<Board> findAllFetchJoinOrderByModifiedDesc();
 
 
 //    @Query(value = "SELECT b" +

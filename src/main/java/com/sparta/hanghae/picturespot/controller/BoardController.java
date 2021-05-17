@@ -116,15 +116,18 @@ public class BoardController {
         return customExceptionController.ok("모든 게시물 데이터 정보입니다." ,loadingBoardMapResponseDtos);
     }
 
+    //무한스크롤
+    @GetMapping("/board/community/scroll")
+    public ResponseEntity boardCommunityScroll(@AuthenticationPrincipal UserPrincipal user, @RequestParam Long lastBoardId, @RequestParam int size) {
+        List<BoardListGetResponseDto> responseDtoList = boardService.fetchBoardPage(lastBoardId, size, user);
+        return customExceptionController.ok("무한스크롤 데이터!!",responseDtoList);
+    }
+
     public  User findUserMethod(UserPrincipal userPrincipal) {
         return userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
     }
 
-    //무한스크롤
-//    @GetMapping("/board/community/scroll")
-//    public ResponseEntity boardCommunityScroll(@AuthenticationPrincipal UserPrincipal user, @RequestParam Long lastBoardId, @RequestParam int size) {
-//        boardService.fetchBoardPage(lastBoardId, size, user);
-//    }
+
 
 }
 
