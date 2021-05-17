@@ -208,10 +208,15 @@ public class BoardService {
 
         List<LoadingBoardMapResponseDto> responseDtos = new ArrayList<>();
         List<Board> boards = boardRepository.findAllFetchJoin();
-        boolean liked = true;
+        boolean likeCheck = true;
         for (Board board : boards) {
             Set<BoardImgCommonRequestDto> imgCommonRequestDtos = BoardImgUrls.toDtoList(board.getBoardImgUrls());
-            responseDtos.add(new LoadingBoardMapResponseDto(board, imgCommonRequestDtos));
+            if (loginUser == null) {
+                likeCheck = false;
+            } else {
+                likeCheck = heartRepository.existsByBoardIdAndUserId(board.getId(), loginUser.getId());
+            }
+            responseDtos.add(new LoadingBoardMapResponseDto(board, likeCheck, imgCommonRequestDtos));
         }
         return responseDtos;
     }
