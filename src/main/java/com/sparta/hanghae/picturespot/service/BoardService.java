@@ -262,7 +262,8 @@ public class BoardService {
         return new BoardDetailResponseDto(board,likeCheck,allBoardHeartCount.size(),boardDetailCommentsDtoList,boardImgCommonRequestDtoList);
     }
 
-    public List<BoardListGetResponseDto> fetchBoardPage(Long lastBoardId, int size, UserPrincipal loginUser) {
+    public List<BoardListGetResponseDto>
+    fetchBoardPage(Long lastBoardId, int size, UserPrincipal loginUser) {
         List<Board> boards = fetchPages(lastBoardId, size);
         List<BoardListGetResponseDto> infinityScrollDto = new ArrayList<>();
         BoardListGetResponseDto boardListGetResponseDto;
