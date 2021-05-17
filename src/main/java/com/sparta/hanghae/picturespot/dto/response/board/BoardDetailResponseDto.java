@@ -19,6 +19,7 @@ public class BoardDetailResponseDto {
     private String writerImgUrl;
     private String title;
     private String content;
+    private String category;
     private LocalDateTime modified;
     private boolean liked;
     private int likeCount;
@@ -34,6 +35,7 @@ public class BoardDetailResponseDto {
         this.writerImgUrl = boardEntity.getUser().getImgUrl();
         this.title = boardEntity.getTitle();
         this.content = boardEntity.getContent();
+        this.category = boardEntity.getCategory();
         this.modified = boardEntity.getModified();
         this.spotName = boardEntity.getSpotName();
         this.liked = likeCheck;

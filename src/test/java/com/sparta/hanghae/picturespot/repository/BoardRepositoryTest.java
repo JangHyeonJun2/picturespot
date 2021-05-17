@@ -37,7 +37,7 @@ class BoardRepositoryTest {
         PageRequest pageRequest = PageRequest.of(0, 3);
 
         List<Board> allFetchJoin = boardRepository.findAllFetchJoin();
-        Assertions.assertThat(33).isEqualTo(allFetchJoin.size());
+        Assertions.assertThat(34).isEqualTo(allFetchJoin.size());
 //        List<Board> ac = boardRepository.findByIdLessThan(999L);
 //
 //        Page<Board> byBoardIn = boardRepository.findByIdInOrderByIdDesc(ac, pageRequest);

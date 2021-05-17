@@ -39,7 +39,7 @@ class BoardServiceTest {
             responseDtos.add(new LoadingBoardMapResponseDto(board, false, board.getHearts().size(), detailCommentsDtos, imgCommonRequestDtos));
         }
 
-        Assertions.assertThat(33).isEqualTo(responseDtos.size());
+        Assertions.assertThat(34).isEqualTo(responseDtos.size());
     }
 
     @Test
