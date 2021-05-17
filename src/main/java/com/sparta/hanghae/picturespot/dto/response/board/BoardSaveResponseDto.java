@@ -15,8 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 public class BoardSaveResponseDto {
     private Long boardId;
-//    private String title;
-//    private String content;
+    private String title;
+    private String content;
     private String category;
     private double latitude;
     private double longitude;
@@ -28,8 +28,8 @@ public class BoardSaveResponseDto {
 
     public BoardSaveResponseDto(Board entity, List<BoardImgSaveRequestDto> reponseDto) {
         this.boardId = entity.getId();
-//        this.title = entity.getTitle();
-//        this.content = entity.getContent();
+        this.title = entity.getTitle();
+        this.content = entity.getContent();
         this.category = entity.getCategory();
         this.latitude = entity.getLatitude();
         this.longitude = entity.getLongitude();

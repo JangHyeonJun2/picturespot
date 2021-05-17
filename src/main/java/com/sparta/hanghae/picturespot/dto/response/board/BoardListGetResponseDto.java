@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 public class BoardListGetResponseDto {
     private Long boardId;
     private LocalDateTime modified;
+    private String title;
+    private String content;
     private String spotName;
     private boolean liked;
     private int likeCount;
@@ -19,6 +21,8 @@ public class BoardListGetResponseDto {
 
     public BoardListGetResponseDto(Board boardEntity, boolean liked, int likeCount) {
         this.boardId = boardEntity.getId();
+        this.title = boardEntity.getTitle();
+        this.content = boardEntity.getContent();
         this.modified = boardEntity.getModified();
         this.spotName = boardEntity.getSpotName();
         this.liked = liked;
