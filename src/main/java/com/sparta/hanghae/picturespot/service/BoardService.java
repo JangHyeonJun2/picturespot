@@ -18,7 +18,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
@@ -218,7 +217,6 @@ public class BoardService {
     }
 
     //게시글 수정(이미지 삭제, 추가, 타이틀, 내용 수정)
-    @Transactional
     public BoardDetailResponseDto update(BoardUpdateRequestDto boardUpdateRequestDto, User loginUser, Long[] deleteImgUrlId,  String[] imgUrls)  {
         Board board = boardRepository.findById(boardUpdateRequestDto.getBoardId()).orElseThrow(() -> new IllegalArgumentException("해당 게시물은 없습니다."));
         if (board.getUser().getId().equals(loginUser.getId())) {
@@ -226,12 +224,7 @@ public class BoardService {
         } else {
             return null;
         }
-        //boardImgUrls 의 테이블에 deleteImgUrl 들을 삭제.
-        if (deleteImgUrlId != null) {
-            for (Long id : deleteImgUrlId) {
-                boardImgUrlsRepository.deleteById(id);
-            }
-        }
+        deleteImgUrl(deleteImgUrlId);
 
         //boardImgUrls 의 테이블에 새로운 imgUrls 를 저장.
         if (imgUrls != null) {
@@ -291,5 +284,16 @@ public class BoardService {
     public List<Board> fetchPages(Long lastBoardId, int size) {
         PageRequest pageRequest = PageRequest.of(0, size);
         return boardRepository.findByIdLessThanOrderByIdDesc(lastBoardId,pageRequest);
+    }
+
+    @Transactional
+    public void deleteImgUrl(Long[] deleteImgUrlId) {
+        //boardImgUrls 의 테이블에 deleteImgUrl 들을 삭제.
+        if (deleteImgUrlId != null) {
+            for (Long id : deleteImgUrlId) {
+                BoardImgUrls boardImgUrls = boardImgUrlsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이미지가 없습니다."));
+                boardImgUrlsRepository.deleteById(boardImgUrls.getId());
+            }
+        }
     }
 }
