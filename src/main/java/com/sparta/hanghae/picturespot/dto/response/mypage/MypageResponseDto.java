@@ -19,41 +19,24 @@ public class MypageResponseDto {
 
     //board
     private Long boardId;
-    private Long writerId;
-    private String writer;
-    private String writerImgUrl;
-    private String title;
-    private String content;
     private double latitude;
     private double longitude;
-    private String category;
     private String spotName;
-    private LocalDateTime modified;
+    private List<BoardImgCommonRequestDto> boardImgResponseDtoList = new ArrayList<>();
 
     //heart
     private boolean liked;
     private int likeCount;
 
-    //comments
-    private List<MypageCommentResponseDto> comments;
-    private List<BoardImgCommonRequestDto> boardImgResponseDtoList = new ArrayList<>();
-
-
     @Builder
-    public MypageResponseDto(Board boardEntity, List<MypageCommentResponseDto> comments, boolean likeCheck, int likeCount, List<BoardImgCommonRequestDto> responseDto) {
+    public MypageResponseDto(Board boardEntity, boolean likeCheck, int likeCount, List<BoardImgCommonRequestDto> responseDto) {
 
         //board 정보
         this.boardId = boardEntity.getId();
-        this.writerId = boardEntity.getUser().getId();
-        this.writer = boardEntity.getUser().getNickname();
-        this.writerImgUrl = boardEntity.getUser().getImgUrl();
-        this.title = boardEntity.getTitle();
-        this.content = boardEntity.getContent();
-        this.category = boardEntity.getCategory();
         this.latitude = boardEntity.getLatitude();
         this.longitude = boardEntity.getLongitude();
         this.spotName = boardEntity.getSpotName();
-        this.modified = boardEntity.getModified();
+
         //이미지
         this.boardImgResponseDtoList = responseDto;
 
@@ -61,8 +44,6 @@ public class MypageResponseDto {
         this.liked = likeCheck;
         this.likeCount = likeCount;
 
-        //댓글
-        this.comments = comments;
         }
     }
 
