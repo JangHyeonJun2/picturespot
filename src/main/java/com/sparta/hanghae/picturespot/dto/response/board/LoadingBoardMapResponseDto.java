@@ -23,15 +23,24 @@ public class LoadingBoardMapResponseDto {
     private double longitude;
     private String spotName;
     private String category;
+    private boolean liked;
+    private String writerName;
     private Set<BoardImgCommonRequestDto> boardImgReponseDtoList = new HashSet<>();
 
 
-    public LoadingBoardMapResponseDto(Board boardEntity, Set<BoardImgCommonRequestDto> reponseDto2) {
+    public LoadingBoardMapResponseDto(Board boardEntity,boolean liked, Set<BoardImgCommonRequestDto> reponseDto2) {
         this.boardId = boardEntity.getId();
+//        this.title = boardEntity.getTitle();
+//        this.content = boardEntity.getContent();
+        this.liked = liked;
+//        this.likeCount = likeCount;
+        this.writerName = boardEntity.getUser().getNickname();
+//        this.writerImgUrl = boardEntity.getUser().getImgUrl();
         this.latitude = boardEntity.getLatitude();
         this.longitude = boardEntity.getLongitude();
         this.spotName = boardEntity.getSpotName();
         this.category = boardEntity.getCategory();
+//        this.boardDetailCommentDtoList2 = detailCommentsDtos2;
         this.boardImgReponseDtoList = reponseDto2;
     }
 
