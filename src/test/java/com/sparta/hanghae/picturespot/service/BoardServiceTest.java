@@ -39,7 +39,7 @@ class BoardServiceTest {
         for (Board board : boards) {
 //            Set<BoardDetailCommentsDto> detailCommentsDtos = Comment.toDtoList(board.getComments());
             Set<BoardImgCommonRequestDto> imgCommonRequestDtos = BoardImgUrls.toDtoList(board.getBoardImgUrls());
-            responseDtos.add(new LoadingBoardMapResponseDto(board,  imgCommonRequestDtos));
+            responseDtos.add(new LoadingBoardMapResponseDto(board, false, imgCommonRequestDtos));
         }
 
 //        Assertions.assertThat(34).isEqualTo(responseDtos.size());

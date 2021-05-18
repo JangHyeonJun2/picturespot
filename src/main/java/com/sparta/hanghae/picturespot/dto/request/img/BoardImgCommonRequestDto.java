@@ -18,4 +18,5 @@ public class BoardImgCommonRequestDto {
         this.imgUrlId = boardImgUrls.getId();
         this.imgUrl = boardImgUrls.getImgUrl();
     }
+
 }
