@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class BoardSaveResponseDto {
+    private Long boardId;
     private String title;
     private String content;
     private String category;
@@ -21,11 +22,12 @@ public class BoardSaveResponseDto {
     private double longitude;
     private String spotName;
     private List<BoardImgSaveRequestDto> boardImgReponseDtoList = new ArrayList<>();
-    private Long userId;
-    private String nickName;
+//    private Long userId;
+//    private String nickName;
 
 
     public BoardSaveResponseDto(Board entity, List<BoardImgSaveRequestDto> reponseDto) {
+        this.boardId = entity.getId();
         this.title = entity.getTitle();
         this.content = entity.getContent();
         this.category = entity.getCategory();
@@ -33,8 +35,8 @@ public class BoardSaveResponseDto {
         this.longitude = entity.getLongitude();
         this.boardImgReponseDtoList = reponseDto;
         this.spotName = entity.getSpotName();
-        this.userId = entity.getUser().getId();
-        this.nickName = entity.getUser().getNickname();
+//        this.userId = entity.getUser().getId();
+//        this.nickName = entity.getUser().getNickname();
 
     }
 }

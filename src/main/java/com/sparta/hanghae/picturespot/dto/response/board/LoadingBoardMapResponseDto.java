@@ -19,52 +19,52 @@ import java.util.Set;
 @NoArgsConstructor
 public class LoadingBoardMapResponseDto {
     private Long boardId;
-    private String title;
-    private String content;
+//    private String title;
+//    private String content;
     private boolean liked;
-    private int likeCount;
+//    private int likeCount;
     private String writerName;
-    private String writerImgUrl;
+//    private String writerImgUrl;
     private double latitude;
     private double longitude;
     private String spotName;
     private String category;
-    private List<BoardDetailCommentsDto> boardDetailCommentDtoList = new ArrayList<>();
-    private List<BoardImgCommonRequestDto> boardImgReponseDtoList = new ArrayList<>();
+//    private List<BoardDetailCommentsDto> boardDetailCommentDtoList = new ArrayList<>();
+//    private List<BoardImgCommonRequestDto> boardImgReponseDtoList = new ArrayList<>();
 
-    private Set<BoardDetailCommentsDto> boardDetailCommentDtoList2 = new HashSet<>();
-    private Set<BoardImgCommonRequestDto> boardImgReponseDtoList2 = new HashSet<>();
+//    private Set<BoardDetailCommentsDto> boardDetailCommentDtoList2 = new HashSet<>();
+    private Set<BoardImgCommonRequestDto> boardImgReponseDtoList = new HashSet<>();
 
-    @Builder
-    public LoadingBoardMapResponseDto(Board boardEntity, boolean liked, int likeCount, List<BoardDetailCommentsDto> detailCommentsDtos, List<BoardImgCommonRequestDto> reponseDto) {
+//    @Builder
+//    public LoadingBoardMapResponseDto(Board boardEntity, boolean liked, int likeCount, List<BoardDetailCommentsDto> detailCommentsDtos, List<BoardImgCommonRequestDto> reponseDto) {
+//        this.boardId = boardEntity.getId();
+//        this.title = boardEntity.getTitle();
+//        this.content = boardEntity.getContent();
+//        this.liked = liked;
+//        this.likeCount = likeCount;
+//        this.writerName = boardEntity.getUser().getNickname();
+//        this.writerImgUrl = boardEntity.getUser().getImgUrl();
+//        this.latitude = boardEntity.getLatitude();
+//        this.longitude = boardEntity.getLongitude();
+//        this.spotName = boardEntity.getSpotName();
+//        this.category = boardEntity.getCategory();
+//        this.boardDetailCommentDtoList = detailCommentsDtos;
+//        this.boardImgReponseDtoList = reponseDto;
+//    }
+    public LoadingBoardMapResponseDto(Board boardEntity,boolean liked, Set<BoardImgCommonRequestDto> reponseDto2) {
         this.boardId = boardEntity.getId();
-        this.title = boardEntity.getTitle();
-        this.content = boardEntity.getContent();
+//        this.title = boardEntity.getTitle();
+//        this.content = boardEntity.getContent();
         this.liked = liked;
-        this.likeCount = likeCount;
+//        this.likeCount = likeCount;
         this.writerName = boardEntity.getUser().getNickname();
-        this.writerImgUrl = boardEntity.getUser().getImgUrl();
+//        this.writerImgUrl = boardEntity.getUser().getImgUrl();
         this.latitude = boardEntity.getLatitude();
         this.longitude = boardEntity.getLongitude();
         this.spotName = boardEntity.getSpotName();
         this.category = boardEntity.getCategory();
-        this.boardDetailCommentDtoList = detailCommentsDtos;
-        this.boardImgReponseDtoList = reponseDto;
-    }
-    public LoadingBoardMapResponseDto(Board boardEntity, boolean liked, int likeCount, Set<BoardDetailCommentsDto> detailCommentsDtos2, Set<BoardImgCommonRequestDto> reponseDto2) {
-        this.boardId = boardEntity.getId();
-        this.title = boardEntity.getTitle();
-        this.content = boardEntity.getContent();
-        this.liked = liked;
-        this.likeCount = likeCount;
-        this.writerName = boardEntity.getUser().getNickname();
-        this.writerImgUrl = boardEntity.getUser().getImgUrl();
-        this.latitude = boardEntity.getLatitude();
-        this.longitude = boardEntity.getLongitude();
-        this.spotName = boardEntity.getSpotName();
-        this.category = boardEntity.getCategory();
-        this.boardDetailCommentDtoList2 = detailCommentsDtos2;
-        this.boardImgReponseDtoList2 = reponseDto2;
+//        this.boardDetailCommentDtoList2 = detailCommentsDtos2;
+        this.boardImgReponseDtoList = reponseDto2;
     }
 
 }

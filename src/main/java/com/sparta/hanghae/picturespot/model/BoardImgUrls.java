@@ -3,9 +3,11 @@ package com.sparta.hanghae.picturespot.model;
 import com.sparta.hanghae.picturespot.dto.request.board.BoardUpdateRequestDto;
 import com.sparta.hanghae.picturespot.dto.request.img.BoardImgCommonRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.board.BoardDetailCommentsDto;
+import com.sparta.hanghae.picturespot.repository.BoardImgUrlsRepository;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.HashSet;

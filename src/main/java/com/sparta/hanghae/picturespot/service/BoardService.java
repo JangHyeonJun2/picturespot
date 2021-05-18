@@ -18,7 +18,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
@@ -30,7 +29,7 @@ public class BoardService {
 
     //게시물 저장
     @Transactional
-    public Long save(BoardSaveRequestDto requestDto, String[] imgUrls) {
+    public BoardSaveResponseDto save(BoardSaveRequestDto requestDto, String[] imgUrls) {
         Board boardEntity = boardRepository.save(requestDto.toEntity());
         List<BoardImgSaveRequestDto> boardImgReponseDtoList = new ArrayList<>();
 
@@ -39,7 +38,9 @@ public class BoardService {
             boardImgUrlsRepository.save(boardImgSaveRequestDto.toEntity());
             boardImgReponseDtoList.add(boardImgSaveRequestDto);
         }
-        return boardEntity.getId();
+
+        BoardSaveResponseDto responseDto = new BoardSaveResponseDto(boardEntity, boardImgReponseDtoList);
+        return responseDto;
     }
 
     //게시물 삭제
@@ -207,21 +208,20 @@ public class BoardService {
 
         List<LoadingBoardMapResponseDto> responseDtos = new ArrayList<>();
         List<Board> boards = boardRepository.findAllFetchJoin();
-        boolean liked = true;
+        boolean likeCheck = true;
         for (Board board : boards) {
-            Set<BoardDetailCommentsDto> detailCommentsDtos = Comment.toDtoList(board.getComments());
             Set<BoardImgCommonRequestDto> imgCommonRequestDtos = BoardImgUrls.toDtoList(board.getBoardImgUrls());
-            if (loginUser == null)
-                liked = false;
-            else
-                liked = heartRepository.existsByBoardIdAndUserId(board.getId(), loginUser.getId());
-            responseDtos.add(new LoadingBoardMapResponseDto(board, liked, board.getHearts().size(), detailCommentsDtos, imgCommonRequestDtos));
+            if (loginUser == null) {
+                likeCheck = false;
+            } else {
+                likeCheck = heartRepository.existsByBoardIdAndUserId(board.getId(), loginUser.getId());
+            }
+            responseDtos.add(new LoadingBoardMapResponseDto(board, likeCheck, imgCommonRequestDtos));
         }
         return responseDtos;
     }
 
     //게시글 수정(이미지 삭제, 추가, 타이틀, 내용 수정)
-    @Transactional
     public BoardDetailResponseDto update(BoardUpdateRequestDto boardUpdateRequestDto, User loginUser, Long[] deleteImgUrlId,  String[] imgUrls)  {
         Board board = boardRepository.findById(boardUpdateRequestDto.getBoardId()).orElseThrow(() -> new IllegalArgumentException("해당 게시물은 없습니다."));
         if (board.getUser().getId().equals(loginUser.getId())) {
@@ -229,12 +229,7 @@ public class BoardService {
         } else {
             return null;
         }
-        //boardImgUrls 의 테이블에 deleteImgUrl 들을 삭제.
-        if (deleteImgUrlId != null) {
-            for (Long id : deleteImgUrlId) {
-                boardImgUrlsRepository.deleteById(id);
-            }
-        }
+        deleteImgUrl(deleteImgUrlId);
 
         //boardImgUrls 의 테이블에 새로운 imgUrls 를 저장.
         if (imgUrls != null) {
@@ -272,7 +267,8 @@ public class BoardService {
         return new BoardDetailResponseDto(board,likeCheck,allBoardHeartCount.size(),boardDetailCommentsDtoList,boardImgCommonRequestDtoList);
     }
 
-    public List<BoardListGetResponseDto> fetchBoardPage(Long lastBoardId, int size, UserPrincipal loginUser) {
+    public List<BoardListGetResponseDto>
+    fetchBoardPage(Long lastBoardId, int size, UserPrincipal loginUser) {
         List<Board> boards = fetchPages(lastBoardId, size);
         List<BoardListGetResponseDto> infinityScrollDto = new ArrayList<>();
         BoardListGetResponseDto boardListGetResponseDto;
@@ -294,5 +290,16 @@ public class BoardService {
     public List<Board> fetchPages(Long lastBoardId, int size) {
         PageRequest pageRequest = PageRequest.of(0, size);
         return boardRepository.findByIdLessThanOrderByIdDesc(lastBoardId,pageRequest);
+    }
+
+    @Transactional
+    public void deleteImgUrl(Long[] deleteImgUrlId) {
+        //boardImgUrls 의 테이블에 deleteImgUrl 들을 삭제.
+        if (deleteImgUrlId != null) {
+            for (Long id : deleteImgUrlId) {
+                BoardImgUrls boardImgUrls = boardImgUrlsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이미지가 없습니다."));
+                boardImgUrlsRepository.deleteById(boardImgUrls.getId());
+            }
+        }
     }
 }
