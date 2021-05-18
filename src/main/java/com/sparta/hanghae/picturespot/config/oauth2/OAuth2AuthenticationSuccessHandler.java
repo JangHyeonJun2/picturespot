@@ -3,6 +3,7 @@ package com.sparta.hanghae.picturespot.config.oauth2;
 import com.sparta.hanghae.picturespot.config.AppProperties;
 import com.sparta.hanghae.picturespot.config.jwt.JwtTokenProvider;
 import com.sparta.hanghae.picturespot.config.oauth2.exception.BadRequestException;
+import com.sparta.hanghae.picturespot.dto.request.user.TokenDto;
 import com.sparta.hanghae.picturespot.model.UserPrincipal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +64,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        String token = tokenProvider.createToken(userPrincipal.getEmail());
+        TokenDto tokenDto = tokenProvider.createToken(userPrincipal.getEmail());
         String nickname = userPrincipal.getNickname();
         Long userId = userPrincipal.getId();
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", token)
+                .queryParam("accessToken", tokenDto.getAccessToken())
+                .queryParam("refreshToken", tokenDto.getRefreshToken())
                 .queryParam("nickname", nickname)
                 .queryParam("userId", userId)
                 .build().toUriString();
