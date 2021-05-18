@@ -32,18 +32,18 @@ class BoardServiceTest {
     @Autowired
     BoardImgUrlsRepository boardImgUrlsRepository;
 
-    @Test
-    public void 맵로딩될때패치조인으로_한번에_데이터받기() {
-        List<LoadingBoardMapResponseDto> responseDtos = new ArrayList<>();
-        List<Board> boards = boardRepository.findAllFetchJoin();
-        for (Board board : boards) {
-//            Set<BoardDetailCommentsDto> detailCommentsDtos = Comment.toDtoList(board.getComments());
-            Set<BoardImgCommonRequestDto> imgCommonRequestDtos = BoardImgUrls.toDtoList(board.getBoardImgUrls());
-            responseDtos.add(new LoadingBoardMapResponseDto(board,  imgCommonRequestDtos));
-        }
-
-//        Assertions.assertThat(34).isEqualTo(responseDtos.size());
-    }
+//    @Test
+//    public void 맵로딩될때패치조인으로_한번에_데이터받기() {
+//        List<LoadingBoardMapResponseDto> responseDtos = new ArrayList<>();
+//        List<Board> boards = boardRepository.findAllFetchJoin();
+//        for (Board board : boards) {
+////            Set<BoardDetailCommentsDto> detailCommentsDtos = Comment.toDtoList(board.getComments());
+//            Set<BoardImgCommonRequestDto> imgCommonRequestDtos = BoardImgUrls.toDtoList(board.getBoardImgUrls());
+//            responseDtos.add(new LoadingBoardMapResponseDto(board,  imgCommonRequestDtos));
+//        }
+//
+////        Assertions.assertThat(34).isEqualTo(responseDtos.size());
+//    }
 
     @Test
     @Transactional
@@ -59,17 +59,17 @@ class BoardServiceTest {
         }
     }
 
-    @Test
-    @Transactional
-    public void 댓글최신순정렬() {
-        Board findBoard = boardRepository.findById(39L).orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다."));
-        Set<Comment> boardComments = findBoard.getComments();
-        List<Comment> collect = boardComments.stream().sorted(Comparator.comparing(Timestamped::getModified).reversed()).collect(Collectors.toList());// 정렬
-        for (Comment comment : collect) {
-            System.out.println(comment.getModified());
-        }
-        System.out.println();
-    }
+//    @Test
+//    @Transactional
+//    public void 댓글최신순정렬() {
+//        Board findBoard = boardRepository.findById(39L).orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다."));
+//        Set<Comment> boardComments = findBoard.getComments();
+//        List<Comment> collect = boardComments.stream().sorted(Comparator.comparing(Timestamped::getModified).reversed()).collect(Collectors.toList());// 정렬
+//        for (Comment comment : collect) {
+//            System.out.println(comment.getModified());
+//        }
+//        System.out.println();
+//    }
 
     @Test
     public void 이미지삭제() {
