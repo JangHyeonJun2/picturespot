@@ -1,7 +1,10 @@
 package com.sparta.hanghae.picturespot.repository;
 
 import com.sparta.hanghae.picturespot.model.Board;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,7 +21,16 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Optional<Board> findByIdOrderByModifiedDesc(Long boardId);
 
     List<Board> findByTitleContainingOrContentContainingOrderByModifiedDesc(String title, String content);
+
     List<Board> findAllByOrderByModifiedDesc();
+
+    Page<Board> findByIdLessThanAndUserIdOrderByModifiedDesc(Long lastId, Long userId, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"comments","comments.user"})
+    List<Board> findAllEntityGraphWithUserByIdLessThanOrderByIdDesc(Long lastBoardId, PageRequest request);
+
+    @Query("select a from Board a join fetch a.comments s")
+    List<Board> findAllJoinFetch();
 
 
 
@@ -61,5 +73,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 //            " ON p.member.id = f.toMember.id" +
 //            " WHERE f.fromMember.id = :memberId AND p.id < :lastPostId")
 //    List<Board> findByIdLessThanAndUserInOrderByIdDesc(long lastId, List<User> collect, Pageable pageRequest);
+
 }
 

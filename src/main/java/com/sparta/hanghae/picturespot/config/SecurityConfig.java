@@ -90,6 +90,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/user/**").permitAll()
                 .antMatchers("/index").permitAll()
                 .antMatchers("/oauth/token").permitAll()
+                .antMatchers("/oauth2/authorize/**").permitAll()
+                .antMatchers("/login/oauth2/code/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/map/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/board/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/board/**").permitAll()
