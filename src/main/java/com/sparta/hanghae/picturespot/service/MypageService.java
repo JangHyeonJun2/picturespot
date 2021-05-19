@@ -13,6 +13,10 @@ import com.sparta.hanghae.picturespot.dto.response.question.Message;
 import com.sparta.hanghae.picturespot.model.*;
 import com.sparta.hanghae.picturespot.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,9 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -33,9 +36,7 @@ public class MypageService {
 
     private final BoardRepository boardRepository;
     private final HeartRepository heartRepository;
-    private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-    private final BoardImgUrlsRepository boardImgUrlsRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final S3Service s3Service;
     private final UserService userService;
@@ -50,36 +51,36 @@ public class MypageService {
     }
 
 
-    //내 명소(내가올린게시물) + 댓글 + 좋아요
-    public List<MypageResponseDto> getMyboard(Long userId, UserPrincipal user) {
+    //내 명소(내가올린게시물)  + 좋아요
+    public List<MypageResponseDto> getMyboard(Long lastId, int size, Long userId, UserPrincipal user) {
         User findUser = userRepository.findById(userId).orElseThrow(
-                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
-        //findUser : 그 사람의 페이지, user : 현재 로그인한 사용자
+                ()->new IllegalArgumentException("해당 사용자가 없습니다.")); //findUser : 그 사람의 페이지, user : 현재 로그인한 사용자
+
+        Pageable pageable = PageRequest.of(0, size);
+        Page<Board> boardList = boardRepository.findByIdLessThanAndUserIdOrderByModifiedDesc(lastId, findUser.getId(), pageable);
+        //List<Board> boardList = boardRepository.findAllByUserIdOrderByModifiedDesc(findUser.getId()); //user로 게시물 찾는다
         List<MypageResponseDto> mypageDtoList = new ArrayList<>();
-        List<Board> boardList = boardRepository.findAllByUserIdOrderByModifiedDesc(findUser.getId()); //user로 게시물 찾는다
+
         for (Board board : boardList) { //게시글
             Long boardId = board.getId();
-            List<BoardImgUrls> allBoardImgUrls = boardImgUrlsRepository.findAllByBoardId(board.getId()); //해당 board에 대한 이미지들 가져오기.
-            List<Comment> comments = commentRepository.findAllByBoardIdOrderByModifiedDesc(boardId); //댓글
-            List<MypageCommentResponseDto> commentResponseDtos = new ArrayList<>();
+            Set<BoardImgUrls> allBoardImgUrls = board.getBoardImgUrls();
+
             List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();//board img list
             for (BoardImgUrls boardImgUrls : allBoardImgUrls) {
                 requestDtos.add(new BoardImgCommonRequestDto(boardImgUrls));
             }
-            for (Comment comment : comments) {
-                MypageCommentResponseDto commentResponseDto = new MypageCommentResponseDto(comment);
-                commentResponseDtos.add(commentResponseDto);
-            }
+
             if (user==null){
                 boolean likeCheck = false;
-                List<Heart> hearts = heartRepository.findAllByBoardId(boardId); //좋아요 수
-                MypageResponseDto mypageDto = new MypageResponseDto(board, commentResponseDtos, likeCheck, hearts.size(), requestDtos);
+                List<Heart> hearts = board.getHearts();
+                //List<Heart> hearts = heartRepository.findAllByBoardId(boardId); //좋아요 수
+                MypageResponseDto mypageDto = new MypageResponseDto(board, likeCheck, hearts.size(), requestDtos);
                 //user정보, 게시글, 댓글, 좋아요 여부, 좋아요 수
                 mypageDtoList.add(mypageDto);
             }else{
                 boolean likeCheck = heartRepository.existsByBoardIdAndUserId(boardId, user.getId()); //좋아요 여부
-                List<Heart> hearts = heartRepository.findAllByBoardId(boardId); //좋아요 수
-                MypageResponseDto mypageDto = new MypageResponseDto(board, commentResponseDtos, likeCheck, hearts.size(), requestDtos);
+                List<Heart> hearts = board.getHearts();
+                MypageResponseDto mypageDto = new MypageResponseDto(board, likeCheck, hearts.size(), requestDtos);
                 //user정보, 게시글, 댓글, 좋아요 여부, 좋아요 수
                 mypageDtoList.add(mypageDto);
             }
@@ -89,39 +90,35 @@ public class MypageService {
 
 
     //찜 명소(좋아요한 게시물) + 댓글 + 좋아요, 내가 올린 게시물은 제외
-    public List<MypageResponseDto> getMylikeboard(Long userId, UserPrincipal user) {
+    public List<MypageResponseDto> getMylikeboard(Long lastId, int size, Long userId, UserPrincipal user) {
         User findUser = userRepository.findById(userId).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
         //findUser : 그 사람의 페이지, user : 현재 로그인한 사용자
         List<MypageResponseDto> mypageDtoList = new ArrayList<>();
-        List<Heart> heartList = heartRepository.findAllByUser(findUser); //user가 누른 하트 찾기
+
+        Pageable pageable = PageRequest.of(0, size);
+        Page<Heart> heartList = heartRepository.findByBoardIdLessThanAndUserIdOrderByBoardIdDesc(lastId, userId, pageable);
+
         for (Heart hearts : heartList) {
-            Long boardId = hearts.getBoard().getId(); //user가 누른 하트에서 게시물 아이디 찾기
-            Board board = boardRepository.findByIdOrderByModifiedDesc(boardId).orElseThrow(//user가 좋아요 한 게시물
-                    () -> new IllegalArgumentException("찜한 명소가 없습니다.")
-            );
+            Board board = hearts.getBoard();
             if (!board.getUser().getId().equals(findUser.getId())) { //게시물 작성자와 페이지 user가 다를 때만(남이 쓴 게시물만)
-                List<Comment> comments = commentRepository.findAllByBoardIdOrderByModifiedDesc(board.getId()); //댓글
-                List<BoardImgUrls> allBoardImgUrls = boardImgUrlsRepository.findAllByBoardId(boardId);        //해당 게시물에 대한 이미지들 가져오기.
-                List<MypageCommentResponseDto> commentResponseDtos = new ArrayList<>();
+                Set<BoardImgUrls> allBoardImgUrls = board.getBoardImgUrls();
+
                 List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();
                 for (BoardImgUrls boardImgUrls : allBoardImgUrls) {
                     requestDtos.add(new BoardImgCommonRequestDto(boardImgUrls));
                 }
-                for (Comment comment : comments) {
-                    MypageCommentResponseDto commentResponseDto = new MypageCommentResponseDto(comment);
-                    commentResponseDtos.add(commentResponseDto);
-                }
+
                 if (user==null){
                     boolean likeCheck = false;
-                    List<Heart> heartsList = heartRepository.findAllByBoardId(boardId); //좋아요 수
-                    MypageResponseDto mypageDto = new MypageResponseDto(board, commentResponseDtos, likeCheck, heartsList.size(), requestDtos);
+                    List<Heart> heartsList = board.getHearts(); //좋아요 수
+                    MypageResponseDto mypageDto = new MypageResponseDto(board, likeCheck, heartsList.size(), requestDtos);
                     //user정보, 게시글, 댓글, 좋아요 여부, 좋아요 수
                     mypageDtoList.add(mypageDto);
                 }else{
-                    boolean likeCheck = heartRepository.existsByBoardIdAndUserId(boardId, user.getId()); //좋아요 여부
-                    List<Heart> heartsList = heartRepository.findAllByBoardId(boardId); //좋아요 수
-                    MypageResponseDto mypageDto = new MypageResponseDto(board, commentResponseDtos, likeCheck, heartsList.size(), requestDtos);
+                    boolean likeCheck = heartRepository.existsByBoardIdAndUserId(board.getId(), user.getId()); //좋아요 여부
+                    List<Heart> heartsList = board.getHearts();; //좋아요 수
+                    MypageResponseDto mypageDto = new MypageResponseDto(board, likeCheck, heartsList.size(), requestDtos);
                     //user정보, 게시글, 댓글, 좋아요 여부, 좋아요 수
                     mypageDtoList.add(mypageDto);
                 }

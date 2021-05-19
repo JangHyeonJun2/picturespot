@@ -36,16 +36,16 @@ public class MypageController {
     }
 
     //유저가 올린 게시물
-    @GetMapping("/story/{userId}/board")
-    public ResponseEntity getMyboard(@PathVariable Long userId, @AuthenticationPrincipal UserPrincipal user){
-        List<MypageResponseDto> myBoards = mypageService.getMyboard(userId, user);
+    @GetMapping("/story/{userId}/board")// /story/{userId}/board?lastId={lastId}&size={size}
+    public ResponseEntity getMyboard(@RequestParam Long lastId, @RequestParam int size, @PathVariable Long userId, @AuthenticationPrincipal UserPrincipal user){
+        List<MypageResponseDto> myBoards = mypageService.getMyboard(lastId, size, userId, user);
         return customExceptionController.ok("유저가 작성한 게시물", myBoards);
     }
 
     //유저가 좋아요 한 게시물
-    @GetMapping("/story/{userId}/likeboard")
-    public ResponseEntity getMylikeboard(@PathVariable Long userId, @AuthenticationPrincipal UserPrincipal user){
-        List<MypageResponseDto> myBoards = mypageService.getMylikeboard(userId, user);
+    @GetMapping("/story/{userId}/likeboard") // /story/{userId}/likeboard?lastId={lastId}&size={size}
+    public ResponseEntity getMylikeboard(@RequestParam Long lastId, @RequestParam int size, @PathVariable Long userId, @AuthenticationPrincipal UserPrincipal user){
+        List<MypageResponseDto> myBoards = mypageService.getMylikeboard(lastId, size, userId, user);
         return customExceptionController.ok("유저가 좋아요 한 게시물", myBoards);
     }
 

@@ -54,7 +54,7 @@ public class BoardController {
         return customExceptionController.ok("게시물을 저장하였습니다.", boardSaveResponseDto);
     }
 
-//    게시글 수정
+    //    게시글 수정
     @PutMapping("/board/{boardId}")
     public ResponseEntity update(@PathVariable Long boardId, @RequestParam(value = "file", required = false) MultipartFile[] files,
                                  @RequestParam("title") String title, @RequestParam("content") String content,
