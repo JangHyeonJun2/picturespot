@@ -47,7 +47,7 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+//    testCompile group: 'junit', name: 'junit', version: '4.12'
 
     //s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws'

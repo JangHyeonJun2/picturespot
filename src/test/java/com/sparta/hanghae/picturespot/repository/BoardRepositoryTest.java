@@ -3,21 +3,15 @@ package com.sparta.hanghae.picturespot.repository;
 import com.sparta.hanghae.picturespot.model.Board;
 import com.sparta.hanghae.picturespot.model.BoardImgUrls;
 import com.sparta.hanghae.picturespot.model.Comment;
-import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.service.BoardService;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @SpringBootTest
 //@TestPropertySource(properties = "spring.jpa.properties.hibernate.default_batch_fetch_size=1000") // 옵션 적용
