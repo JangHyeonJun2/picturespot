@@ -26,10 +26,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -38,9 +36,7 @@ public class MypageService {
 
     private final BoardRepository boardRepository;
     private final HeartRepository heartRepository;
-    private final CommentRepository commentRepository;
     private final UserRepository userRepository;
-    private final BoardImgUrlsRepository boardImgUrlsRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final S3Service s3Service;
     private final UserService userService;
@@ -91,38 +87,6 @@ public class MypageService {
         }
         return mypageDtoList;
     }
-//    public List<MypageResponseDto> getMyboard(Long userId, UserPrincipal user) {
-//        User findUser = userRepository.findById(userId).orElseThrow(
-//                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
-//        //findUser : 그 사람의 페이지, user : 현재 로그인한 사용자
-//        List<MypageResponseDto> mypageDtoList = new ArrayList<>();
-//        List<Board> boardList = boardRepository.findAllByUserIdOrderByModifiedDesc(findUser.getId()); //user로 게시물 찾는다
-//        for (Board board : boardList) { //게시글
-//            Long boardId = board.getId();
-//
-//            List<BoardImgUrls> allBoardImgUrls = boardImgUrlsRepository.findAllByBoardId(board.getId()); //해당 board에 대한 이미지들 가져오기.
-//            List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();//board img list
-//            for (BoardImgUrls boardImgUrls : allBoardImgUrls) {
-//                requestDtos.add(new BoardImgCommonRequestDto(boardImgUrls));
-//            }
-//
-//            if (user==null){
-//                boolean likeCheck = false;
-//                List<Heart> hearts = heartRepository.findAllByBoardId(boardId); //좋아요 수
-//                MypageResponseDto mypageDto = new MypageResponseDto(board, likeCheck, hearts.size(), requestDtos);
-//                //user정보, 게시글, 댓글, 좋아요 여부, 좋아요 수
-//                mypageDtoList.add(mypageDto);
-//            }else{
-//                boolean likeCheck = heartRepository.existsByBoardIdAndUserId(boardId, user.getId()); //좋아요 여부
-//                List<Heart> hearts = heartRepository.findAllByBoardId(boardId); //좋아요 수
-//                MypageResponseDto mypageDto = new MypageResponseDto(board, likeCheck, hearts.size(), requestDtos);
-//                //user정보, 게시글, 댓글, 좋아요 여부, 좋아요 수
-//                mypageDtoList.add(mypageDto);
-//            }
-//        }
-//        return mypageDtoList;
-//    }
-
 
 
     //찜 명소(좋아요한 게시물) + 댓글 + 좋아요, 내가 올린 게시물은 제외
@@ -133,9 +97,8 @@ public class MypageService {
         List<MypageResponseDto> mypageDtoList = new ArrayList<>();
 
         Pageable pageable = PageRequest.of(0, size);
-        Page<Heart> heartList = heartRepository.findByIdLessThanAndUserIdOrderByIdDesc(lastId, userId, pageable);
+        Page<Heart> heartList = heartRepository.findByBoardIdLessThanAndUserIdOrderByBoardIdDesc(lastId, userId, pageable);
 
-        //List<Heart> heartList = heartRepository.findAllByUser(findUser); //user가 누른 하트 찾기
         for (Heart hearts : heartList) {
             Board board = hearts.getBoard();
             if (!board.getUser().getId().equals(findUser.getId())) { //게시물 작성자와 페이지 user가 다를 때만(남이 쓴 게시물만)
@@ -163,42 +126,6 @@ public class MypageService {
         }
         return mypageDtoList;
     }
-//    public List<MypageResponseDto> getMylikeboard(Long userId, UserPrincipal user) {
-//        User findUser = userRepository.findById(userId).orElseThrow(
-//                ()->new IllegalArgumentException("해당 사용자가 없습니다."));
-//        //findUser : 그 사람의 페이지, user : 현재 로그인한 사용자
-//        List<MypageResponseDto> mypageDtoList = new ArrayList<>();
-//        List<Heart> heartList = heartRepository.findAllByUser(findUser); //user가 누른 하트 찾기
-//        for (Heart hearts : heartList) {
-//            Long boardId = hearts.getBoard().getId(); //user가 누른 하트에서 게시물 아이디 찾기
-//            Board board = boardRepository.findByIdOrderByModifiedDesc(boardId).orElseThrow(//user가 좋아요 한 게시물
-//                    () -> new IllegalArgumentException("찜한 명소가 없습니다.")
-//            );
-//            if (!board.getUser().getId().equals(findUser.getId())) { //게시물 작성자와 페이지 user가 다를 때만(남이 쓴 게시물만)
-//                List<BoardImgUrls> allBoardImgUrls = boardImgUrlsRepository.findAllByBoardId(boardId);        //해당 게시물에 대한 이미지들 가져오기.
-//                List<BoardImgCommonRequestDto> requestDtos = new ArrayList<>();
-//                for (BoardImgUrls boardImgUrls : allBoardImgUrls) {
-//                    requestDtos.add(new BoardImgCommonRequestDto(boardImgUrls));
-//                }
-//
-//                if (user==null){
-//                    boolean likeCheck = false;
-//                    List<Heart> heartsList = heartRepository.findAllByBoardId(boardId); //좋아요 수
-//                    MypageResponseDto mypageDto = new MypageResponseDto(board, likeCheck, heartsList.size(), requestDtos);
-//                    //user정보, 게시글, 댓글, 좋아요 여부, 좋아요 수
-//                    mypageDtoList.add(mypageDto);
-//                }else{
-//                    boolean likeCheck = heartRepository.existsByBoardIdAndUserId(boardId, user.getId()); //좋아요 여부
-//                    List<Heart> heartsList = heartRepository.findAllByBoardId(boardId); //좋아요 수
-//                    MypageResponseDto mypageDto = new MypageResponseDto(board, likeCheck, heartsList.size(), requestDtos);
-//                    //user정보, 게시글, 댓글, 좋아요 여부, 좋아요 수
-//                    mypageDtoList.add(mypageDto);
-//                }
-//            }
-//        }
-//        return mypageDtoList;
-//    }
-
 
 
     //프로필 편집(사진, 소개)

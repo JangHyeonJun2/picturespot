@@ -41,12 +41,6 @@ public class MypageController {
         List<MypageResponseDto> myBoards = mypageService.getMyboard(lastId, size, userId, user);
         return customExceptionController.ok("유저가 작성한 게시물", myBoards);
     }
-//    @GetMapping("/story/{userId}/board")
-//    public ResponseEntity getMyboard(@PathVariable Long userId, @AuthenticationPrincipal UserPrincipal user){
-//        List<MypageResponseDto> myBoards = mypageService.getMyboard(userId, user);
-//        return customExceptionController.ok("유저가 작성한 게시물", myBoards);
-//    }
-
 
     //유저가 좋아요 한 게시물
     @GetMapping("/story/{userId}/likeboard") // /story/{userId}/likeboard?lastId={lastId}&size={size}
@@ -54,13 +48,6 @@ public class MypageController {
         List<MypageResponseDto> myBoards = mypageService.getMylikeboard(lastId, size, userId, user);
         return customExceptionController.ok("유저가 좋아요 한 게시물", myBoards);
     }
-//    @GetMapping("/story/{userId}/likeboard")
-//    public ResponseEntity getMylikeboard(@PathVariable Long userId, @AuthenticationPrincipal UserPrincipal user){
-//        List<MypageResponseDto> myBoards = mypageService.getMylikeboard(userId, user);
-//        return customExceptionController.ok("유저가 좋아요 한 게시물", myBoards);
-//    }
-
-
 
     //프로필 편집(사진, 자기소개)
     @PutMapping("/editmyprofile/{userId}")
