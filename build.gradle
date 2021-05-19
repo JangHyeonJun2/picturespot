@@ -58,6 +58,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     //mail
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    //maria db
+    compile("org.mariadb.jdbc:mariadb-java-client")
 }
 
 dependencyManagement { imports { mavenBom 'org.springframework.cloud:spring-cloud-aws:2.2.1.RELEASE' } }
