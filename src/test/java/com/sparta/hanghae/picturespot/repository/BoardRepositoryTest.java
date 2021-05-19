@@ -28,9 +28,9 @@ class BoardRepositoryTest {
 //        List<Board> all = boardRepository.findAllJoinFetch();
 //        System.out.println(all.size());
 
-        PageRequest pageRequest = PageRequest.of(0, 3);
-
-        List<Board> allFetchJoin = boardRepository.findAllFetchJoin();
+//        PageRequest pageRequest = PageRequest.of(0, 3);
+//
+//        List<Board> allFetchJoin = boardRepository.findAllFetchJoin();
 //        Assertions.assertThat(34).isEqualTo(allFetchJoin.size());
 //        List<Board> ac = boardRepository.findByIdLessThan(999L);
 //
@@ -92,21 +92,21 @@ class BoardRepositoryTest {
 //            }
 //        }
 
-        Board board = boardRepository.findById(11L).orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다."));
-        Set<BoardImgUrls> boardImgUrls = board.getBoardImgUrls();
-        for (BoardImgUrls boardImgUrl : boardImgUrls) {
-            System.out.println(boardImgUrl.getImgUrl());
-        }
-
-        Set<Comment> comments = board.getComments();
-        for (Comment comment : comments) {
-            System.out.println(comment.getContent());
-        }
+//        Board board = boardRepository.findById(11L).orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다."));
+//        Set<BoardImgUrls> boardImgUrls = board.getBoardImgUrls();
+//        for (BoardImgUrls boardImgUrl : boardImgUrls) {
+//            System.out.println(boardImgUrl.getImgUrl());
+//        }
+//
+//        Set<Comment> comments = board.getComments();
+//        for (Comment comment : comments) {
+//            System.out.println(comment.getContent());
+//        }
     }
 
     @Test
     public void 패치조인날짜순정렬() {
-        List<Board> boards = boardRepository.findAllFetchJoinOrderByModifiedDesc();
+//        List<Board> boards = boardRepository.findAllFetchJoinOrderByModifiedDesc();
     }
 
 }

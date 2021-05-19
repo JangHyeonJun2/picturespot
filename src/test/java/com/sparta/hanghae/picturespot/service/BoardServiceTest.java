@@ -60,13 +60,13 @@ class BoardServiceTest {
     @Test
     @Transactional
     public void 댓글최신순정렬() {
-        Board findBoard = boardRepository.findById(39L).orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다."));
-        Set<Comment> boardComments = findBoard.getComments();
-        List<Comment> collect = boardComments.stream().sorted(Comparator.comparing(Timestamped::getModified).reversed()).collect(Collectors.toList());// 정렬
-        for (Comment comment : collect) {
-            System.out.println(comment.getModified());
-        }
-        System.out.println();
+//        Board findBoard = boardRepository.findById(39L).orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다."));
+//        Set<Comment> boardComments = findBoard.getComments();
+//        List<Comment> collect = boardComments.stream().sorted(Comparator.comparing(Timestamped::getModified).reversed()).collect(Collectors.toList());// 정렬
+//        for (Comment comment : collect) {
+//            System.out.println(comment.getModified());
+//        }
+//        System.out.println();
     }
 
     @Test
