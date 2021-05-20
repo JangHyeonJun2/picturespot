@@ -49,13 +49,14 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 //                json.put("message", "tokenInvalid");
 //                PrintWriter out = response.getWriter();
 //                out.print(json);
-            }else{
-                //log.error(jwtTokenProvider.resolveToken((HttpServletRequest) request));
-                JSONObject json = new JSONObject();
-                json.put("message", "tokenExpired");
-                PrintWriter out = response.getWriter();
-                out.print(json);
             }
+//            else{
+//                //log.error(jwtTokenProvider.resolveToken((HttpServletRequest) request));
+//                JSONObject json = new JSONObject();
+//                json.put("message", "tokenExpired");
+//                PrintWriter out = response.getWriter();
+//                out.print(json);
+//            }
 
         }
     }
