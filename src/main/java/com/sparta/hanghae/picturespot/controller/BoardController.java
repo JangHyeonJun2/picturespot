@@ -33,7 +33,7 @@ public class BoardController {
     private final UserRepository userRepository;
 
 
-    //게시글(커뮤니티)페이지
+    //게시글(커뮤니티)페이지입니다.
     @GetMapping("/board")
     public ResponseEntity getBoards(@AuthenticationPrincipal UserPrincipal user) {
         List<BoardsGetResponseDto> boards = boardService.getBoards(user);
