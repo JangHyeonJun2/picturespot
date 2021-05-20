@@ -26,7 +26,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class S3Service {
-    private final AmazonS3Client amazonS3Client;
+    private final AmazonS3 amazonS3Client;
     private final BoardImgUrlsRepository boardImgUrlsRepository;
 
     @Value("${cloud.aws.s3.bucket}")
