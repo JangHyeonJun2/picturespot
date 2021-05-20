@@ -4,6 +4,16 @@ files:
   - source: / # (2)
     destination: /home/ec2-user/app/step2/zip/ # (3)
     overwrite: yes # (4)
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ec2-user
+    group: ec2-user
+hooks:
+  ApplicationStart:
+    - location: deploy.sh
+      timeout: 60
+      runas: ec2-user
 
 
   # 1번
