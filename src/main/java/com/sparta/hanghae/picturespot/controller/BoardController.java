@@ -37,7 +37,7 @@ public class BoardController {
     @GetMapping("/board")
     public ResponseEntity getBoards(@AuthenticationPrincipal UserPrincipal user) {
         List<BoardsGetResponseDto> boards = boardService.getBoards(user);
-        return customExceptionController.ok("게시글 정보 입니다!!!!!!.", boards);
+        return customExceptionController.ok("게시글 정보 입니다아!!!.", boards);
     }
 
     //게시물 작성
