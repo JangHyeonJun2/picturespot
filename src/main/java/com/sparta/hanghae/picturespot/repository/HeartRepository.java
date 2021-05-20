@@ -14,7 +14,7 @@ public interface HeartRepository extends JpaRepository<Heart, Long> {
     List<Heart> findAllByBoardId(Long boardId);
     List<Heart> findAllByUser(User user);
 
-    Page<Heart> findByIdLessThanAndUserIdOrderByIdDesc(Long lastId, Long userId, Pageable pageable);
+    Page<Heart> findByBoardIdLessThanAndUserIdOrderByBoardIdDesc(Long lastId, Long userId, Pageable pageable);
 
     boolean existsByBoardIdAndUserId(Long boardId, Long loginUserId);
     Heart findByBoardIdAndUserId(Long boardId, Long loginUserId);
