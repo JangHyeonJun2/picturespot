@@ -1,0 +1,3 @@
+spring:
+  profiles:
+    include: oauth2, real-db, mail

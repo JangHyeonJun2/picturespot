@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.sparta.hanghae'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.3-SNAPSHOT' + new Date().format("yyyyMMddHHmmss")
 sourceCompatibility = '1.8'
 
 configurations {
@@ -31,8 +31,11 @@ dependencies {
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'org.junit.jupiter:junit-jupiter:5.7.0'
-    implementation 'org.projectlombok:lombok:1.18.18'
-    implementation 'org.projectlombok:lombok:1.18.18'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.20'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
     // https://mvnrepository.com/artifact/com.h2database/h2
 //    compile('com.h2database:h2')
     compile 'org.json:json:20210307'
@@ -40,13 +43,13 @@ dependencies {
     //maria db
     compile("org.mariadb.jdbc:mariadb-java-client")
 
-    compileOnly 'org.projectlombok:lombok'
+
 //    runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    annotationProcessor 'org.projectlombok:lombok'
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+//    testCompile group: 'junit', name: 'junit', version: '4.12'
 
     //s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws'
@@ -57,6 +60,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     //mail
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    //maria db
+    compile("org.mariadb.jdbc:mariadb-java-client")
 }
 
 dependencyManagement { imports { mavenBom 'org.springframework.cloud:spring-cloud-aws:2.2.1.RELEASE' } }
