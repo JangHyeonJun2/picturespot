@@ -23,6 +23,7 @@ public class PicturespotApplication {
 //
 //    }
 //
+    //main 실행문
     public static final String APPLICATION_LOCATIONS = "spring.config.location="
             + "/home/ec2-user/app/application-oauth2.yml,"
             + "classpath:application.yml,"
