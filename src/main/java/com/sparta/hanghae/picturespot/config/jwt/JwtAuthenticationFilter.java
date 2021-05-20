@@ -1,6 +1,9 @@
 package com.sparta.hanghae.picturespot.config.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
@@ -35,11 +39,24 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             chain.doFilter(request, response);
-        } catch (Exception e){
-            JSONObject json = new JSONObject();
-            json.put("message", "tokenExpired");
-            PrintWriter out = response.getWriter();
-            out.print(json);
+        }
+        catch (Exception e){
+            //jwtTokenProvider.resolveToken((HttpServletRequest) request)가 null일 경우는 token이 필요하지 않은 경우이고 "null"일 경우는 토큰이 필요하고 토큰을 보내지만 토큰이 null로 온 경우이다.
+            if ((jwtTokenProvider.resolveToken((HttpServletRequest) request)).equals("null")){
+                //log.error(jwtTokenProvider.resolveToken((HttpServletRequest) request));
+                throw new MalformedJwtException("에러");
+//                JSONObject json = new JSONObject();
+//                json.put("message", "tokenInvalid");
+//                PrintWriter out = response.getWriter();
+//                out.print(json);
+            }else{
+                //log.error(jwtTokenProvider.resolveToken((HttpServletRequest) request));
+                JSONObject json = new JSONObject();
+                json.put("message", "tokenExpired");
+                PrintWriter out = response.getWriter();
+                out.print(json);
+            }
+
         }
     }
 }

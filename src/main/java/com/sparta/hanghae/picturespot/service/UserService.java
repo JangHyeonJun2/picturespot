@@ -70,15 +70,15 @@ public class UserService {
         if(!bCryptPasswordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())){
             throw new IllegalStateException("잘못된 비밀번호 입니다.");
         }
-        TokenDto tokenDto = jwtTokenProvider.createToken(user.getEmail());
+        //TokenDto tokenDto = jwtTokenProvider.createToken(user.getEmail());
 
         // refresh Token 저장
-        RefreshToken refreshToken = new RefreshToken(user.getEmail(), tokenDto.getRefreshToken());
-        refreshTokenRepository.save(refreshToken);
+//        RefreshToken refreshToken = new RefreshToken(user.getEmail(), tokenDto.getRefreshToken());
+//        refreshTokenRepository.save(refreshToken);
 
 
 
-        return new LoginResponseDto(tokenDto.getAccessToken(), tokenDto.getRefreshToken(), user.getNickname(), "성공", user.getId(), user.getRole());
+        return new LoginResponseDto(jwtTokenProvider.createToken(user.getEmail()), user.getNickname(), "성공", user.getId(), user.getRole());
     }
 
     // @Vaild 에러체크
@@ -256,47 +256,47 @@ public class UserService {
     }
 
 
-    @Transactional
-    public TokenDto reissue(TokenDto tokenDto) {
-        //1. Refresh Token 검증
-        if (!jwtTokenProvider.validateToken(tokenDto.getRefreshToken())){
-            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
-        }
-
-        Authentication authentication = jwtTokenProvider.getAuthentication(tokenDto.getAccessToken());
-
-
-        // 3. Refresh Token 저장소에서 Member ID를 기반으로 Refresh Token 값 가져오기
-        RefreshToken refreshToken = refreshTokenRepository.findByTokenKey(authentication.getName());
-
-        // 위에서 유효기간이 끝나면 걸러주기 때문에 굳이 필요하진 않을것 같다.
-        LocalDateTime today = LocalDateTime.now();
-        LocalDateTime modiyfied = refreshToken.getModified();
-        long days = Duration.between(modiyfied, today).toDays();
-        if(days > 7){
-            throw new RuntimeException("Refresh Token 이 만료되었습니다.");
-        }
-
-        // redis 사용법에는 2가지 방법이 있다. 1) template사용하는 것과 2) repository 사용법
-
-        // template방법 사용시 redishash도 필요없고 repository도 필요없는것 같다.
-        /////////////////////////
-        System.out.println("refreshToken.getTokenValue(): " + refreshToken.getTokenValue());
-        System.out.println("tokenDto.getRefreshToken(): "+ tokenDto.getRefreshToken());
-
-        if (!refreshToken.getTokenValue().equals(tokenDto.getRefreshToken())){
-            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
-        }
-
-        // 새로운 토큰 생성
-        // authentication.getName으로 이메일 가져올 수 있다. 토큰 생성할때 이메일을 넣어서 생성해서 가능한것 같다.
-        TokenDto newTokenDto = jwtTokenProvider.createToken(authentication.getName());
-
-        // 저장소 정보 업데이트
-        refreshToken.updateValue(newTokenDto.getRefreshToken());
-
-
-
-        return newTokenDto;
-    }
+//    @Transactional
+//    public TokenDto reissue(TokenDto tokenDto) {
+//        //1. Refresh Token 검증
+//        if (!jwtTokenProvider.validateToken(tokenDto.getRefreshToken())){
+//            throw new RuntimeException("Refresh Token 이 유효하지 않습니다.");
+//        }
+//
+//        Authentication authentication = jwtTokenProvider.getAuthentication(tokenDto.getAccessToken());
+//
+//
+//        // 3. Refresh Token 저장소에서 Member ID를 기반으로 Refresh Token 값 가져오기
+//        RefreshToken refreshToken = refreshTokenRepository.findByTokenKey(authentication.getName());
+//
+//        // 위에서 유효기간이 끝나면 걸러주기 때문에 굳이 필요하진 않을것 같다.
+//        LocalDateTime today = LocalDateTime.now();
+//        LocalDateTime modiyfied = refreshToken.getModified();
+//        long days = Duration.between(modiyfied, today).toDays();
+//        if(days > 7){
+//            throw new RuntimeException("Refresh Token 이 만료되었습니다.");
+//        }
+//
+//        // redis 사용법에는 2가지 방법이 있다. 1) template사용하는 것과 2) repository 사용법
+//
+//        // template방법 사용시 redishash도 필요없고 repository도 필요없는것 같다.
+//        /////////////////////////
+//        System.out.println("refreshToken.getTokenValue(): " + refreshToken.getTokenValue());
+//        System.out.println("tokenDto.getRefreshToken(): "+ tokenDto.getRefreshToken());
+//
+//        if (!refreshToken.getTokenValue().equals(tokenDto.getRefreshToken())){
+//            throw new RuntimeException("토큰의 유저 정보가 일치하지 않습니다.");
+//        }
+//
+//        // 새로운 토큰 생성
+//        // authentication.getName으로 이메일 가져올 수 있다. 토큰 생성할때 이메일을 넣어서 생성해서 가능한것 같다.
+//        TokenDto newTokenDto = jwtTokenProvider.createToken(authentication.getName());
+//
+//        // 저장소 정보 업데이트
+//        refreshToken.updateValue(newTokenDto.getRefreshToken());
+//
+//
+//
+//        return newTokenDto;
+//    }
 }
