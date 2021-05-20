@@ -8,7 +8,7 @@ import com.sparta.hanghae.picturespot.dto.response.user.LoginResponseDto;
 import com.sparta.hanghae.picturespot.model.*;
 import com.sparta.hanghae.picturespot.repository.EmailCheckRepository;
 import com.sparta.hanghae.picturespot.repository.PwdCheckRepository;
-import com.sparta.hanghae.picturespot.repository.RefreshTokenRepository;
+//import com.sparta.hanghae.picturespot.repository.RefreshTokenRepository;
 import com.sparta.hanghae.picturespot.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.joda.time.DateTime;
@@ -42,7 +42,7 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final ModelMapper modelMapper;
     private final JavaMailSender javaMailSender;
-    private final RefreshTokenRepository refreshTokenRepository;
+    //private final RefreshTokenRepository refreshTokenRepository;
 
     @Value("${spring.mail.username}")
     private String from;
