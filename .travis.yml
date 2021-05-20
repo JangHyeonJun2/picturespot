@@ -21,6 +21,17 @@ deploy:
     local_dir: deploy # before_deploy에서 생성한 디렉토리
     wait-until-deployed: true
 
+  - provider: codedeploy
+    access_key_id: AKIA4PAY5UU4VMHS4TMJ # Travis repo settings에 설정된 값
+    secret_access_key: 0i9ohKefHJctq5+dO3qg2Wakj3ebMSVrDU3dPoSS # Travis repo settings에 설정된 값
+    bucket: picturespot # S3 버킷
+    key: picturespot.zip # 빌드 파일을 압축해서 전달
+    bundle_type: zip
+    application: picturespot # 웹 콘솔에서 등록한 CodeDeploy 어플리케이션
+    deployment_group: picturespot-group # 웹 콘솔에서 등록한 CodeDeploy 배포 그룹
+    region: ap-northeast-2
+    wait-until-deployed: true
+
 branches:
   only:
     - master
