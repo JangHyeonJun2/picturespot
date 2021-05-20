@@ -5,6 +5,22 @@ jdk:
 before_install:
   - chmod +x gradlew
 
+before_deploy:
+  - zip -r picturespot *
+  - mkdir -p deploy
+  - mv picturespot.zip deploy/picturespot.zip
+
+deploy:
+  - provider: s3
+    access_key_id: AKIA4PAY5UU4VMHS4TMJ # Travis repo settings에 설정된 값
+    secret_access_key: 0i9ohKefHJctq5+dO3qg2Wakj3ebMSVrDU3dPoSS # Travis repo settings에 설정된 값
+    bucket: picturespot # S3 버킷
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private # zip 파일 접근을 private으로
+    local_dir: deploy # before_deploy에서 생성한 디렉토리
+    wait-until-deployed: true
+
 branches:
   only:
     - master
