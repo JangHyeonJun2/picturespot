@@ -26,7 +26,7 @@ public class PicturespotApplication {
     //main 실행문
     public static final String APPLICATION_LOCATIONS = "spring.config.location="
             + "classpath:application.yml,"
-            + "classpath:application-real.yml";
+            + "classpath:application-real.yml,";
 
 
     public static void main(String[] args) {
