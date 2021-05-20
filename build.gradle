@@ -40,6 +40,8 @@ dependencies {
 //    compile('com.h2database:h2')
     compile 'org.json:json:20210307'
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.0'
+    //maria db
+    compile("org.mariadb.jdbc:mariadb-java-client")
 
 
 //    runtimeOnly 'com.h2database:h2'

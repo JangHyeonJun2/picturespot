@@ -22,6 +22,7 @@ public class MypageResponseDto {
     private double latitude;
     private double longitude;
     private String spotName;
+    private String category;
     private List<BoardImgCommonRequestDto> boardImgResponseDtoList = new ArrayList<>();
 
     //heart
@@ -33,6 +34,7 @@ public class MypageResponseDto {
 
         //board 정보
         this.boardId = boardEntity.getId();
+        this.category = boardEntity.getCategory();
         this.latitude = boardEntity.getLatitude();
         this.longitude = boardEntity.getLongitude();
         this.spotName = boardEntity.getSpotName();
