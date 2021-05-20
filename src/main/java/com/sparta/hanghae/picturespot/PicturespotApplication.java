@@ -27,10 +27,10 @@ public class PicturespotApplication {
     public static final String APPLICATION_LOCATIONS = "spring.config.location="
             + "classpath:application.yml,"
             + "classpath:application-real.yml,"
-            + "/home/ec2-user/app/application-oauth2.yml,"
-            + "/home/ec2-user/app/application-aws.yml,"
-            + "/home/ec2-user/app/application-mail.yml,"
-            + "/home/ec2-user/app/application-db.yml";
+            + "/app/application-oauth2.yml,"
+            + "/app/application-aws.yml,"
+            + "/app/application-mail.yml,"
+            + "/app/application-db.yml";
 
 
     public static void main(String[] args) {
