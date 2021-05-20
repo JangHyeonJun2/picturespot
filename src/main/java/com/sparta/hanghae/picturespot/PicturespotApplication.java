@@ -27,6 +27,7 @@ public class PicturespotApplication {
     public static final String APPLICATION_LOCATIONS = "spring.config.location="
             + "/home/ec2-user/app/application-oauth2.yml,"
             + "classpath:application.yml,"
+            + "classpath:application-real.yml,"
             + "/home/ec2-user/app/application-aws.yml,"
             + "/home/ec2-user/app/application-mail.yml,"
             + "/home/ec2-user/app/application-db.yml";
