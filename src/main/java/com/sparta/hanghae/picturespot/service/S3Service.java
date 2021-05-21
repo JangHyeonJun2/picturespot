@@ -92,7 +92,7 @@ public class S3Service {
     private Optional<File[]> convert(List<MultipartFile> file) throws IOException {
         File[] convertFiles = new File[file.size()];
         for (int i=0; i<file.size(); i++) {
-            convertFiles[i] = new File(file.get(i).getOriginalFilename());
+            convertFiles[i] = new File(Objects.requireNonNull(file.get(i).getOriginalFilename()));
             if (!convertFiles[i].createNewFile()) {
                 return Optional.empty();
             }else {
