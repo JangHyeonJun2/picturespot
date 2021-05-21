@@ -3,11 +3,8 @@ package com.sparta.hanghae.picturespot.controller;
 import com.sparta.hanghae.picturespot.dto.request.board.BoardSaveRequestDto;
 import com.sparta.hanghae.picturespot.dto.request.board.BoardUpdateRequestDto;
 import com.sparta.hanghae.picturespot.dto.response.board.*;
-import com.sparta.hanghae.picturespot.model.Board;
-import com.sparta.hanghae.picturespot.model.BoardImgUrls;
 import com.sparta.hanghae.picturespot.model.User;
 import com.sparta.hanghae.picturespot.model.UserPrincipal;
-import com.sparta.hanghae.picturespot.repository.BoardRepository;
 import com.sparta.hanghae.picturespot.repository.UserRepository;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import com.sparta.hanghae.picturespot.service.BoardService;
@@ -19,10 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController

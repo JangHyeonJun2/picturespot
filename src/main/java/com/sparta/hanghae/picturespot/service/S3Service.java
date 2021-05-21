@@ -1,18 +1,14 @@
 package com.sparta.hanghae.picturespot.service;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.DeleteBucketRequest;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-
 import com.sparta.hanghae.picturespot.model.BoardImgUrls;
 import com.sparta.hanghae.picturespot.repository.BoardImgUrlsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +22,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class S3Service {
-    private final AmazonS3 amazonS3Client;
+    private final AmazonS3Client amazonS3Client;
     private final BoardImgUrlsRepository boardImgUrlsRepository;
 
     @Value("${cloud.aws.s3.bucket}")
