@@ -69,7 +69,7 @@ public class S3Service {
 
 
 
-    private String[] upload(File[] uploadFile, String dirName) {
+    private String[] upload(File[] uploadFile, String dirName) throws IOException {
         String[] uploadImgUrl = new String[uploadFile.length];
 
 
@@ -136,7 +136,7 @@ public class S3Service {
     }
 
     //profile
-    private String upload(File uploadFile, String dirName) {
+    private String upload(File uploadFile, String dirName) throws IOException {
 
         String fileName = uploadFile.getName().substring(uploadFile.getName().lastIndexOf('.'));
 
@@ -168,7 +168,8 @@ public class S3Service {
 
 
     private String putS3(File uploadFile, String fileName) {
-        log.info("파일 이름 나타내기 3번째 : " + uploadFile.toString().lastIndexOf("/")+1);
+        log.info("파일 이름 나타내기 3번째 : " + uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
+        uploadFile= new File(uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
 
 
@@ -177,12 +178,14 @@ public class S3Service {
 
 
 
-    private void removeNewFile(File targetFile) {
-        if (targetFile.delete()) {
-            log.info("파일이 삭제되었습니다.");
-        } else {
-            log.info("파일이 삭제되지 못했습니다.");
-        }
+    private void removeNewFile(File targetFile) throws IOException {
+        Runtime.getRuntime().exec("rm -r " + targetFile);
+        log.info("파일이 삭제 되었습니다.");
+//        if (targetFile.delete()) {
+//            log.info("파일이 삭제되었습니다.");
+//        } else {
+//            log.info("파일이 삭제되지 못했습니다.");
+//        }
     }
 
     //삭제할 이미지를 id로 찾고 delete 메서드 호출
