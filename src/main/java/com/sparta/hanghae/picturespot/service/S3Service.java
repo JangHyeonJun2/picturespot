@@ -170,7 +170,7 @@ public class S3Service {
 
     private String putS3(File uploadFile, String fileName) {
         log.info("파일 이름 나타내기 3번째 : " + uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
-        uploadFile= new File(uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
+//        uploadFile= new File(uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
 
 
