@@ -1,6 +1,4 @@
 spring:
-  freemarker:
-    checkTemplateLocation: false
   profiles:
     include: oauth
   jpa:
