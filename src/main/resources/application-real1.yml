@@ -2,4 +2,4 @@ server:
   port: 8081
 spring:
   profiles:
-    include: oauth2, real-db, mail
+    include: oauth2, real-db, mail, aws
