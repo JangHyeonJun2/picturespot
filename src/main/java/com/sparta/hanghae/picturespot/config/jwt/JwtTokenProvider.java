@@ -73,17 +73,17 @@ public class JwtTokenProvider { // 토큰 생성, 검증
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
             return !claims.getBody().getExpiration().before(new Date());
-//        } catch (SignatureException ex) {
-//            log.error("Invalid JWT signature");
-//        } catch (MalformedJwtException ex) {
-//            log.error("Invalid JWT token");
-//        } catch (ExpiredJwtException ex) {
-//            log.error("Expired JWT token");
-//        } catch (UnsupportedJwtException ex) {
-//            log.error("Unsupported JWT token");
-//        } catch (IllegalArgumentException ex) {
-//            log.error("JWT claims string is empty.");
-//        }
+        } catch (SignatureException ex) {
+            log.error("Invalid JWT signature");
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string is empty.");
+        }
         return false;
 
     }
