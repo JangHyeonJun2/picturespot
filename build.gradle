@@ -48,11 +48,10 @@ dependencies {
 
     //s3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws'
-    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
+//    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
     implementation 'com.amazonaws:aws-java-sdk-s3'
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     //mail
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
