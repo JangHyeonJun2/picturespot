@@ -168,8 +168,9 @@ public class S3Service {
 
 
     private String putS3(File uploadFile, String fileName) {
+        log.info("파일 이름 나타내기 3번째 : " + uploadFile);
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-        log.info("putObject 뒷쪽 공간" );
+
 
         return amazonS3.getUrl(bucket, fileName).toString();
     }
