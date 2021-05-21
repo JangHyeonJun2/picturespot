@@ -53,10 +53,13 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-bom
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-bom', version: '1.10.10', ext: 'pom'
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-ec2
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-ec2', version: '1.11.1018'
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb
-//    implementation group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.11.1021'
-    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk
-//    implementation group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.7.4'
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.11.1009'
+
 
     //mail
     implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -65,7 +68,12 @@ dependencies {
     compile("org.mariadb.jdbc:mariadb-java-client")
 }
 
-dependencyManagement { imports { mavenBom 'org.springframework.cloud:spring-cloud-aws:2.2.1.RELEASE' } }
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.cloud:spring-cloud-aws:2.2.1.RELEASE'
+    }
+
+}
 
 test {
     useJUnitPlatform()
