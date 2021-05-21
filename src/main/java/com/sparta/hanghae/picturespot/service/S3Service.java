@@ -29,6 +29,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class S3Service {
+    private final static String PATH = "/home/ec2-user/app/";
     private  AmazonS3 amazonS3;
     private final BoardImgUrlsRepository boardImgUrlsRepository;
     @Value("AKIA4PAY5UU4VMHS4TMJ")
@@ -92,7 +93,7 @@ public class S3Service {
     private Optional<File[]> convert(List<MultipartFile> file) throws IOException {
         File[] convertFiles = new File[file.size()];
         for (int i=0; i<file.size(); i++) {
-            convertFiles[i] = new File((file.get(i).getOriginalFilename()));
+            convertFiles[i] = new File((PATH+file.get(i).getOriginalFilename()));
             if (!convertFiles[i].exists()) {
                 convertFiles[i].mkdirs();
                 Runtime.getRuntime().exec("chmod 777 " + file.get(i).getOriginalFilename());
@@ -170,6 +171,8 @@ public class S3Service {
 
         return amazonS3.getUrl(bucket, fileName).toString();
     }
+
+
 
     private void removeNewFile(File targetFile) {
         if (targetFile.delete()) {
