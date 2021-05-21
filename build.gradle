@@ -23,10 +23,6 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    // https://mvnrepository.com/artifact/org.springframework/spring-web
-//    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.3'
-
-
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
@@ -35,17 +31,15 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
 
+
     testCompileOnly 'org.projectlombok:lombok:1.18.20'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
-    // https://mvnrepository.com/artifact/com.h2database/h2
 //    compile('com.h2database:h2')
     compile 'org.json:json:20210307'
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.0'
     //maria db
     compile("org.mariadb.jdbc:mariadb-java-client")
 
-
-//    runtimeOnly 'com.h2database:h2'
     runtimeOnly 'mysql:mysql-connector-java'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
@@ -56,6 +50,8 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-aws'
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
     implementation 'com.amazonaws:aws-java-sdk-s3'
+    //sdk 추가 속성
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.X')
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'

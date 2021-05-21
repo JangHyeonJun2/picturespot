@@ -28,9 +28,10 @@ public class PicturespotApplication {
 //            + "classpath:application.yml,"
 //            + "classpath:application-real.yml,"
 //            + "classpath:application-credentials.yml,"
-//            + "/home/ec2-user/app/application-oauth2.yml,"
-//            + "/home/ec2-user/app/application-mail.yml,"
-//            + "/home/ec2-user/app/application-real-db.yml";
+//            + "classpath:application-oauth2.yml,"
+//            + "classpath:application-mail.yml,"
+//            + "classpath:application-aws.yml,"
+//            + "classpath:application-db.yml";
 
 
     public static void main(String[] args) {
