@@ -54,7 +54,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb
-    implementation group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.11.1021'
+//    implementation group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.11.1021'
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk
     implementation group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.7.4'
 
