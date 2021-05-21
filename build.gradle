@@ -47,9 +47,9 @@ dependencies {
 //    testCompile group: 'junit', name: 'junit', version: '4.12'
 
     //s3
-    implementation 'org.springframework.cloud:spring-cloud-starter-aws'
-//    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
-    implementation 'com.amazonaws:aws-java-sdk-s3'
+//    implementation 'org.springframework.cloud:spring-cloud-starter-aws'
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-aws', version: '2.2.1.RELEASE', ext: 'pom'
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.993'
 
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     //mail
