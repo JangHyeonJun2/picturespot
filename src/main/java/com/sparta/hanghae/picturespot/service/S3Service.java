@@ -96,6 +96,7 @@ public class S3Service {
         for (int i=0; i<file.size(); i++) {
             convertFiles[i] = new File((PATH+file.get(i).getOriginalFilename()));
             if (!convertFiles[i].exists()) {
+                log.info("파일이 존재하는지? : " + convertFiles[i].exists());
                 convertFiles[i].mkdirs();
                 Runtime.getRuntime().exec("chmod 777 " + file.get(i).getOriginalFilename());
                 convertFiles[i].setExecutable(true, false);
