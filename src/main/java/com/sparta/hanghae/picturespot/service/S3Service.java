@@ -93,17 +93,18 @@ public class S3Service {
         File[] convertFiles = new File[file.size()];
         for (int i=0; i<file.size(); i++) {
             convertFiles[i] = new File((file.get(i).getOriginalFilename()));
-            convertFiles[i].mkdirs();
-            Runtime.getRuntime().exec("chmod 777 " + file.get(i).getOriginalFilename());
-            convertFiles[i].setExecutable(true, false);
-            convertFiles[i].setReadable(true, false);
-            convertFiles[i].setWritable(true, false);
-
-            if (!convertFiles[i].createNewFile()) {
-                return Optional.empty();
-            }else {
-                try(FileOutputStream fos = new FileOutputStream(convertFiles[i])) {
-                    fos.write(file.get(i).getBytes());
+            if (!convertFiles[i].exists()) {
+                convertFiles[i].mkdirs();
+                Runtime.getRuntime().exec("chmod 777 " + file.get(i).getOriginalFilename());
+                convertFiles[i].setExecutable(true, false);
+                convertFiles[i].setReadable(true, false);
+                convertFiles[i].setWritable(true, false);
+                if (!convertFiles[i].createNewFile()) {
+                    return Optional.empty();
+                }else {
+                    try(FileOutputStream fos = new FileOutputStream(convertFiles[i])) {
+                        fos.write(file.get(i).getBytes());
+                    }
                 }
             }
         }
