@@ -1,6 +1,12 @@
 package com.sparta.hanghae.picturespot.service;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -12,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,11 +29,34 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class S3Service {
-    private final AmazonS3Client amazonS3Client;
+    private  AmazonS3 amazonS3;
     private final BoardImgUrlsRepository boardImgUrlsRepository;
+    @Value("AKIA4PAY5UU4VMHS4TMJ")
+    private String accessKey;
 
-    @Value("${cloud.aws.s3.bucket}")
+    @Value("0i9ohKefHJctq5+dO3qg2Wakj3ebMSVrDU3dPoSS")
+    private String secretKey;
+
+    @Value("picturespot")
     private String bucket;
+
+    @Value("ap-northeast-2")
+    private String region;
+
+    @PostConstruct
+    public void setS3Client() {
+        AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
+
+        amazonS3 = AmazonS3ClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                .withRegion(this.region)
+                .build();
+    }
+
+
+
+//    @Value("${cloud.aws.s3.bucket}")
+//    private String bucket;
 
     public String[] upload(List<MultipartFile> multipartFile, String dirName) throws IOException {
         //System.out.println("확인!!");
@@ -84,7 +114,7 @@ public class S3Service {
         for (String imgUrl : imgUrls) {
             String objkeyArr = dirName + "/" +imgUrl;
             DeleteObjectsRequest delObjReq = new DeleteObjectsRequest(bucket).withKeys(objkeyArr);
-            amazonS3Client.deleteObjects(delObjReq);
+            amazonS3.deleteObjects(delObjReq);
         }
     }
 
@@ -129,9 +159,9 @@ public class S3Service {
 
 
     private String putS3(File uploadFile, String fileName) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
 
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+        return amazonS3.getUrl(bucket, fileName).toString();
     }
 
     private void removeNewFile(File targetFile) {
