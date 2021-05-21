@@ -38,7 +38,6 @@ public class PicturespotApplication {
 //                .properties(APPLICATION_LOCATIONS)
 //                .run(args);
         SpringApplication.run(PicturespotApplication.class, args);
-
     }
 //    @PostConstruct
 //    public void started(){
