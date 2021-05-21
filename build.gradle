@@ -59,6 +59,9 @@ dependencies {
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-ec2', version: '1.11.1018'
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-dynamodb
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.11.1009'
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.993'
+
 
 
     //mail
