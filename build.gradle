@@ -61,6 +61,11 @@ dependencies {
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.11.1009'
     // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3
     implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.993'
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-core
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-core', version: '1.11.1022'
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-kms
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-kms', version: '1.11.615'
+
 
 
 
