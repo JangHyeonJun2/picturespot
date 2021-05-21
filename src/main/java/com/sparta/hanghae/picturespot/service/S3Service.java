@@ -84,6 +84,7 @@ public class S3Service {
 
             String dateFileName = fourteen_format.format(date_now) + fileName;
             String resultFileName = dirName + "/" + subUUID +dateFileName;
+            log.info("파일 이름 나타내기 2번째 : "+ uploadFile[0].getName()+" ," + resultFileName);
             uploadImgUrl[i] = putS3(uploadFile[i],resultFileName);
             removeNewFile(uploadFile[i]);
         }
