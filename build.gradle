@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.sparta.hanghae'
-version = '0.0.5-SNAPSHOT' + new Date().format("yyyyMMddHHmmss")
+version = '0.0.6-SNAPSHOT' + new Date().format("yyyyMMddHHmmss")
 sourceCompatibility = '1.8'
 
 configurations {
