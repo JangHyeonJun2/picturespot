@@ -21,6 +21,7 @@ public class BoardSaveResponseDto {
     private double latitude;
     private double longitude;
     private String spotName;
+    private String writerName;
     private List<BoardImgSaveRequestDto> boardImgReponseDtoList = new ArrayList<>();
 //    private Long userId;
 //    private String nickName;
@@ -35,6 +36,7 @@ public class BoardSaveResponseDto {
         this.longitude = entity.getLongitude();
         this.boardImgReponseDtoList = reponseDto;
         this.spotName = entity.getSpotName();
+        this.writerName = entity.getUser().getNickname();
 //        this.userId = entity.getUser().getId();
 //        this.nickName = entity.getUser().getNickname();
 
