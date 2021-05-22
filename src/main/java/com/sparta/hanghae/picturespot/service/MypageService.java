@@ -5,7 +5,6 @@ import com.sparta.hanghae.picturespot.dto.request.img.BoardImgCommonRequestDto;
 import com.sparta.hanghae.picturespot.dto.request.mypage.NicknameRequestDto;
 import com.sparta.hanghae.picturespot.dto.request.mypage.PasswordRequestDto;
 import com.sparta.hanghae.picturespot.dto.request.mypage.ProfileRequestDto;
-import com.sparta.hanghae.picturespot.dto.response.mypage.MypageCommentResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.mypage.MypageResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.mypage.NicknameResponseDto;
 import com.sparta.hanghae.picturespot.dto.response.mypage.ProfileResponseDto;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -137,7 +134,7 @@ public class MypageService {
         User findUser = userRepository.findById(user.getId()).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
         if (!(file == null)){
-            String imgUrl = s3Service.upload(file, "profile");
+            String imgUrl = s3Service.profileUpload(file, "profile");
             ProfileRequestDto profileDto = new ProfileRequestDto(imgUrl, introduceMsg);
             findUser.updateProfile(profileDto);
             ProfileResponseDto profileResponseDto = new ProfileResponseDto(findUser);
