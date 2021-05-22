@@ -41,7 +41,7 @@ public class BoardController {
                                @RequestParam("content") String content, @RequestParam("category") String category, @RequestParam("latitude") double latitude,
                                @RequestParam("longitude") double longitude, @RequestParam("spotName") String spotName, @AuthenticationPrincipal UserPrincipal user) throws IOException {
 
-        String[] imgUrls = s3Service.testUpload(Arrays.asList(files), "board");
+        String[] imgUrls = s3Service.boardUpload(Arrays.asList(files), "board");
 
         User findUser = findUserMethod(user);
         BoardSaveRequestDto boardSaveRequestDto = new BoardSaveRequestDto(title,content,category,latitude,longitude, spotName, findUser);
@@ -63,7 +63,7 @@ public class BoardController {
         //s3에 이미지 업로드하고 업로드된 이미지 배열
         String[] imgUrls =null;
         if (files != null) {
-            imgUrls = s3Service.upload(Arrays.asList(files), "board"); //새로 추가된 이미지 s3에 저장.
+            imgUrls = s3Service.boardUpload(Arrays.asList(files), "board"); //새로 추가된 이미지 s3에 저장.
         }
 
         BoardUpdateRequestDto boardUpdateRequestDto = new BoardUpdateRequestDto(boardId,title,content);
