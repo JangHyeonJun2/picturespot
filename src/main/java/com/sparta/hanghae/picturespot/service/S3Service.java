@@ -33,7 +33,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class S3Service {
-    private final static String PATH = "/home/ec2-user/app/";
     private static MultipartFile[] multiparts;
     private  AmazonS3 amazonS3;
     private final BoardImgUrlsRepository boardImgUrlsRepository;
@@ -117,7 +116,7 @@ public class S3Service {
             String dateFileName = fourteen_format.format(date_now) + fileName;
             String resultFileName = dirName + "/" + subUUID +dateFileName;
             log.info("파일 이름 나타내기 2번째 : "+ uploadFile.get(i).getName()+" ," + resultFileName);
-            uploadImgUrl.add(putS3(uploadFile.get(i),resultFileName,i));
+            uploadImgUrl.add(putS3Aws(uploadFile.get(i),resultFileName));
             log.info("삭제할 파일" + uploadFile.get(i));
 //            removeNewFile(uploadFile.get(i));
         }
@@ -130,7 +129,7 @@ public class S3Service {
         File[] convertFiles = new File[file.size()];
         for (int i=0; i<file.size(); i++) {
             multiparts[i] = file.get(i);
-            convertFiles[i] = new File((PATH+file.get(i).getOriginalFilename()));
+            convertFiles[i] = new File((file.get(i).getOriginalFilename()));
             if (!convertFiles[i].exists()) {
                 log.info("파일이 존재하는지? : " + convertFiles[i].exists()+" ,"+convertFiles[i]);
                 convertFiles[i].mkdirs();
@@ -211,14 +210,14 @@ public class S3Service {
 
 
 
-    private String putS3(MultipartFile uploadFile, String fileName, int index) throws IOException {
+    private String putS3Aws(MultipartFile uploadFile, String fileName) throws IOException {
         ObjectMetadata metadata =new ObjectMetadata();
-        log.info("파일 이름 나타내기 3번째 : " + uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
+//        log.info("파일 이름 나타내기 3번째 : " + uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
 //        String substring = uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/") + 1);
 //        Process exec = Runtime.getRuntime().exec("find /home/ec2-user/app/ -name " + substring);
-        metadata.setContentType(uploadFile.getContentType());
-        metadata.setContentLength(uploadFile.getSize());
-        metadata.setHeader("filename",uploadFile.getOriginalFilename());
+//        metadata.setContentType(uploadFile.getContentType());
+//        metadata.setContentLength(uploadFile.getSize());
+//        metadata.setHeader("filename",uploadFile.getOriginalFilename());
         log.info("파일 이름 나타내기 4번째 : " + uploadFile.getOriginalFilename());
 //        File newFile= new File(uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1)).getAbsoluteFile();
 //        amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile,metadata).withCannedAcl(CannedAccessControlList.PublicRead));
