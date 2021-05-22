@@ -28,8 +28,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class S3Service {
-    private static MultipartFile[] multiparts;
-    private static MultipartFile file;
     private AmazonS3 amazonS3;
     private final BoardImgUrlsRepository boardImgUrlsRepository;
     @Value("AKIA4PAY5UU4VMHS4TMJ")
