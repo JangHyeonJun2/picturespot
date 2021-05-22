@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.sparta.hanghae.picturespot.model.BoardImgUrls;
 import com.sparta.hanghae.picturespot.repository.BoardImgUrlsRepository;
@@ -170,13 +171,14 @@ public class S3Service {
 
 
     private String putS3(File uploadFile, String fileName) throws IOException {
+        ObjectMetadata metadata =new ObjectMetadata();
         log.info("파일 이름 나타내기 3번째 : " + uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
         String substring = uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/") + 1);
-//        Process exec = Runtime.getRuntime().exec("find /home/ec2-user/app/ -name " + substring);
+        Process exec = Runtime.getRuntime().exec("find /home/ec2-user/app/ -name " + substring);
 
         log.info("파일 이름 나타내기 4번째 : " + new File(".").getAbsoluteFile());
         File newFile= new File(uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1)).getAbsoluteFile();
-        amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        amazonS3.putObject(new PutObjectRequest(bucket, fileName, exec.getInputStream(),metadata).withCannedAcl(CannedAccessControlList.PublicRead));
 
 
         return amazonS3.getUrl(bucket, fileName).toString();
