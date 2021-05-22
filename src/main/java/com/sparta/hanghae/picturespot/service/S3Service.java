@@ -190,7 +190,7 @@ public class S3Service {
         metadata.setContentType(multiparts[index].getContentType());
         metadata.setContentLength(multiparts[index].getSize());
         metadata.setHeader("filename",multiparts[index].getOriginalFilename());
-        log.info("파일 이름 나타내기 4번째 : " + multiparts[index].getName());
+        log.info("파일 이름 나타내기 4번째 : " + multiparts[index].getOriginalFilename());
         File newFile= new File(uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1)).getAbsoluteFile();
 //        amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile,metadata).withCannedAcl(CannedAccessControlList.PublicRead));
         amazonS3.putObject(new PutObjectRequest(bucket, fileName,multiparts[index].getInputStream(),metadata ).withCannedAcl(CannedAccessControlList.PublicRead));
