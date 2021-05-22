@@ -174,8 +174,8 @@ public class S3Service {
         String substring = uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/") + 1);
 //        Process exec = Runtime.getRuntime().exec("find /home/ec2-user/app/ -name " + substring);
 
-        log.info("파일 이름 나타내기 4번째 : " + new File(".").getAbsolutePath());
-        File newFile= new File(uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
+        log.info("파일 이름 나타내기 4번째 : " + new File(".").getAbsoluteFile());
+        File newFile= new File(uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1)).getAbsoluteFile();
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
 
 
