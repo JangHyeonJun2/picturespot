@@ -51,11 +51,11 @@ public class S3Service {
                 .withRegion(this.region)
                 .build();
     }
-
+    //board
     public String[] boardUpload(List<MultipartFile> multipartFile, String dirName) throws IOException {
         return changeUploadFileName(multipartFile, dirName);
     }
-
+    //profile
     public String profileUpload(MultipartFile file, String dirName) throws IOException {
         return changeProfileFileName(file, dirName);
     }
