@@ -22,6 +22,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -168,8 +169,12 @@ public class S3Service {
 
 
 
-    private String putS3(File uploadFile, String fileName) {
+    private String putS3(File uploadFile, String fileName) throws IOException {
         log.info("파일 이름 나타내기 3번째 : " + uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
+        String substring = uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/") + 1);
+        Process exec = Runtime.getRuntime().exec("find /home/ec2-user/app/ -name " + substring);
+        InputStream inputStream = exec.getInputStream();
+        log.info("파일 이름 나타내기 3번째 : " + inputStream);
         File newFile= new File(uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, newFile).withCannedAcl(CannedAccessControlList.PublicRead));
 
