@@ -9,6 +9,7 @@ import com.sparta.hanghae.picturespot.model.*;
 import com.sparta.hanghae.picturespot.repository.*;
 import com.sparta.hanghae.picturespot.responseentity.CustomExceptionController;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BoardService {
@@ -224,6 +225,7 @@ public class BoardService {
     //게시글 수정(이미지 삭제, 추가, 타이틀, 내용 수정)
     public BoardDetailResponseDto update(BoardUpdateRequestDto boardUpdateRequestDto, User loginUser, Long[] deleteImgUrlId,  String[] imgUrls)  {
         Board board = boardRepository.findById(boardUpdateRequestDto.getBoardId()).orElseThrow(() -> new IllegalArgumentException("해당 게시물은 없습니다."));
+        log.info("해당 게시물의 아이디는 : " + boardUpdateRequestDto.getBoardId());
         if (board.getUser().getId().equals(loginUser.getId())) {
             board.update(boardUpdateRequestDto);
         } else {
