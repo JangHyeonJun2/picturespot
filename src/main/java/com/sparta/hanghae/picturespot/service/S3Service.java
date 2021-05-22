@@ -214,15 +214,15 @@ public class S3Service {
     private String putS3(MultipartFile uploadFile, String fileName, int index) throws IOException {
         ObjectMetadata metadata =new ObjectMetadata();
         log.info("파일 이름 나타내기 3번째 : " + uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
-        String substring = uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/") + 1);
-        Process exec = Runtime.getRuntime().exec("find /home/ec2-user/app/ -name " + substring);
-        metadata.setContentType(multiparts[index].getContentType());
-        metadata.setContentLength(multiparts[index].getSize());
-        metadata.setHeader("filename",multiparts[index].getOriginalFilename());
-        log.info("파일 이름 나타내기 4번째 : " + multiparts[index].getOriginalFilename());
-        File newFile= new File(uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1)).getAbsoluteFile();
+//        String substring = uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/") + 1);
+//        Process exec = Runtime.getRuntime().exec("find /home/ec2-user/app/ -name " + substring);
+        metadata.setContentType(uploadFile.getContentType());
+        metadata.setContentLength(uploadFile.getSize());
+        metadata.setHeader("filename",uploadFile.getOriginalFilename());
+        log.info("파일 이름 나타내기 4번째 : " + uploadFile.getOriginalFilename());
+//        File newFile= new File(uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1)).getAbsoluteFile();
 //        amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile,metadata).withCannedAcl(CannedAccessControlList.PublicRead));
-        amazonS3.putObject(new PutObjectRequest(bucket, fileName,multiparts[index].getInputStream(),metadata ).withCannedAcl(CannedAccessControlList.PublicRead));
+        amazonS3.putObject(new PutObjectRequest(bucket, fileName,uploadFile.getInputStream(),metadata ).withCannedAcl(CannedAccessControlList.PublicRead));
 
 
         return amazonS3.getUrl(bucket, fileName).toString();
