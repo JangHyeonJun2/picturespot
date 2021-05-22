@@ -105,7 +105,8 @@ public class S3Service {
 
         for (int i=0; i<uploadFile.size(); i++) {
 //            String fileName = uploadFile[i].getName().replace(" ", "");
-            String fileName = uploadFile.get(i).getName().substring(uploadFile.get(i).getName().lastIndexOf('.'));
+            String fileName = uploadFile.get(i).getOriginalFilename().substring(uploadFile.get(i).getName().lastIndexOf('.'));
+            log.info("changeFileName: " + fileName);
             Date date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
             //파일 이름을 다르게 한다. 날짜로만헀는데 for문이 너무 빠르게 돌아서 mmss까지 커버가 안되서 교체!
             UUID uuid = UUID.randomUUID();
