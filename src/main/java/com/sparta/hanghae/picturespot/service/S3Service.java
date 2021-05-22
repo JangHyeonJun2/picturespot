@@ -72,6 +72,10 @@ public class S3Service {
         return upload(uploadFile, dirName);
     }
 
+    public String[] testUpload(List<MultipartFile> multipartFile, String dirName) throws IOException {
+        return changeFileName(multipartFile, dirName);
+    }
+
 
 
     private String[] upload(File[] uploadFile, String dirName) throws IOException {
@@ -90,11 +94,34 @@ public class S3Service {
             String dateFileName = fourteen_format.format(date_now) + fileName;
             String resultFileName = dirName + "/" + subUUID +dateFileName;
             log.info("파일 이름 나타내기 2번째 : "+ uploadFile[0].getName()+" ," + resultFileName);
-            uploadImgUrl[i] = putS3(uploadFile[i],resultFileName,i);
+//            uploadImgUrl[i] = putS3(uploadFile[i],resultFileName,i);
             removeNewFile(uploadFile[i]);
         }
         return uploadImgUrl;
     }
+
+    private String[] changeFileName(List<MultipartFile> uploadFile, String dirName) throws IOException {
+        List<String> uploadImgUrl = new ArrayList<>();
+
+        for (int i=0; i<uploadFile.size(); i++) {
+//            String fileName = uploadFile[i].getName().replace(" ", "");
+            String fileName = uploadFile.get(i).getName().substring(uploadFile.get(i).getName().lastIndexOf('.'));
+            Date date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
+            //파일 이름을 다르게 한다. 날짜로만헀는데 for문이 너무 빠르게 돌아서 mmss까지 커버가 안되서 교체!
+            UUID uuid = UUID.randomUUID();
+            String subUUID = uuid.toString().substring(0, 8);
+            SimpleDateFormat fourteen_format = new SimpleDateFormat("yyyyMMddHHmmss");
+
+            String dateFileName = fourteen_format.format(date_now) + fileName;
+            String resultFileName = dirName + "/" + subUUID +dateFileName;
+            log.info("파일 이름 나타내기 2번째 : "+ uploadFile.get(i).getName()+" ," + resultFileName);
+            uploadImgUrl.add(putS3(uploadFile.get(i),resultFileName,i));
+            log.info("삭제할 파일" + uploadFile.get(i));
+//            removeNewFile(uploadFile.get(i));
+        }
+        return uploadImgUrl.toArray(new String[uploadImgUrl.size()]);
+    }
+
 
     private Optional<File[]> convert(List<MultipartFile> file) throws IOException {
         multiparts = new MultipartFile[file.size()];
@@ -182,7 +209,7 @@ public class S3Service {
 
 
 
-    private String putS3(File uploadFile, String fileName, int index) throws IOException {
+    private String putS3(MultipartFile uploadFile, String fileName, int index) throws IOException {
         ObjectMetadata metadata =new ObjectMetadata();
         log.info("파일 이름 나타내기 3번째 : " + uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
         String substring = uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/") + 1);
