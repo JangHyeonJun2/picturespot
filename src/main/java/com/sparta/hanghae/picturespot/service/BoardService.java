@@ -223,6 +223,7 @@ public class BoardService {
     }
 
     //게시글 수정(이미지 삭제, 추가, 타이틀, 내용 수정)
+    @Transactional
     public BoardDetailResponseDto update(BoardUpdateRequestDto boardUpdateRequestDto, User loginUser, Long[] deleteImgUrlId,  String[] imgUrls)  {
         Board board = boardRepository.findById(boardUpdateRequestDto.getBoardId()).orElseThrow(() -> new IllegalArgumentException("해당 게시물은 없습니다."));
         log.info("해당 게시물의 아이디는 : " + boardUpdateRequestDto.getBoardId());
