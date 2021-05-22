@@ -15,8 +15,10 @@ import com.sparta.hanghae.picturespot.model.BoardImgUrls;
 import com.sparta.hanghae.picturespot.repository.BoardImgUrlsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.dialect.unique.MySQLUniqueDelegate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
@@ -32,6 +34,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class S3Service {
     private final static String PATH = "/home/ec2-user/app/";
+    private static MultipartFile[] multiparts;
     private  AmazonS3 amazonS3;
     private final BoardImgUrlsRepository boardImgUrlsRepository;
     @Value("AKIA4PAY5UU4VMHS4TMJ")
@@ -87,15 +90,17 @@ public class S3Service {
             String dateFileName = fourteen_format.format(date_now) + fileName;
             String resultFileName = dirName + "/" + subUUID +dateFileName;
             log.info("파일 이름 나타내기 2번째 : "+ uploadFile[0].getName()+" ," + resultFileName);
-            uploadImgUrl[i] = putS3(uploadFile[i],resultFileName);
+            uploadImgUrl[i] = putS3(uploadFile[i],resultFileName,i);
             removeNewFile(uploadFile[i]);
         }
         return uploadImgUrl;
     }
 
     private Optional<File[]> convert(List<MultipartFile> file) throws IOException {
+        multiparts = new MultipartFile[file.size()];
         File[] convertFiles = new File[file.size()];
         for (int i=0; i<file.size(); i++) {
+            multiparts[i] = file.get(i);
             convertFiles[i] = new File((PATH+file.get(i).getOriginalFilename()));
             if (!convertFiles[i].exists()) {
                 log.info("파일이 존재하는지? : " + convertFiles[i].exists()+" ,"+convertFiles[i]);
@@ -167,18 +172,27 @@ public class S3Service {
         }
         return Optional.of(convertFile);
     }
+    private String putS3(File uploadFile, String fileName) {
+        amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+
+        return amazonS3.getUrl(bucket, fileName).toString();
+    }
 
 
 
-    private String putS3(File uploadFile, String fileName) throws IOException {
+
+    private String putS3(File uploadFile, String fileName, int index) throws IOException {
         ObjectMetadata metadata =new ObjectMetadata();
         log.info("파일 이름 나타내기 3번째 : " + uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1));
         String substring = uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/") + 1);
         Process exec = Runtime.getRuntime().exec("find /home/ec2-user/app/ -name " + substring);
-
+        metadata.setContentType(multiparts[index].getContentType());
+        metadata.setContentLength(multiparts[index].getSize());
+        metadata.setHeader("filename",multiparts[index].getOriginalFilename());
         log.info("파일 이름 나타내기 4번째 : " + new File(".").getAbsoluteFile());
         File newFile= new File(uploadFile.toString().substring(uploadFile.toString().lastIndexOf("/")+1)).getAbsoluteFile();
-        amazonS3.putObject(new PutObjectRequest(bucket, fileName, exec.getInputStream(),metadata).withCannedAcl(CannedAccessControlList.PublicRead));
+//        amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile,metadata).withCannedAcl(CannedAccessControlList.PublicRead));
+        amazonS3.putObject(new PutObjectRequest(bucket, fileName,multiparts[index].getInputStream(),metadata ).withCannedAcl(CannedAccessControlList.PublicRead));
 
 
         return amazonS3.getUrl(bucket, fileName).toString();
@@ -205,4 +219,5 @@ public class S3Service {
         }
         delete(imgUrls, "board");
     }
+
 }
