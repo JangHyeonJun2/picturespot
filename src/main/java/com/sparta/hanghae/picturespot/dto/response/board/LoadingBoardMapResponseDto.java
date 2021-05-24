@@ -21,7 +21,7 @@ public class LoadingBoardMapResponseDto {
     private Long boardId;
     private double latitude;
     private double longitude;
-    private String spotName;
+    private String spotNames;
     private String category;
     private boolean liked;
     private String writerName;
@@ -38,7 +38,7 @@ public class LoadingBoardMapResponseDto {
 //        this.writerImgUrl = boardEntity.getUser().getImgUrl();
         this.latitude = boardEntity.getLatitude();
         this.longitude = boardEntity.getLongitude();
-        this.spotName = boardEntity.getSpotName();
+        this.spotNames = boardEntity.getSpotName();
         this.category = boardEntity.getCategory();
 //        this.boardDetailCommentDtoList2 = detailCommentsDtos2;
         this.boardImgReponseDtoList = reponseDto2;
