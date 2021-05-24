@@ -234,7 +234,7 @@ public class BoardService {
         }
         deleteImgUrl(deleteImgUrlId);
 
-        //boardImgUrls 의 테이블에 새로운 imgUrls 를 저장.
+        //boardImgUrls 의 테이블에 새로운 imgUrls 를 저장입니다.
         if (imgUrls.length != 0) {
             for (String imgUrl : imgUrls) {
                 BoardImgSaveRequestDto boardImgSaveRequestDto = new BoardImgSaveRequestDto(board, imgUrl);
