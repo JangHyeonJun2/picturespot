@@ -69,6 +69,7 @@ public class BoardController {
         BoardUpdateRequestDto boardUpdateRequestDto = new BoardUpdateRequestDto(boardId,title,content);
         BoardDetailResponseDto updateBoard = boardService.update(boardUpdateRequestDto, findUser, deleteImages, imgUrls);
 
+
         if (updateBoard == null)
             return customExceptionController.error("사용자가 옳바르지 않습니다.");
         else
