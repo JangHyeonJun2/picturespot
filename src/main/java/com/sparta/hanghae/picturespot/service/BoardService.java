@@ -236,7 +236,7 @@ public class BoardService {
         if (deleteImgUrlId != null) {
             for (Long id : deleteImgUrlId) {
                 BoardImgUrls boardImgUrls = boardImgUrlsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이미지가 없습니다."));
-                boardImgUrlsRepository.delete(boardImgUrls);
+                boardImgUrlsRepository.deleteById(boardImgUrls.getId());
             }
         }
 
