@@ -46,3 +46,12 @@ aws.yml
 oauth2.yml
 aws.yml
 application.yml
+application-db.yml
+application.properties
+application.yml
+application-db.yml
+application-mail.yml
+application-oauth2.yml
+application-real.yml
+application-real1.yml
+application-real2.yml

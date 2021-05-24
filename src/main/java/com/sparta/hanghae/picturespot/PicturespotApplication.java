@@ -24,21 +24,21 @@ public class PicturespotApplication {
 //    }
 //
     //main 실행문
-//    public static final String APPLICATION_LOCATIONS = "spring.config.location="
-//            + "classpath:application.yml,"
+    public static final String APPLICATION_LOCATIONS = "spring.config.location="
+            + "classpath:application.yml,"
 //            + "classpath:application-real.yml,"
 //            + "classpath:application-credentials.yml,"
-//            + "classpath:application-oauth2.yml,"
-//            + "classpath:application-mail.yml,"
+            + "classpath:application-oauth2.yml,"
+            + "classpath:application-mail.yml,"
 //            + "classpath:application-aws.yml,"
-//            + "classpath:application-db.yml";
+            + "classpath:application-db.yml";
 
 
     public static void main(String[] args) {
-//        new SpringApplicationBuilder(PicturespotApplication.class)
-//                .properties(APPLICATION_LOCATIONS)
-//                .run(args);
-        SpringApplication.run(PicturespotApplication.class, args);
+        new SpringApplicationBuilder(PicturespotApplication.class)
+                .properties(APPLICATION_LOCATIONS)
+                .run(args);
+//        SpringApplication.run(PicturespotApplication.class, args);
     }
 //    @PostConstruct
 //    public void started(){
