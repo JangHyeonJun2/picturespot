@@ -295,7 +295,7 @@ public class BoardService {
         return boardRepository.findByIdLessThanOrderByIdDesc(lastBoardId,pageRequest);
     }
 
-    @Transactional
+
     public void deleteImgUrl(Long[] deleteImgUrlId) {
         //boardImgUrls 의 테이블에 deleteImgUrl 들을 삭제.
         if (deleteImgUrlId != null) {
