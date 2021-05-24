@@ -117,7 +117,7 @@ public class BoardController {
         List<BoardListGetResponseDto> responseDtoList = boardService.fetchBoardPage(lastBoardId, size, user);
         return customExceptionController.ok("무한스크롤 데이터!!",responseDtoList);
     }
-
+    //사용자 검사
     public  User findUserMethod(UserPrincipal userPrincipal) {
         return userRepository.findById(userPrincipal.getId()).orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
     }
