@@ -232,7 +232,13 @@ public class BoardService {
         } else {
             return null;
         }
-        deleteImgUrl(deleteImgUrlId);
+//        deleteImgUrl(deleteImgUrlId);
+        if (deleteImgUrlId != null) {
+            for (Long id : deleteImgUrlId) {
+                BoardImgUrls boardImgUrls = boardImgUrlsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 이미지가 없습니다."));
+                boardImgUrlsRepository.deleteById(boardImgUrls.getId());
+            }
+        }
 
         //boardImgUrls 의 테이블에 새로운 imgUrls 를 저장.
         if (imgUrls != null) {
