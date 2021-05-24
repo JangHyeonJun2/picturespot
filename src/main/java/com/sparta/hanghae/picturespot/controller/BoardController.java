@@ -58,6 +58,8 @@ public class BoardController {
 
         User findUser = findUserMethod(user);
         //s3에 이미지를 삭제하는 메서드
+        if (deleteImages != null)
+            s3Service.findImgUrls(deleteImages);
         //s3에 이미지 업로드하고 업로드된 이미지 배열
         String[] imgUrls =null;
         if (files != null) {
@@ -66,8 +68,6 @@ public class BoardController {
 
         BoardUpdateRequestDto boardUpdateRequestDto = new BoardUpdateRequestDto(boardId,title,content);
         BoardDetailResponseDto updateBoard = boardService.update(boardUpdateRequestDto, findUser, deleteImages, imgUrls);
-        if (deleteImages != null)
-            s3Service.findImgUrls(deleteImages);
 
 
         if (updateBoard == null)
