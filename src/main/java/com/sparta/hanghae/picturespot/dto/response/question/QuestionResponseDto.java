@@ -13,6 +13,7 @@ import java.util.List;
 public class QuestionResponseDto {
     private Long id;
     private String title;
+    private String content;
     private String writer;
     private long qnaSize;
     private int pageSize;
@@ -25,6 +26,7 @@ public class QuestionResponseDto {
     public QuestionResponseDto(Question question) {
         this.id = question.getId();
         this.title = question.getTitle();
+        this.content = question.getContent();
         this.writer = question.getUser().getNickname();
         this.modified = question.getModified();
     }
@@ -41,6 +43,7 @@ public class QuestionResponseDto {
     public QuestionResponseDto(Question question, List<QCommentResponseDto> qCommentResponseDtos){
         this.id = question.getId();
         this.title = question.getTitle();
+        this.content = question.getContent();
         this.writer = question.getUser().getNickname();
         this.modified = question.getModified();
         this.qcomments = qCommentResponseDtos;

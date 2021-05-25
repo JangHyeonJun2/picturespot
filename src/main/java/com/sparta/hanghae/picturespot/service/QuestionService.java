@@ -41,7 +41,7 @@ public class QuestionService {
         Page<Question> questionList = questionRepository.findAllByOrderByModifiedDesc(pageable);
         List<QuestionResponseDto> questionResponseDtos = new ArrayList<>();
         for (Question question : questionList){
-            QuestionResponseDto questionDto = new QuestionResponseDto(question, questionList.getTotalElements(), questionList.getTotalPages() );
+            QuestionResponseDto questionDto = new QuestionResponseDto(question, questionList.getTotalElements(), questionList.getTotalPages());
             questionResponseDtos.add(questionDto);
         }
         return questionResponseDtos;
