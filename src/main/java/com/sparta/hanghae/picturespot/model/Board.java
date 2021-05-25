@@ -61,7 +61,7 @@ public class Board extends Timestamped{
         this.user = user;
     }
 
-    @Transactional
+//    @Transactional
     public void update(BoardUpdateRequestDto boardUpdateRequestDto) {
         this.title = boardUpdateRequestDto.getTitle();
         this.content = boardUpdateRequestDto.getContent();
