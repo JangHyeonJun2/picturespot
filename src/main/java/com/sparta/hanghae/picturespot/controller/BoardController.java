@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,11 +38,11 @@ public class BoardController {
 
     //게시물 작성
     @PostMapping("/board")
-    public ResponseEntity save(@RequestParam(value = "file", required = false) MultipartFile[] files, @RequestParam("title") String title,
+    public ResponseEntity save(@RequestParam(value = "file", required = false) List<MultipartFile> files, @RequestParam("title") String title,
                                @RequestParam("content") String content, @RequestParam("category") String category, @RequestParam("latitude") double latitude,
                                @RequestParam("longitude") double longitude, @RequestParam("spotName") String spotName, @AuthenticationPrincipal UserPrincipal user) throws IOException {
 
-        String[] imgUrls = s3Service.boardUpload(Arrays.asList(files), "board");
+        List<String> imgUrls = s3Service.boardUpload(files, "board");
 
         User findUser = findUserMethod(user);
         BoardSaveRequestDto boardSaveRequestDto = new BoardSaveRequestDto(title,content,category,latitude,longitude, spotName, findUser);
@@ -51,19 +52,23 @@ public class BoardController {
 
     //    게시글 수정
     @PutMapping("/board/{boardId}")
-    public ResponseEntity update(@PathVariable Long boardId, @RequestParam(value = "file", required = false) MultipartFile[] files,
+    public ResponseEntity update(@PathVariable Long boardId, @RequestParam(value = "file", required = false) List<MultipartFile> files,
                                  @RequestParam("title") String title, @RequestParam("content") String content,
-                                 @RequestParam(value = "deleteImages", required = false) Long[] deleteImages,
+                                 @RequestParam(value = "deleteImages", required = false) List<Long> deleteImages,
                                  @AuthenticationPrincipal UserPrincipal user) throws IOException {
 
         User findUser = findUserMethod(user);
         //s3에 이미지를 삭제하는 메서드
         if (deleteImages != null)
             s3Service.findImgUrls(deleteImages);
+        else {
+            deleteImages = new ArrayList<>();
+        }
         //s3에 이미지 업로드하고 업로드된 이미지 배열
-        String[] imgUrls =null;
-        if (files != null) {
-            imgUrls = s3Service.boardUpload(Arrays.asList(files), "board"); //새로 추가된 이미지 s3에 저장.
+
+        List<String> imgUrls = new ArrayList<>();
+        if (files.size() != 0) {
+            imgUrls = s3Service.boardUpload(files, "board"); //새로 추가된 이미지 s3에 저장.
         }
 
         BoardUpdateRequestDto boardUpdateRequestDto = new BoardUpdateRequestDto(boardId,title,content);

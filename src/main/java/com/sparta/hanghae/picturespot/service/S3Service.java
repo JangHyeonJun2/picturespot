@@ -52,8 +52,10 @@ public class S3Service {
                 .build();
     }
     //board
-    public String[] boardUpload(List<MultipartFile> multipartFile, String dirName) throws IOException {
-        return changeUploadFileName(multipartFile, dirName);
+    public List<String> boardUpload(List<MultipartFile> multipartFile, String dirName) throws IOException {
+        String[] result = changeUploadFileName(multipartFile, dirName);
+        return Arrays.asList(result);
+//        return changeUploadFileName(multipartFile, dirName);
     }
     //profile
     public String profileUpload(MultipartFile file, String dirName) throws IOException {
@@ -137,11 +139,11 @@ public class S3Service {
     }
 
     //삭제할 이미지를 id로 찾고 delete 메서드 호출
-    public void findImgUrls(Long[] deleteImages) throws IOException {
-        BoardImgUrls[] imgUrls = new BoardImgUrls[deleteImages.length]; //id로 찾은 boardImgUrl들을 담을 배열 선언.
+    public void findImgUrls(List<Long> deleteImages) throws IOException {
+        BoardImgUrls[] imgUrls = new BoardImgUrls[deleteImages.size()]; //id로 찾은 boardImgUrl들을 담을 배열 선언.
 
-        for (int i = 0; i < deleteImages.length; i++) {
-            imgUrls[i] = boardImgUrlsRepository.findById(deleteImages[i]).orElseThrow(() -> new IllegalArgumentException("해당 이미지는 없습니다."));
+        for (int i = 0; i < deleteImages.size(); i++) {
+            imgUrls[i] = boardImgUrlsRepository.findById(deleteImages.get(i)).orElseThrow(() -> new IllegalArgumentException("해당 이미지는 없습니다."));
         }
         delete(imgUrls, "board");
     }
