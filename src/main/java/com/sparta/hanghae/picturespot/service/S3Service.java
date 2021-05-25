@@ -184,9 +184,6 @@ public class S3Service {
 //        return Optional.of(convertFile);
 //    }
 
-
-    /* 옛날 코드들 */
-
     //    public String[] upload(List<MultipartFile> multipartFile, String dirName) throws IOException {
 //        //System.out.println("확인!!");
 //        File[] uploadFile = convert(multipartFile)
