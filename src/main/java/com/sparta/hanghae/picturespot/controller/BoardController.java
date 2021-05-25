@@ -58,6 +58,7 @@ public class BoardController {
                                  @AuthenticationPrincipal UserPrincipal user) throws IOException {
 
         User findUser = findUserMethod(user);
+
         //s3에 이미지를 삭제하는 메서드
         if (deleteImages != null)
             s3Service.findImgUrls(deleteImages);
