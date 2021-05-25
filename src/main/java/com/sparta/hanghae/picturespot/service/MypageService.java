@@ -86,7 +86,7 @@ public class MypageService {
     }
 
 
-    //찜 명소(좋아요한 게시물) + 댓글 + 좋아요, 내가 올린 게시물은 제외
+    //찜 명소(좋아요한 게시물) + 좋아요, 내가 올린 게시물은 제외
     public List<MypageResponseDto> getMylikeboard(Long lastId, int size, Long userId, UserPrincipal user) {
         User findUser = userRepository.findById(userId).orElseThrow(
                 ()->new IllegalArgumentException("해당 사용자가 없습니다."));
