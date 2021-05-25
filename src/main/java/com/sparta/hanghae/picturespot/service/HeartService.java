@@ -17,7 +17,7 @@ public class HeartService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
 
-    //좋아요 클릭하기
+    //좋아요 클릭하기입니다.
     @Transactional
     public boolean addHeart(Long boardId, Long userId) {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
