@@ -34,7 +34,7 @@ public class JwtTokenProvider { // 토큰 생성, 검증
         Claims claims = Jwts.claims().setSubject(userPk);
         Date now = new Date();
         // token 발급 후 유효시간 30분 테스트만 임시로 300분
-        long tokenValidTime = 30 * 60 * 10000L;
+        long tokenValidTime = 2 * 60 * 100L;
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
