@@ -7,8 +7,8 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 <br>
 
 #### 팀원
-* Frontend : 허민규, 김다영, 김형민
-* Backend : 장현준, 김승욱, 이세정
+* Frontend : 허민규, 김다영, 김형민 `React`
+* Backend : 장현준, 김승욱, 이세정 `SpringBoot`
 
 #### 진행 기간
 * 21.04.23(금) - 21.05.28(금)
@@ -21,18 +21,19 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 
 ## 개발 환경
 ---
-* Java 8
-* JDK 1.8.0
-* IDE : IntelliJ 
-* Framework : SpringBoot
-* Build Tools : Gradle
-* Server : Amazon EC2 Ubuntu
-* Database : Amazon RDS MariaDB
-* CI/CD : Travis
+* `Java 8`
+* `JDK 1.8.0`
+* IDE : `IntelliJ`
+* Framework : `SpringBoot`
+* Build Tools : `Gradle`
+* Server : `Amazon EC2 Ubuntu`
+* Database : `Amazon RDS MariaDB`
+* CI/CD : `Travis`
 <br>
 
 ## 전체 구조
 ---
+![](https://user-images.githubusercontent.com/55679927/119793545-a778e780-bf11-11eb-946e-581fd2063913.jpeg)
 
 
 ## 주요 기능
