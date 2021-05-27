@@ -1,71 +1,3 @@
-- OAuth2 로그인 흐름
-  - 사용자 측의 브라우저에서 엔드포인트 `http://{도메인}/oauth2/authorize{provider}?redirect_uri={프론트엔드에서 소셜로그인 후 돌아갈 uri}`로 접속하는 것으로 프론트엔드 클라이언트에서 시작된다.
-  - provider 경로 매개변수는 naver, google, kakao중 하나이다.
-  - OAuth2 콜백으로 인해 오류가 발생하면 스프링 시큐리티는 설정해놓은 oAuth2AuthenticationFailureHandler를 호출한다.
-  - OAuth2 콜백이 성공하고 인증 코드가 포함 된 경우 Spring Security는 access_token에 대한 authorization_code를 교환하고 Security에 지정된 customOAuth2UserService를 호출한다.
-  - customOAuth2UserService는 인증된 사용자의 세부 정보를 검색하고 데이터베이스에 새 항목을 작성하거나 동일한 이메일의 정보를 찾아 기존 항목을 업데이트 한다.
-  - 마지막으로 oAuth2AuthenticationSuccessHandler가 호출된다. 사용자에 대한 JWT 인증 토큰을 만들고 쿼리 문자열로 JWT 토큰과 함께 사용자를 redirect_uri로 보낸다.
-
-
-![소셜로그인 로직](https://user-images.githubusercontent.com/70622731/119793333-74ceef00-bf11-11eb-9c9e-61286f6c2c0d.jpg)
-
-
-- security 설정
-
-  - authoriztionEndpoint()를 `/oauth2/authorize`로 지정한다.
-  - redirectionEndpoint()를 `/login/oauth2/code/*`로 지정한다.
-  - 성공했을경우 succesHandler로 보낸다.
-  - 실패했을경우 failureHandler로 보낸다.
-
-    ![security 캡쳐](https://user-images.githubusercontent.com/70622731/119793494-9def7f80-bf11-11eb-9ad5-6ff23a711ec0.PNG)
-
-
-
-- customOAuth2UserService
-
-  - oauth2 를 통해 로그인한 사용자 정보를 받아서 저장하는 역할을 한다.
-
-    ![CustomOAuth2UserService](https://user-images.githubusercontent.com/70622731/119793798-e0b15780-bf11-11eb-9aaa-8b4d834a8cfa.PNG)
-
-
-
-- OAuth2UserInfoFactory
-
-  - customOAuth2UserService에서 받은 provider가 google, naver, kakao중에 어떤것인지 판단해 맞는 객체를 생성한다.
-
-    ![OAuth2UserInfoFactory 캡쳐](https://user-images.githubusercontent.com/70622731/119793908-f7f04500-bf11-11eb-9d38-1af66fdbb7aa.PNG)
-
-
-
-- oAuth2AuthenticationSuccessHandler
-
-  - jwt 토큰을 생성하고 사용자가 지정한 redirect_uri에 queryParam으로 token을 담아서 보내준다.
-
-    ![oAuth2AuthenticationSuccessHandler](https://user-images.githubusercontent.com/70622731/119793963-063e6100-bf12-11eb-9b6e-641cb6c906b4.PNG)
-
-
-
-- UserPrincipal
-
-  - OAuth2로 로그인한 사용자도 담아주기 위해서 UserPrincipal에서 OAuth2User도 implements한다.
-
-    ![UserPrincipal](https://user-images.githubusercontent.com/70622731/119793999-10f8f600-bf12-11eb-8777-366951c3eaaa.PNG)
-
-
-
-- oauth2.yml
-  - oauth2에 대한 설정을 yml에 다해준다. 구글, 페이스북, 깃허브 같이 oauth2에 provider들은 provider를 따로 써줄필요 없는데 국내 소셜로그인 네이버, 카카오 같은 경우는 oauth2에 provider로 등록이 안되어 있기 때문에 yml에 provider에 대한 설정도 같이 넣어줘야한다.
-
-
-
-### Reference
-
-http://yoonbumtae.com/?p=3000
-
-
-
-------
-
 
 
 # SFlash 회원가입, 로그인, jwt 정리
@@ -150,3 +82,73 @@ http://yoonbumtae.com/?p=3000
 - 관리자 회원가입
 
   - 기존 회원가입 방식에서 adminToken을 추가해서 회원가입을 하게되면 ADMIN role을 추가해서 관리자로 회원가입 시킨다.
+
+# OAuth2 소셜로그인
+
+- OAuth2 로그인 흐름
+  - 사용자 측의 브라우저에서 엔드포인트 `http://{도메인}/oauth2/authorize{provider}?redirect_uri={프론트엔드에서 소셜로그인 후 돌아갈 uri}`로 접속하는 것으로 프론트엔드 클라이언트에서 시작된다.
+  - provider 경로 매개변수는 naver, google, kakao중 하나이다.
+  - OAuth2 콜백으로 인해 오류가 발생하면 스프링 시큐리티는 설정해놓은 oAuth2AuthenticationFailureHandler를 호출한다.
+  - OAuth2 콜백이 성공하고 인증 코드가 포함 된 경우 Spring Security는 access_token에 대한 authorization_code를 교환하고 Security에 지정된 customOAuth2UserService를 호출한다.
+  - customOAuth2UserService는 인증된 사용자의 세부 정보를 검색하고 데이터베이스에 새 항목을 작성하거나 동일한 이메일의 정보를 찾아 기존 항목을 업데이트 한다.
+  - 마지막으로 oAuth2AuthenticationSuccessHandler가 호출된다. 사용자에 대한 JWT 인증 토큰을 만들고 쿼리 문자열로 JWT 토큰과 함께 사용자를 redirect_uri로 보낸다.
+
+
+![소셜로그인 로직](https://user-images.githubusercontent.com/70622731/119793333-74ceef00-bf11-11eb-9c9e-61286f6c2c0d.jpg)
+
+
+- security 설정
+
+  - authoriztionEndpoint()를 `/oauth2/authorize`로 지정한다.
+  - redirectionEndpoint()를 `/login/oauth2/code/*`로 지정한다.
+  - 성공했을경우 succesHandler로 보낸다.
+  - 실패했을경우 failureHandler로 보낸다.
+
+    ![security 캡쳐](https://user-images.githubusercontent.com/70622731/119793494-9def7f80-bf11-11eb-9ad5-6ff23a711ec0.PNG)
+
+
+
+- customOAuth2UserService
+
+  - oauth2 를 통해 로그인한 사용자 정보를 받아서 저장하는 역할을 한다.
+
+    ![CustomOAuth2UserService](https://user-images.githubusercontent.com/70622731/119793798-e0b15780-bf11-11eb-9aaa-8b4d834a8cfa.PNG)
+
+
+
+- OAuth2UserInfoFactory
+
+  - customOAuth2UserService에서 받은 provider가 google, naver, kakao중에 어떤것인지 판단해 맞는 객체를 생성한다.
+
+    ![OAuth2UserInfoFactory 캡쳐](https://user-images.githubusercontent.com/70622731/119793908-f7f04500-bf11-11eb-9d38-1af66fdbb7aa.PNG)
+
+
+
+- oAuth2AuthenticationSuccessHandler
+
+  - jwt 토큰을 생성하고 사용자가 지정한 redirect_uri에 queryParam으로 token을 담아서 보내준다.
+
+    ![oAuth2AuthenticationSuccessHandler](https://user-images.githubusercontent.com/70622731/119793963-063e6100-bf12-11eb-9b6e-641cb6c906b4.PNG)
+
+
+
+- UserPrincipal
+
+  - OAuth2로 로그인한 사용자도 담아주기 위해서 UserPrincipal에서 OAuth2User도 implements한다.
+
+    ![UserPrincipal](https://user-images.githubusercontent.com/70622731/119793999-10f8f600-bf12-11eb-8777-366951c3eaaa.PNG)
+
+
+
+- oauth2.yml
+  - oauth2에 대한 설정을 yml에 다해준다. 구글, 페이스북, 깃허브 같이 oauth2에 provider들은 provider를 따로 써줄필요 없는데 국내 소셜로그인 네이버, 카카오 같은 경우는 oauth2에 provider로 등록이 안되어 있기 때문에 yml에 provider에 대한 설정도 같이 넣어줘야한다.
+
+
+
+### Reference
+
+http://yoonbumtae.com/?p=3000
+
+
+
+------
