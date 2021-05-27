@@ -79,7 +79,7 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 
 - 로그인/회원가입 flow chart
 
-  ![로그인,회원가입 flow chart4](https://user-images.githubusercontent.com/70622731/119794137-3ab21d00-bf12-11eb-8344-446965e1d39d.PNG)
+  <img src = "https://user-images.githubusercontent.com/70622731/119794137-3ab21d00-bf12-11eb-8344-446965e1d39d.PNG" width="50%">
 
   
 
@@ -138,6 +138,8 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 - 관리자 회원가입
 
   - 기존 회원가입 방식에서 adminToken을 추가해서 회원가입을 하게되면 ADMIN role을 추가해서 관리자로 회원가입 시킨다.
+
+
 
 ### OAuth2 소셜로그인
 
