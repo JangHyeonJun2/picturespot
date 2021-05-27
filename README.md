@@ -1,15 +1,14 @@
-# SFlash
+# SFlash ✨
 <br>
 
-## 프로젝트 소개
----
+## 💡 프로젝트 소개
 SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 <br>
 
 #### 팀원
 * Frontend : 허민규, 김다영, 김형민 `React`
 * Backend : 장현준, 김승욱, 이세정 `SpringBoot`
-* Designer: 송은정, 임아현
+* Designer : 송은정, 임아현
 
 #### 진행 기간
 * 21.04.23(금) - 21.05.28(금)
@@ -20,8 +19,7 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 <br>
 
 
-## 개발 환경
----
+## 💡 개발 환경
 * `Java 8`
 * `JDK 1.8.0`
 * IDE : `IntelliJ`
@@ -32,13 +30,11 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 * CI/CD : `Travis`
 <br>
 
-## 전체 구조
----
+## 💡 전체 구조
 ![](https://user-images.githubusercontent.com/55679927/119793545-a778e780-bf11-11eb-946e-581fd2063913.jpeg)
 
 
-## 주요 기능
----
+## 💡 주요 기능
 * 로그인, 회원가입
 * 소셜 로그인
 * 게시글 CRUD
@@ -50,14 +46,7 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 * 문의하기 답변 CRUD
 <br>
 
-## DB 설계
----
-
-
-## 기능구현
---- 
-### SFlash 회원가입, 로그인, jwt 정리
-
+### ▶ SFlash 회원가입, 로그인, jwt 정리
 - jwt 토큰
 
   - 로그인 요청이 들어온 후 정보가 맞으면 jwtTokenProvider에서 createToken 함수를 이용해서 jwt 토큰을 생성한다.
@@ -201,7 +190,221 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 - oauth2.yml
   - oauth2에 대한 설정을 yml에 다해준다. 구글, 페이스북, 깃허브 같이 oauth2에 provider들은 provider를 따로 써줄필요 없는데 국내 소셜로그인 네이버, 카카오 같은 경우는 oauth2에 provider로 등록이 안되어 있기 때문에 yml에 provider에 대한 설정도 같이 넣어줘야한다.
 
-------
+<br>
+
+### ▶ 마이페이지
+
+* 프로필 정보
+   * `/profile/{userId}`
+   * url의 `userId`로 유저를 찾아 ProfileResponseDto를 리턴
+  
+```java
+@Getter
+@NoArgsConstructor
+public class ProfileResponseDto {
+    private Long userId;
+    private String nickname;
+    private String imgUrl;
+    private String introduceMsg;
+
+    public ProfileResponseDto(User editUser){
+        this.userId = editUser.getId();
+        this.nickname = editUser.getNickname();
+        this.imgUrl = editUser.getImgUrl();
+        this.introduceMsg = editUser.getIntroduceMsg();
+    }
+
+}
+```
+
+* 유저가 업로드 한 게시물
+   * `/story/{userId}/board`
+   * 무한 스크롤 방식 적용
+   * 유저가 `null`일 경우는 비로그인 회원이 다른 사람의 페이지를 방문했을 경우이므로, 좋아요의 체크 여부를 `false`로 하여 반환
+   
+* 유저가 좋아요 한 게시물
+   * `/story/{userId}/likeboard`
+   * 무한 스크롤 방식 적용
+   * 좋아요 한 게시물 중 유저가 업로드한 게시물은 제외
+   * 유저가 `null`일 경우는 비로그인 회원이 다른 사람의 페이지를 방문했을 경우이므로, 좋아요의 체크 여부를 `false`로 하여 반환
+
+```java
+@Getter
+@NoArgsConstructor
+public class MypageResponseDto {
+
+    //board
+    private Long boardId;
+    private double latitude;
+    private double longitude;
+    private String spotName;
+    private String category;
+    private List<BoardImgCommonRequestDto> boardImgResponseDtoList = new ArrayList<>();
+
+    //heart
+    private boolean liked;
+    private int likeCount;
+
+    @Builder
+    public MypageResponseDto(Board boardEntity, boolean likeCheck, int likeCount, List<BoardImgCommonRequestDto> responseDto) {
+
+        //board 정보
+        this.boardId = boardEntity.getId();
+        this.category = boardEntity.getCategory();
+        this.latitude = boardEntity.getLatitude();
+        this.longitude = boardEntity.getLongitude();
+        this.spotName = boardEntity.getSpotName();
+
+        //이미지
+        this.boardImgResponseDtoList = responseDto;
+
+        //좋아요
+        this.liked = likeCheck;
+        this.likeCount = likeCount;
+
+        }
+    }
+```
+
+* 프로필 편집
+   * 프로필 이미지, 소개 메시지
+      * `/editmyprofile/{userId}`
+      * `userId`와 token 속 user를 비교하여 본인만 편집 가능
+      * 프로필 이미지를 변경하지 않는 경우에는 imgUrl에 유저의 기존 imgUrl로 설정
+      * 프로필 이미지 파일을 받은 경우에는  
+          * 기존 파일 이름을 변경. 공백 제거, `.확장자` 앞의 문자 제거 ---> 고유식별자 + 날짜
+          * S3에 업로드
+```java
+public String profileUpload(MultipartFile file, String dirName) throws IOException {
+        return changeProfileFileName(file, dirName);
+    }
+
+private String changeProfileFileName(MultipartFile uploadFile, String dirName) throws IOException {
+
+        String replace = uploadFile.getOriginalFilename().replace(" ", ""); //공백 다 없애기
+        log.info("changeFileName1: " + uploadFile.getOriginalFilename());
+        String fileName = replace.substring(uploadFile.getOriginalFilename().lastIndexOf('.')); //.png 즉, 확장자와 . 앞에 문자 다 없애기
+        log.info("=======새로운 fileName : " + fileName);
+        log.info("changeFileName2: " + fileName);
+        Date date_now = new Date(System.currentTimeMillis()); // 현재시간을 가져와 Date형으로 저장한다
+
+        //파일 이름을 다르게 한다. 날짜로만헀는데 for문이 너무 빠르게 돌아서 mmss까지 커버가 안되서 교체!
+        UUID uuid = UUID.randomUUID();
+        String subUUID = uuid.toString().substring(0, 8); //16자리로 생성되는데 너무 길어서 8자리로 짜름!
+        SimpleDateFormat fourteen_format = new SimpleDateFormat("yyyyMMddHHmmss");
+        String dateUuidFileName = subUUID + fourteen_format.format(date_now) + fileName;
+        String resultFileName = dirName + "/" + dateUuidFileName;
+        log.info("파일 이름 나타내기 2번째 : " + uploadFile.getName() + " ," + resultFileName);
+        String uploadImgUrl = putS3Aws(uploadFile, resultFileName);
+
+        return uploadImgUrl;
+    }
+
+    private String putS3Aws(MultipartFile uploadFile, String fileName) throws IOException {
+        ObjectMetadata metadata = new ObjectMetadata();
+        amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile.getInputStream(), metadata).withCannedAcl(CannedAccessControlList.PublicRead));
+        return amazonS3.getUrl(bucket, fileName).toString();
+    }
+```
+
+   * 닉네임
+      * `/editnickname/{userId}`
+      * 닉네임 중복확인을 먼저 거치기
+      * 본인만 편집 가능
+      
+   * 비밀번호 변경
+      * `/editpwd/{userId}`
+      * 본인만 변경 가능
+      * PasswordRequestDto에서 `@NotBlank`, `@Pattern` 어노테이션으로 validation체크. 회원가입 시 비밀번호 세팅과 동일하게 맞춰줌
+      * `BCryptPasswordEncoder.matches`를 이용하여 원래 비밀번호와 입력 비밀번호가 같은 지 확인
+      
+ ```java
+@Getter
+@NoArgsConstructor
+public class PasswordRequestDto {
+    @NotBlank(message = "비밀번호를 비워둘 수 없습니다.")
+    private String pwd;
+
+    @NotBlank(message = "비밀번호를 비워둘 수 없습니다.")
+    @Pattern(regexp = "^(?=.*[a-zA-Z])((?=.*\\d)|(?=.*\\W)).{10,}$",
+            message = "비밀번호 형식을 지켜주세요")
+    private String newPwd;
+
+    @NotBlank(message = "비밀번호 체크를 비워둘 수 없습니다.")
+    private String pwdChk;
+}
+```
+<br>
+
+### ▶ 문의하기 게시판
+
+<b>게시글</b>
+
+* 게시글 리스트
+   * `/qna`
+   * 페이지네이션 적용
+   * QuestionResponseDto에 content제거(본인만 상세페이지 확인 가능하므로)
+   * 전체 데이터 수와 필요한 페이지 수 함께 리턴
+```java
+public QuestionResponseDto(Question question, Long qnaSize, int pageSize) {
+        this.id = question.getId();
+        this.title = question.getTitle();
+        this.writer = question.getUser().getNickname();
+        this.modified = question.getModified();
+        this.qnaSize = qnaSize;
+        this.pageSize = pageSize;
+    }
+```
+
+* 게시글 상세보기
+   * `/qna/{qnaId}/detail`
+   * 게시글에 연관된 댓글도 함께 리턴
+   
+* 게시글 작성
+  * `/qna`
+  * QuestionRequestDto에 `@NotBlank`어노테이션을 이용하여 validation 체크. 비어있을 경우 message리턴
+```java
+@Getter
+@NoArgsConstructor
+public class QuestionRequestDto {
+    private Long id;
+
+    @NotBlank(message = "제목을 입력해주세요.")
+    private String title;
+
+    @NotBlank(message = "내용을 입력해주세요.")
+    private String content;
+
+    private Long userId;
+}
+```
+
+* 게시글 수정
+   * `/qna/{qnaId}`
+   * 본인만 수정 가능
+   * `@NotBlank` validation체크
+   
+* 게시글 삭제
+   * `/qna/{qnaId}`
+   * 본인만 삭제 가능
+   * `cascade = CascadeType.REMOVE`으로 게시글에 연관된 댓글 함께 삭제
+
+<b>댓글</b>
+
+ * 게시글과 `@ManyToOne` mapping
+ * configure에 다음 조건 추가하여 관리자만 접근 가능
+   ```java
+   .antMatchers(HttpMethod.POST,"/qcomment/**").hasRole("ADMIN")
+   .antMatchers(HttpMethod.PUT,"/qcomment/**").hasRole("ADMIN")
+   .antMatchers(HttpMethod.DELETE,"/qcomment/**").hasRole("ADMIN")
+   ```
+ * service에서 role 한번 더 검증
+ * 댓글 작성 : `/qcomment/{qnaId}`
+ * 댓글 수정 :  `/qcomment/{qcommentId}/qna/{qnaId}`   
+ * 댓글 삭제 : `/qcomment/{qcommentId}/qna/{qnaId}`
+
+<br>
+<br>
 
 ### Reference
 
