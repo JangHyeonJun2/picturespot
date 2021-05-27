@@ -27,6 +27,7 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 * Build Tools : `Gradle`
 * Server : `Amazon EC2 Ubuntu`
 * Database : `Amazon RDS MariaDB`
+* File Storage: `AWS S3 Bucket`
 * CI/CD : `Travis`
 <br>
 
