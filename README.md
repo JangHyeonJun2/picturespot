@@ -2,7 +2,6 @@
 <br>
 
 ## 프로젝트 소개
----
 SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 <br>
 
@@ -21,7 +20,6 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 
 
 ## 개발 환경
----
 * `Java 8`
 * `JDK 1.8.0`
 * IDE : `IntelliJ`
@@ -33,12 +31,10 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 <br>
 
 ## 전체 구조
----
 ![](https://user-images.githubusercontent.com/55679927/119793545-a778e780-bf11-11eb-946e-581fd2063913.jpeg)
 
 
 ## 주요 기능
----
 * 로그인, 회원가입
 * 소셜 로그인
 * 게시글 CRUD
@@ -50,14 +46,7 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 * 문의하기 답변 CRUD
 <br>
 
-## DB 설계
----
-
-
-## 기능구현
---- 
-### SFlash 회원가입, 로그인, jwt 정리
-
+### ▶ SFlash 회원가입, 로그인, jwt 정리
 - jwt 토큰
 
   - 로그인 요청이 들어온 후 정보가 맞으면 jwtTokenProvider에서 createToken 함수를 이용해서 jwt 토큰을 생성한다.
@@ -199,7 +188,104 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 - oauth2.yml
   - oauth2에 대한 설정을 yml에 다해준다. 구글, 페이스북, 깃허브 같이 oauth2에 provider들은 provider를 따로 써줄필요 없는데 국내 소셜로그인 네이버, 카카오 같은 경우는 oauth2에 provider로 등록이 안되어 있기 때문에 yml에 provider에 대한 설정도 같이 넣어줘야한다.
 
-------
+<br>
+
+### ▶ 마이페이지
+
+* 프로필 정보
+   * `/profile/{userId}`
+   * url의 `userId`로 유저를 찾아 ProfileResponseDto를 리턴
+  
+```java
+@Getter
+@NoArgsConstructor
+public class ProfileResponseDto {
+    private Long userId;
+    private String nickname;
+    private String imgUrl;
+    private String introduceMsg;
+
+    public ProfileResponseDto(User editUser){
+        this.userId = editUser.getId();
+        this.nickname = editUser.getNickname();
+        this.imgUrl = editUser.getImgUrl();
+        this.introduceMsg = editUser.getIntroduceMsg();
+    }
+
+}
+```
+
+* 유저가 업로드 한 게시물
+   * `/story/{userId}/board`
+   * 무한 스크롤 방식 적용
+   * 유저가 `null`일 경우는 비로그인 회원이 다른 사람의 페이지를 방문했을 경우이므로, 좋아요의 체크 여부를 `false`로 하여 반환
+   
+* 유저가 좋아요 한 게시물
+   * `/story/{userId}/likeboard`
+   * 무한 스크롤 방식 적용
+   * 좋아요 한 게시물 중 유저가 업로드한 게시물은 제외
+   * 유저가 `null`일 경우는 비로그인 회원이 다른 사람의 페이지를 방문했을 경우이므로, 좋아요의 체크 여부를 `false`로 하여 반환
+
+```java
+@Getter
+@NoArgsConstructor
+public class MypageResponseDto {
+
+    //board
+    private Long boardId;
+    private double latitude;
+    private double longitude;
+    private String spotName;
+    private String category;
+    private List<BoardImgCommonRequestDto> boardImgResponseDtoList = new ArrayList<>();
+
+    //heart
+    private boolean liked;
+    private int likeCount;
+
+    @Builder
+    public MypageResponseDto(Board boardEntity, boolean likeCheck, int likeCount, List<BoardImgCommonRequestDto> responseDto) {
+
+        //board 정보
+        this.boardId = boardEntity.getId();
+        this.category = boardEntity.getCategory();
+        this.latitude = boardEntity.getLatitude();
+        this.longitude = boardEntity.getLongitude();
+        this.spotName = boardEntity.getSpotName();
+
+        //이미지
+        this.boardImgResponseDtoList = responseDto;
+
+        //좋아요
+        this.liked = likeCheck;
+        this.likeCount = likeCount;
+
+        }
+    }
+```
+
+* 프로필 편집
+   * 프로필 이미지, 소개 메시지
+      * `/editmyprofile/{userId}`
+      * `userId`와 token 속 user를 비교하여 본인만 편집 가능
+      * 프로필 이미지를 변경하지 않는 경우에는 imgUrl에 유저의 기존 imgUrl로 설정
+      * 프로필 이미지 파일을 받은 경우에는  
+          * 기존 파일 이름을 변경. 공백 제거, `.확장자` 앞의 문자 제거 ---> 고유식별자 + 날짜
+          * S3에 업로드
+   * 닉네임
+      * `/editnickname/{userId}`
+      * 닉네임 중복확인을 먼저 거치기
+      * 본인만 편집 가능
+      
+   * 비밀번호 변경
+      * `/editpwd/{userId}`
+      * 본인만 변경 가능
+      * PasswordRequestDto에서 `@NotBlank`, `@Pattern` 어노테이션으로 validation체크. 회원가입 시 비밀번호 세팅과 동일하게 맞춰줌
+      * `BCryptPasswordEncoder.matches`를 이용하여 원래 비밀번호와 입력 비밀번호가 같은 지 확인
+
+
+<br>
+<br>
 
 ### Reference
 
