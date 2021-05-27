@@ -276,8 +276,7 @@ public class MypageResponseDto {
 public String profileUpload(MultipartFile file, String dirName) throws IOException {
         return changeProfileFileName(file, dirName);
     }
-```
-```java
+
 private String changeProfileFileName(MultipartFile uploadFile, String dirName) throws IOException {
 
         String replace = uploadFile.getOriginalFilename().replace(" ", ""); //공백 다 없애기
@@ -298,8 +297,7 @@ private String changeProfileFileName(MultipartFile uploadFile, String dirName) t
 
         return uploadImgUrl;
     }
-```
-```java
+
     private String putS3Aws(MultipartFile uploadFile, String fileName) throws IOException {
         ObjectMetadata metadata = new ObjectMetadata();
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile.getInputStream(), metadata).withCannedAcl(CannedAccessControlList.PublicRead));
