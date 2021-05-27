@@ -79,13 +79,13 @@ SFlash 는 자신만의 스팟을 저장하고 공유하는 서비스입니다.
 
 - 로그인/회원가입 flow chart
 
-  <img src = "https://user-images.githubusercontent.com/70622731/119794137-3ab21d00-bf12-11eb-8344-446965e1d39d.PNG" width="50%">
+  <img src = "https://user-images.githubusercontent.com/70622731/119794137-3ab21d00-bf12-11eb-8344-446965e1d39d.PNG" width="70%">
 
   
 
 - 이메일/비밀번호 찾기 flow chart
 
-  ![이메일, 비밀번호 찾기 flow chart3](https://user-images.githubusercontent.com/70622731/119794165-41d92b00-bf12-11eb-9db0-2be808ef4b73.PNG)
+  <img src = "https://user-images.githubusercontent.com/70622731/119794165-41d92b00-bf12-11eb-9db0-2be808ef4b73.PNG" width="80%">
 
   
 
