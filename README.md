@@ -94,7 +94,7 @@
   - 마지막으로 oAuth2AuthenticationSuccessHandler가 호출된다. 사용자에 대한 JWT 인증 토큰을 만들고 쿼리 문자열로 JWT 토큰과 함께 사용자를 redirect_uri로 보낸다.
 
 
-![소셜로그인 로직](https://user-images.githubusercontent.com/70622731/119793333-74ceef00-bf11-11eb-9c9e-61286f6c2c0d.jpg)
+    <img src = "https://user-images.githubusercontent.com/70622731/119793333-74ceef00-bf11-11eb-9c9e-61286f6c2c0d.jpg" width="60%">
 
 
 - security 설정
