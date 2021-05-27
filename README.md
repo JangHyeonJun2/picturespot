@@ -308,7 +308,7 @@ private String changeProfileFileName(MultipartFile uploadFile, String dirName) t
     }
 ```
 
-   * 닉네임 
+   * 닉네임 변경
       * `/editnickname/{userId}`
       * 닉네임 중복확인을 먼저 거치기
       * 본인만 편집 가능
