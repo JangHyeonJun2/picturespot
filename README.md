@@ -337,6 +337,9 @@ public class PasswordRequestDto {
 <br>
 
 ### ▶ 문의하기 게시판
+
+<b>게시글</b>
+
 * 게시글 리스트
    * `/qna`
    * 페이지네이션 적용
@@ -386,19 +389,19 @@ public class QuestionRequestDto {
    * 본인만 삭제 가능
    * `cascade = CascadeType.REMOVE`으로 게시글에 연관된 댓글 함께 삭제
 
-* 댓글 작성
-   * `/qcomment/{qnaId}`
-   * configure에 다음 조건 추가하여 관리자만 접근 가능
+<b>댓글</b>
+
+ * 게시글과 `@ManyToOne` mapping
+ * configure에 다음 조건 추가하여 관리자만 접근 가능
    ```java
    .antMatchers(HttpMethod.POST,"/qcomment/**").hasRole("ADMIN")
    .antMatchers(HttpMethod.PUT,"/qcomment/**").hasRole("ADMIN")
    .antMatchers(HttpMethod.DELETE,"/qcomment/**").hasRole("ADMIN")
    ```
-   * service에서 role 한번 더 검증
- * 댓글 수정
-    * 관리자만 수정 가능
- * 댓글 삭제
-    * 관리자만 
+ * service에서 role 한번 더 검증
+ * 댓글 작성 : `/qcomment/{qnaId}`
+ * 댓글 수정 :  `/qcomment/{qcommentId}/qna/{qnaId}`   
+ * 댓글 삭제 : `/qcomment/{qcommentId}/qna/{qnaId}`
 
 <br>
 <br>
