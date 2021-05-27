@@ -1,6 +1,6 @@
+## 기능구현
 
-
-# SFlash 회원가입, 로그인, jwt 정리
+### SFlash 회원가입, 로그인, jwt 정리
 
 - jwt 토큰
 
@@ -83,7 +83,7 @@
 
   - 기존 회원가입 방식에서 adminToken을 추가해서 회원가입을 하게되면 ADMIN role을 추가해서 관리자로 회원가입 시킨다.
 
-# OAuth2 소셜로그인
+### OAuth2 소셜로그인
 
 - OAuth2 로그인 흐름
   - 사용자 측의 브라우저에서 엔드포인트 `http://{도메인}/oauth2/authorize{provider}?redirect_uri={프론트엔드에서 소셜로그인 후 돌아갈 uri}`로 접속하는 것으로 프론트엔드 클라이언트에서 시작된다.
@@ -143,7 +143,7 @@
 - oauth2.yml
   - oauth2에 대한 설정을 yml에 다해준다. 구글, 페이스북, 깃허브 같이 oauth2에 provider들은 provider를 따로 써줄필요 없는데 국내 소셜로그인 네이버, 카카오 같은 경우는 oauth2에 provider로 등록이 안되어 있기 때문에 yml에 provider에 대한 설정도 같이 넣어줘야한다.
 
-
+------
 
 ### Reference
 
@@ -151,4 +151,3 @@ http://yoonbumtae.com/?p=3000
 
 
 
-------
