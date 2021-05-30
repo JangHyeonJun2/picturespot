@@ -58,11 +58,20 @@ SFlash(Spot + Flash)는 전국의 명소들을 사진과 지도로 한눈에 볼
 
 
 
-| [로그인/회원가입](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#-sflash-%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85-%EB%A1%9C%EA%B7%B8%EC%9D%B8-jwt-%EC%A0%95%EB%A6%AC) | [이메일/비밀번호 찾기](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#-%EC%9D%B4%EB%A9%94%EC%9D%BC%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8-%EC%B0%BE%EA%B8%B0) | [소셜 로그인](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#-oauth2-%EC%86%8C%EC%85%9C%EB%A1%9C%EA%B7%B8%EC%9D%B8) | 게시글 CRUD                                                  | 다중 이미지 업로드                                           |
+
+
+
+
+| [로그인/회원가입](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#-sflash-%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85-%EB%A1%9C%EA%B7%B8%EC%9D%B8-jwt-%EC%A0%95%EB%A6%AC) | [이메일/비밀번호 찾기](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#-%EC%9D%B4%EB%A9%94%EC%9D%BC%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8-%EC%B0%BE%EA%B8%B0) | [소셜 로그인](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#-oauth2-%EC%86%8C%EC%85%9C%EB%A1%9C%EA%B7%B8%EC%9D%B8) | [게시글 CRUD](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C/_edit#%EA%B2%8C%EC%8B%9C%EA%B8%80-%EC%9E%91%EC%84%B1) | [다중 이미지 업로드](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#%EB%8B%A4%EC%A4%91-%EC%9D%B4%EB%AF%B8%EC%A7%80-%EC%97%85%EB%A1%9C%EB%93%9C) |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | [![2021-05-31-4-54-56.png](https://i.postimg.cc/qBspRJK7/2021-05-31-4-54-56.png )](https://postimg.cc/gr2CtPN9) | [![2021-05-31-4-56-35.png](https://i.postimg.cc/DwD96HGD/2021-05-31-4-56-35.png )](https://postimg.cc/G4FghMqJ) | ![2021-05-31-4-54-56.png](https://i.postimg.cc/qBspRJK7/2021-05-31-4-54-56.png ) | [![2021-05-31-4-58-55.png](https://i.postimg.cc/qq3ht98T/2021-05-31-4-58-55.png)](https://postimg.cc/N2QfSCJJ) | [![2021-05-31-5-00-07.png](https://i.postimg.cc/g2DssB7p/2021-05-31-5-00-07.png )](https://postimg.cc/Wdd0bSjY) |
-| **댓글CRUD**                                                 | **좋아요**                                                   | **프로필 편집**                                              | [**문의하기 CRUD**](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#-%EB%AC%B8%EC%9D%98%ED%95%98%EA%B8%B0-%EA%B2%8C%EC%8B%9C%ED%8C%90) | [**문의하기 답변 CRUD**](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#%EB%8C%93%EA%B8%80) |
+| [**댓글CRUD**](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#%EB%8C%93%EA%B8%80crud) | [**좋아요**](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#%EC%A2%8B%EC%95%84%EC%9A%94) | [**프로필 편집**](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#-%EB%A7%88%EC%9D%B4%ED%8E%98%EC%9D%B4%EC%A7%80) | [**문의하기 CRUD**](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#-%EB%AC%B8%EC%9D%98%ED%95%98%EA%B8%B0-%EA%B2%8C%EC%8B%9C%ED%8C%90) | [**문의하기 답변 CRUD**](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#%EB%8C%93%EA%B8%80) |
 | [![2021-05-31-5-01-11.png](https://i.postimg.cc/vZ37fx1H/2021-05-31-5-01-11.png )](https://postimg.cc/3k0DHRCP) | [![2021-05-31-5-02-05.png](https://i.postimg.cc/tTPVSsg6/2021-05-31-5-02-05.png )](https://postimg.cc/r0VmzFxy) | [![2021-05-31-5-02-55.png](https://i.postimg.cc/hGQJvXTY/2021-05-31-5-02-55.png)](https://postimg.cc/Y4k2yqXN) | [![2021-05-31-5-03-42.png](https://i.postimg.cc/6pg3kBgf/2021-05-31-5-03-42.png )](https://postimg.cc/0zGPm18z) | [![2021-05-31-5-04-38.png](https://i.postimg.cc/SRSN6RYk/2021-05-31-5-04-38.png )](https://postimg.cc/BLz0sqCV) |
+
+
+
+
+
 
 
 
