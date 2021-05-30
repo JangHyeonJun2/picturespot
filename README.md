@@ -55,16 +55,19 @@ SFlash(Spot + Flash)는 전국의 명소들을 사진과 지도로 한눈에 볼
 
 
 ## 💡 주요 기능
-* 로그인, 회원가입
-* 이메일찾기, 비밀번호 찾기
-* 소셜 로그인
-* 게시글 CRUD
-* 다중 이미지 업로드 
-* 댓글 CRUD
-* 좋아요
-* 프로필 편집
-* 문의하기 CRUD
-* 문의하기 답변 CRUD
+
+
+| 로그인/회원가입                                              | 이메일/비밀번호 찾기                                         | 소셜 로그인       
+
+| 로그인/회원가입                                              | 이메일/비밀번호 찾기                                         | 소셜 로그인                                                  | 게시글 CRUD                                                  | 다중 이미지 업로드                                           |
+| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| [![2021-05-31-4-54-56.png](https://i.postimg.cc/qBspRJK7/2021-05-31-4-54-56.png)](https://postimg.cc/gr2CtPN9) | [<img src="https://i.postimg.cc/DwD96HGD/2021-05-31-4-56-35.png \" alt="2021-05-31-4-56-35.png" /> ](https://postimg.cc/G4FghMqJ) | ![2021-05-31-4-54-56.png](https://i.postimg.cc/qBspRJK7/2021-05-31-4-54-56.png ) | [![2021-05-31-4-58-55.png](https://i.postimg.cc/qq3ht98T/2021-05-31-4-58-55.png)](https://postimg.cc/N2QfSCJJ) | [![2021-05-31-5-00-07.png](https://i.postimg.cc/g2DssB7p/2021-05-31-5-00-07.png )](https://postimg.cc/Wdd0bSjY) |
+| **댓글CRUD**                                                 | **좋아요**                                                   | **프로필 편집**                                              | **문의하기 CRUD**                                            | **문의하기 답변 CRUD**                                       |
+| [![2021-05-31-5-01-11.png](https://i.postimg.cc/vZ37fx1H/2021-05-31-5-01-11.png )](https://postimg.cc/3k0DHRCP) | [![2021-05-31-5-02-05.png](https://i.postimg.cc/tTPVSsg6/2021-05-31-5-02-05.png )](https://postimg.cc/r0VmzFxy) | [![2021-05-31-5-02-55.png](https://i.postimg.cc/hGQJvXTY/2021-05-31-5-02-55.png)](https://postimg.cc/Y4k2yqXN) | [![2021-05-31-5-03-42.png](https://i.postimg.cc/6pg3kBgf/2021-05-31-5-03-42.png )](https://postimg.cc/0zGPm18z) | [![2021-05-31-5-04-38.png](https://i.postimg.cc/SRSN6RYk/2021-05-31-5-04-38.png )](https://postimg.cc/BLz0sqCV) |
+
+
+
+
 <br>
 
 ### ▶ SFlash 회원가입, 로그인, jwt 정리
