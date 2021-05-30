@@ -1,5 +1,21 @@
-# SFlash 📸✨
+# SFlash - 지도 SNS 서비스 📸✨
+[![bg-3.png](https://i.postimg.cc/rsYZfRbT/bg-3.png)](https://postimg.cc/V0nF6vmZ)
 <br>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=white"/>
+  <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat-square&logo=Spring&logoColor=white"/>
+  <img src="https://img.shields.io/badge/HTML-E34F26?style=flat-square&logo=html5&logoColor=white"/>
+  <img src="https://img.shields.io/badge/CSS-1572B6?style=flat-square&logo=css3&logoColor=white"/>
+  <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=white"/><br>
+  <img src="https://img.shields.io/badge/Json_Web_Tokens-000000?style=flat-square&logo=Json-Web-Tokens&logoColor=white"/>
+  <img src="https://img.shields.io/badge/AmazonS3-569A31?style=flat-square&logo=amazon-s3&logoColor=white"/>
+  <img src="https://img.shields.io/badge/aws-232F3E?style=flat-square&logo=amazon-aws&logoColor=white"/>
+  <img src="https://img.shields.io/badge/MariaDB-003545?style=flat-square&logo=MariaDB&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Travis_CI-3EAAAF?style=flat-square&logo=Travis-CI&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=Gradle&logoColor=white"/>
+  
+</p>
 
 ## 💡 프로젝트 소개
 사람들은 알고 나만 모르는 스팟들…
