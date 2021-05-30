@@ -47,7 +47,7 @@ SFlash(Spot + Flash)는 전국의 명소들을 사진과 지도로 한눈에 볼
 * Server : `Amazon EC2 Ubuntu`
 * Database : `Amazon RDS MariaDB`
 * File Storage: `AWS S3 Bucket`
-* CI/CD : `Travis`
+* CI/CD : `Travis`, `codedeploy`,`s3`
 <br>
 
 ## 💡 전체 구조
