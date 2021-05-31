@@ -71,7 +71,7 @@ SFlash(Spot + Flash)는 전국의 명소들을 사진과 지도로 한눈에 볼
 
 <br>
 
-# 📌 [기술 및 프로젝트 상세정보 정리 - WIKI](https://github.com/JangHyeonJun2/picturespot/wiki)
+# 📌 [기술 및 프로젝트 정리 - WIKI](https://github.com/JangHyeonJun2/picturespot/wiki)
 <br>
 <br>
 <br>
