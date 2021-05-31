@@ -68,18 +68,104 @@ SFlash(Spot + Flash)는 전국의 명소들을 사진과 지도로 한눈에 볼
 | [**댓글CRUD**](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#%EB%8C%93%EA%B8%80crud) | [**좋아요**](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#%EC%A2%8B%EC%95%84%EC%9A%94) | [**프로필 편집**](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#-%EB%A7%88%EC%9D%B4%ED%8E%98%EC%9D%B4%EC%A7%80) | [**문의하기 CRUD**](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#-%EB%AC%B8%EC%9D%98%ED%95%98%EA%B8%B0-%EA%B2%8C%EC%8B%9C%ED%8C%90) | [**문의하기 답변 CRUD**](https://github.com/JangHyeonJun2/picturespot/wiki/%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5-%EC%86%8C%EA%B0%9C#%EB%8C%93%EA%B8%80) |
 | [![2021-05-31-5-01-11.png](https://i.postimg.cc/vZ37fx1H/2021-05-31-5-01-11.png )](https://postimg.cc/3k0DHRCP) | [![2021-05-31-5-02-05.png](https://i.postimg.cc/tTPVSsg6/2021-05-31-5-02-05.png )](https://postimg.cc/r0VmzFxy) | [![2021-05-31-5-02-55.png](https://i.postimg.cc/hGQJvXTY/2021-05-31-5-02-55.png)](https://postimg.cc/Y4k2yqXN) | [![2021-05-31-5-03-42.png](https://i.postimg.cc/6pg3kBgf/2021-05-31-5-03-42.png )](https://postimg.cc/0zGPm18z) | [![2021-05-31-5-04-38.png](https://i.postimg.cc/SRSN6RYk/2021-05-31-5-04-38.png )](https://postimg.cc/BLz0sqCV) |
 
-
-
-
-
-
-
-
-
-
-
 <br>
 
+
+# 문제발생 및 해결
+
+### /map(GetMapping), /board(GetMapping) API호출 할 때 시간 최적화 하기 위한 노력
+
+- /map, /board를 호출시 Board,User,Heart,BoardImgUrl에 대한 정보를 한번에 보내주어야한다. 처음 프로젝트를 설계를 하였을 때는 반복문으로 DB를 조회를 하였지만 N + 1문제가 발생하였고, 데이터가 많아 질 수록 조회시간도 더욱 느리게 되었다. 그래서 한번 조회를 할 때 User,Heart,ImgUrl를 다 조회하는 페치조인을 사용하였다. 그 결과 아래 사진과 같이 시간을 축소 시켰습니다.
+  [![2021-05-31-8-31-59.png](https://i.postimg.cc/J7Bjh4jv/2021-05-31-8-31-59.png  )](https://postimg.cc/9zCD828Y)
+
+### 무중단 CI/CD
+
+- FileZila를 사용하면서 배포 시간비용이 오래 걸렸고, 배포를 하는 과정에서 서비스가 멈춰야하는 불상사가 나버리는 치명적인 단점이 있다. 그래서 깃헙에서 무료제공중인 travis와 스크립트를 활용하여 무중단 배포를 구현하였습니다. 그 결과 배포과정에서의 시간비용을 최소화할 수 있었고 배포가 되더라도 서비스는 멈추지않는 결과가 나오게 되었습니다.
+
+  [![2021-05-31-8-36-50.png](https://i.postimg.cc/qRwShxfB/2021-05-31-8-36-50.png)](https://postimg.cc/ph9q38X3)
+
+### 제1정규형 위배
+
+- 처음 설계를 하였을 때는 메모리 DB인 H2를 사용하였다.그리고 엔티티 설계를 한 컬럼에 데이터가 2개도 넣을 수 있게 하였다. 즉, 하나의 게시글에 이미지가 1개이상인데 만약 이미지가 2개일 때 하나의 컬럼에 ImgUrl이 2개가 있는것이다. 근데 H2는 이걸 에러를 띄우지 않았다. 그래서 중반(?)까지 가서 눈치를 채게 되었다...!! 정말 치명적인 실수였다. 그래서 BoardImgUrl 엔티티를 만들고 다시 설계를 하는 불상사가 일어났다.
+
+  ```java
+  @NoArgsConstructor
+  @Getter
+  @Entity
+  public class BoardImgUrls {
+      @Id
+      @GeneratedValue(strategy = GenerationType.IDENTITY)
+      @Column(name = "BOARDIMGURLS_ID")
+      private Long id;
+  
+      @ManyToOne
+      @JoinColumn(name = "BOARD_ID")
+      private Board board;
+  
+      private String imgUrl;
+  
+      @Builder
+      public BoardImgUrls(String imgUrl, Board board) {
+          this.imgUrl = imgUrl;
+          this.board = board;
+      }
+  
+      public static Set<BoardImgCommonRequestDto> toDtoList(Set<BoardImgUrls> dtos) {
+          Set<BoardImgCommonRequestDto> imgCommonRequestDtos = new HashSet<>();
+          for (BoardImgUrls boardImgUrl : dtos) {
+              imgCommonRequestDtos.add(new BoardImgCommonRequestDto(boardImgUrl));
+          }
+          return imgCommonRequestDtos;
+      }
+  }
+  ```
+
+### S3 게시글 작성 이미지 업로드 에러
+
+- 1차배포, Http일 때는 이상이 없었다. -> 2차배포, Https 적용하고 나서 게시글 작성시 Permission Error가 발생.
+
+- 블로그와 문서를 찾아보니 S3는 Https를 지원을 안할 수 도 있다? 라는 의견을 보게되었다. 그래서 1차 해결책으로 AWS CLoudFront로 s3를 배포하기로 해보았다. 하지만 실패를 하였고, 스택오버플로우와 블로그, 문서를 찾아보다가 나와 비슷한 문제를 가진 사람이 있었다. 
+
+  ```java
+  private Optional<File[]> convert(List<MultipartFile> file) throws IOException {
+          multiparts = new MultipartFile[file.size()];
+          File[] convertFiles = new File[file.size()];
+          for (int i=0; i<file.size(); i++) {
+              multiparts[i] = file.get(i);
+              convertFiles[i] = new File((file.get(i).getOriginalFilename()));
+             if (!convertFiles[i].exists()) {
+                log.info("파일이 존재하는지? : " + convertFiles[i].exists()+" ,"+convertFiles[i]);
+                  convertFiles[i].mkdirs();
+                  Runtime.getRuntime().exec("chmod 777 " + file.get(i).getOriginalFilename());
+                  convertFiles[i].setExecutable(true, false);
+                  convertFiles[i].setReadable(true, false);
+                  convertFiles[i].setWritable(true, false);
+                 if (!convertFiles[i].createNewFile()) {
+                     log.debug("===========Optional.emty 가 나옴!!===========");
+                      return Optional.empty();
+                  }else {
+                      try(FileOutputStream fos = new FileOutputStream(convertFiles[i])) {
+                          fos.write(file.get(i).getBytes());
+                      }
+                  }
+              }
+          }
+          return Optional.of(convertFiles);
+      }
+  ```
+
+  이런식인데 배포를 Linux환경에서 Multipart를 File로 변환을 하려면 권한이 있어야 한다는 점을 깨달았다! 그래서 권한을 주면서 File을 만들어 보았지만 부분적으로 해결은 했지만 결론적인 해결 x 
+
+  - 2차 해결방안 : 블로그를 보다보니 굳이 Multipart -> File로 안하고 바로 Multipart를 사용해도 된다는 것이다!!... 분명히.. 안된다고 블로그에서 봤었는데.. 그래서 다음과 같이 코드를 수정하였다. 
+
+    ```java
+    public List<String> boardUpload(List<MultipartFile> multipartFile, String dirName) throws IOException {
+            String[] result = changeUploadFileName(multipartFile, dirName);
+            return Arrays.asList(result);
+        }
+    ```
+
+    그냥 다이렉트로 Multipart를 사용해도 문제가 없었던것이다!!
 
 
 
