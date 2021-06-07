@@ -28,7 +28,7 @@ SFlash(Spot + Flash)는 전국의 명소들을 사진과 지도로 한눈에 볼
 
 #### 👨‍👨‍👦‍👦 팀원
 * Frontend : 허민규, 김다영, 김형민 `React`
-* Backend : 장현준[이력서](https://www.notion.so/Junior-Backend-Developer-15241dff2cb849ff9226c89924644ae4), 김승욱, 이세정 `SpringBoot`
+* Backend : 장현준[[이력서]](https://www.notion.so/Junior-Backend-Developer-15241dff2cb849ff9226c89924644ae4), 김승욱, 이세정 `SpringBoot`
 * Designer : 송은정, 임아현
 
 #### 📅 진행 기간
