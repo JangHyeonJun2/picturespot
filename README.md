@@ -20,6 +20,7 @@
 # [🏠 HOME PAGE](https://www.sflash.net/)<br>
 # [📺프로젝트 시연 영상](https://youtu.be/UdnDlwT31Xk)<br>
 # [🖨프로젝트 기획서](https://www.notion.so/02fcdb856d914a17abcdba35ae6aeb84)<br>
+# 📌 [기술 및 프로젝트 정리 - WIKI](https://github.com/JangHyeonJun2/picturespot/wiki)<br>
 ## 💡 프로젝트 소개
 사람들은 알고 나만 모르는 스팟들……
 대체 거기가 어디야? 블로그, 인스타 검색 이제 그만!!
@@ -78,7 +79,7 @@ SFlash(Spot + Flash)는 전국의 명소들을 사진과 지도로 한눈에 볼
 
 <br>
 
-# 📌 [기술 및 프로젝트 정리 - WIKI](https://github.com/JangHyeonJun2/picturespot/wiki)
+
 <br>
 <br>
 <br>
